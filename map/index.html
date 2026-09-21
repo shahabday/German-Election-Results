@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German Bundestag Election Map — Wahlkreise 2002–2025</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e8eaed;
+    --text-dim: #9aa0ab;
+    --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  #app { position: relative; height: 100vh; width: 100vw; }
+  #map { position: absolute; inset: 0; background: #0b0d11; }
+
+  #panel {
+    position: absolute; top: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 14px 16px; width: 300px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  #panel h1 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+  #panel .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
+
+  .row { margin-bottom: 12px; }
+  .row:last-child { margin-bottom: 0; }
+  .row-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+
+  #yearSlider { width: 100%; accent-color: var(--accent); }
+  #yearLabel { font-size: 22px; font-weight: 700; text-align: center; margin: 2px 0 6px; }
+  #yearTicks { display: flex; justify-content: space-between; font-size: 9px; color: var(--text-dim); padding: 0 2px; }
+
+  .toggle-group { display: flex; border: 1px solid var(--panel-border); border-radius: 6px; overflow: hidden; }
+  .toggle-group button {
+    flex: 1; background: transparent; color: var(--text-dim); border: none; padding: 6px 4px;
+    font-size: 11px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .toggle-group button.active { background: var(--accent); color: #fff; }
+  .toggle-group button:not(.active):hover { background: #20242e; color: var(--text); }
+
+  #statusLine { font-size: 11px; color: var(--text-dim); margin-top: 10px; min-height: 14px; }
+
+  #legend {
+    position: absolute; bottom: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 10px 14px; font-size: 11px; max-width: 220px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  #legend .legend-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  .legend-swatch { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); }
+  .legend-pct { color: var(--text-dim); margin-left: auto; font-variant-numeric: tabular-nums; }
+
+  .leaflet-tooltip.wkr-tooltip {
+    background: rgba(15, 17, 21, 0.96); color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  }
+  .wkr-tooltip .tt-title { font-weight: 700; font-size: 13px; margin-bottom: 1px; }
+  .wkr-tooltip .tt-sub { color: var(--text-dim); font-size: 10.5px; margin-bottom: 6px; }
+  .wkr-tooltip .tt-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+  .wkr-tooltip .tt-swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+  .wkr-tooltip .tt-party { flex: 1; }
+  .wkr-tooltip .tt-share { font-variant-numeric: tabular-nums; color: var(--text-dim); }
+  .wkr-tooltip .tt-meta { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--panel-border); color: var(--text-dim); font-size: 10.5px; }
+
+  #loading {
+    position: absolute; top: 16px; right: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    padding: 6px 12px; font-size: 11px; color: var(--text-dim); display: none;
+  }
+  #loading.active { display: block; }
+
+  #credit {
+    position: absolute; bottom: 8px; right: 8px; z-index: 999;
+    font-size: 10px; color: var(--text-dim); background: rgba(15,17,21,0.7);
+    padding: 3px 8px; border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="map"></div>
+
+  <div id="panel">
+    <h1>Bundestag Elections</h1>
+    <div class="subtitle">Constituency (Wahlkreis) results, 2002–2025</div>
+
+    <div class="row">
+      <div id="yearLabel">2025</div>
+      <input type="range" id="yearSlider" min="0" max="6" step="1" value="6">
+      <div id="yearTicks"></div>
+    </div>
+
+    <div class="row">
+      <div class="row-label">Color by</div>
+      <div class="toggle-group" id="metricToggle">
+        <button data-metric="elected" class="active">Direct mandate winner</button>
+        <button data-metric="zweitstimme">Party-list plurality</button>
+      </div>
+    </div>
+
+    <div id="statusLine"></div>
+  </div>
+
+  <div id="legend">
+    <div class="legend-title">Constituencies won</div>
+    <div id="legendItems"></div>
+  </div>
+
+  <div id="loading">Loading…</div>
+  <div id="credit">Data: GERDA / Bundeswahlleiterin · Boundaries: Bundeswahlleiterin, okfde/wahldaten, linusha</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const DATA_DIR = "data/prepared";
+  const YEARS = ["2002", "2005", "2009", "2013", "2017", "2021", "2025"];
+
+  const map = L.map("map", { zoomControl: false, attributionControl: false })
+    .setView([51.15, 10.45], 6);
+  L.control.zoom({ position: "topright" }).addTo(map);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nomatter/{z}/{x}/{y}{r}.png", {
+    maxZoom: 19,
+    subdomains: "abcd",
+  }).addTo(map);
+
+  const state = {
+    metric: "elected",
+    yearIndex: YEARS.length - 1,
+    meta: null,
+    layer: null,
+    cache: {}, // year -> geojson
+  };
+
+  const yearSlider = document.getElementById("yearSlider");
+  const yearLabel = document.getElementById("yearLabel");
+  const yearTicks = document.getElementById("yearTicks");
+  const statusLine = document.getElementById("statusLine");
+  const loadingEl = document.getElementById("loading");
+  const legendItems = document.getElementById("legendItems");
+
+  yearSlider.max = YEARS.length - 1;
+  YEARS.forEach((y) => {
+    const span = document.createElement("span");
+    span.textContent = "'" + y.slice(2);
+    yearTicks.appendChild(span);
+  });
+
+  document.getElementById("metricToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-metric]");
+    if (!btn) return;
+    document.querySelectorAll("#metricToggle button").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    state.metric = btn.dataset.metric;
+    render();
+  });
+
+  yearSlider.addEventListener("input", () => {
+    state.yearIndex = +yearSlider.value;
+    yearLabel.textContent = YEARS[state.yearIndex];
+    render();
+  });
+
+  function partyStyle(party) {
+    if (!state.meta) return { color: "#999999", label: party || "—" };
+    return state.meta.party_info[party] || { color: state.meta.default_fallback.color, label: party || "—" };
+  }
+
+  function fillOpacityForShare(share) {
+    if (share == null) return 0.55;
+    // Map ~25%-60% winning share to opacity 0.45-0.95 so close races look paler.
+    const clamped = Math.max(0.20, Math.min(0.65, share));
+    return 0.35 + (clamped - 0.20) * ((0.95 - 0.35) / (0.65 - 0.20));
+  }
+
+  function styleFeature(feature) {
+    const props = feature.properties;
+    const party = state.metric === "elected" ? props.elected_party : props.zweitstimme_top_party;
+    const share = state.metric === "elected" ? props.elected_party_share : props.zweitstimme_top_share;
+    const style = partyStyle(party);
+    return {
+      color: "#0b0d11",
+      weight: 0.6,
+      fillColor: style.color,
+      fillOpacity: fillOpacityForShare(share),
+    };
+  }
+
+  function highlightStyle(feature) {
+    const s = styleFeature(feature);
+    s.weight = 2;
+    s.color = "#ffffff";
+    return s;
+  }
+
+  function fmtPct(v) {
+    return v == null ? "—" : (v * 100).toFixed(1) + "%";
+  }
+
+  function tooltipHtml(props) {
+    const party = state.metric === "elected" ? props.elected_party : props.zweitstimme_top_party;
+    const share = state.metric === "elected" ? props.elected_party_share : props.zweitstimme_top_share;
+    const style = partyStyle(party);
+    const breakdown = state.metric === "elected" ? props.erststimme_top6 : props.zweitstimme_top6;
+    const metricLabel = state.metric === "elected" ? "Direct mandate (Erststimme)" : "Party list (Zweitstimme)";
+
+    let rows = "";
+    (breakdown || []).slice(0, 5).forEach(([p, v]) => {
+      const st = partyStyle(p);
+      rows += `<div class="tt-row">
+          <span class="tt-swatch" style="background:${st.color}"></span>
+          <span class="tt-party">${st.label}</span>
+          <span class="tt-share">${fmtPct(v)}</span>
+        </div>`;
+    });
+
+    return `
+      <div class="tt-title">${props.wkr_name}</div>
+      <div class="tt-sub">Wahlkreis ${props.wkr_nr} · ${props.state_name}</div>
+      <div class="tt-row" style="margin-bottom:6px;">
+        <span class="tt-swatch" style="background:${style.color}"></span>
+        <span class="tt-party"><strong>${style.label}</strong> wins</span>
+        <span class="tt-share">${fmtPct(share)}</span>
+      </div>
+      <div style="color:var(--text-dim); font-size:10px; margin-bottom:4px;">${metricLabel} — top parties</div>
+      ${rows}
+      <div class="tt-meta">Turnout ${fmtPct(props.turnout)}</div>
+    `;
+  }
+
+  function buildLegend(geojson) {
+    if (!geojson) { legendItems.innerHTML = ""; return; }
+    const counts = {};
+    geojson.features.forEach((f) => {
+      const p = state.metric === "elected" ? f.properties.elected_party : f.properties.zweitstimme_top_party;
+      if (!p) return;
+      counts[p] = (counts[p] || 0) + 1;
+    });
+    const total = geojson.features.length;
+    const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    legendItems.innerHTML = "";
+    ranked.forEach(([party, n]) => {
+      const style = partyStyle(party);
+      const div = document.createElement("div");
+      div.className = "legend-item";
+      div.innerHTML = `<span class="legend-swatch" style="background:${style.color}"></span>
+        <span>${style.label}</span>
+        <span class="legend-pct">${n}</span>`;
+      legendItems.appendChild(div);
+    });
+  }
+
+  async function loadYear(year) {
+    if (state.cache[year]) return state.cache[year];
+    loadingEl.classList.add("active");
+    try {
+      const res = await fetch(`${DATA_DIR}/wkr_${year}.geojson`);
+      const gj = await res.json();
+      state.cache[year] = gj;
+      return gj;
+    } finally {
+      loadingEl.classList.remove("active");
+    }
+  }
+
+  async function render() {
+    const year = YEARS[state.yearIndex];
+    statusLine.textContent = `Bundestagswahl ${year}`;
+    const geojson = await loadYear(year);
+
+    if (state.layer) {
+      map.removeLayer(state.layer);
+    }
+    state.layer = L.geoJSON(geojson, {
+      style: styleFeature,
+      onEachFeature: (feature, layer) => {
+        layer.bindTooltip(tooltipHtml(feature.properties), {
+          className: "wkr-tooltip",
+          sticky: true,
+          direction: "top",
+        });
+        layer.on({
+          mouseover: (e) => e.target.setStyle(highlightStyle(feature)),
+          mouseout: (e) => e.target.setStyle(styleFeature(feature)),
+        });
+      },
+    }).addTo(map);
+
+    buildLegend(geojson);
+  }
+
+  async function init() {
+    const res = await fetch(`${DATA_DIR}/meta.json`);
+    state.meta = await res.json();
+    yearLabel.textContent = YEARS[state.yearIndex];
+    await render();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

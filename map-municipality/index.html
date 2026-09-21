@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German Election Map — Municipality Resolution</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e8eaed;
+    --text-dim: #9aa0ab;
+    --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  #app { position: relative; height: 100vh; width: 100vw; }
+  #map { position: absolute; inset: 0; background: #0b0d11; }
+
+  #panel {
+    position: absolute; top: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 14px 16px; width: 310px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    max-height: calc(100vh - 32px); overflow-y: auto;
+  }
+  #panel h1 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+  #panel .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
+
+  .row { margin-bottom: 12px; }
+  .row:last-child { margin-bottom: 0; }
+  .row-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+
+  .toggle-group { display: flex; border: 1px solid var(--panel-border); border-radius: 6px; overflow: hidden; flex-wrap: wrap; }
+  .toggle-group button {
+    flex: 1 1 auto; min-width: 25%; background: transparent; color: var(--text-dim); border: none; padding: 7px 4px;
+    font-size: 11.5px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .toggle-group button.active { background: var(--accent); color: #fff; }
+  .toggle-group button:not(.active):hover { background: #20242e; color: var(--text); }
+
+  select {
+    width: 100%; background: #1e222b; color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 6px; padding: 7px 8px; font-size: 12.5px;
+  }
+
+  #yearSlider { width: 100%; accent-color: var(--accent); }
+  #yearLabel { font-size: 20px; font-weight: 700; text-align: center; margin: 2px 0 6px; }
+  #yearTicks { display: flex; justify-content: space-between; font-size: 9px; color: var(--text-dim); padding: 0 2px; }
+
+  #statusLine { font-size: 11px; color: var(--text-dim); margin-top: 10px; min-height: 14px; }
+  #noteLine { font-size: 10.5px; color: var(--text-dim); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--panel-border); display: none; }
+
+  #legend {
+    position: absolute; bottom: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 10px 14px; font-size: 11px; max-width: 230px; max-height: 260px; overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  #legend .legend-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  .legend-swatch { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); }
+  .legend-pct { color: var(--text-dim); margin-left: auto; font-variant-numeric: tabular-nums; }
+
+  .leaflet-tooltip.muni-tooltip {
+    background: rgba(15, 17, 21, 0.96); color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  }
+  .muni-tooltip .tt-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .muni-tooltip .tt-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+  .muni-tooltip .tt-swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+  .muni-tooltip .tt-party { flex: 1; }
+  .muni-tooltip .tt-share { font-variant-numeric: tabular-nums; color: var(--text-dim); }
+  .muni-tooltip .tt-meta { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--panel-border); color: var(--text-dim); font-size: 10.5px; }
+
+  #loading {
+    position: absolute; top: 16px; right: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    padding: 6px 12px; font-size: 11px; color: var(--text-dim); display: none;
+  }
+  #loading.active { display: block; }
+
+  #credit {
+    position: absolute; bottom: 8px; right: 8px; z-index: 999;
+    font-size: 10px; color: var(--text-dim); background: rgba(15,17,21,0.7);
+    padding: 3px 8px; border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="map"></div>
+
+  <div id="panel">
+    <h1>German Elections</h1>
+    <div class="subtitle">Municipality-level results (~10,900 Gemeinden)</div>
+
+    <div class="row">
+      <div class="row-label">Election</div>
+      <div class="toggle-group" id="typeToggle">
+        <button data-type="federal" class="active">Bundestag</button>
+        <button data-type="european">Europawahl</button>
+        <button data-type="landtag">Landtag</button>
+        <button data-type="kommunal">Kommunalwahl</button>
+      </div>
+    </div>
+
+    <div class="row" id="stateRow" style="display:none;">
+      <div class="row-label">State</div>
+      <select id="stateSelect"></select>
+    </div>
+
+    <div class="row">
+      <div id="yearLabel">—</div>
+      <input type="range" id="yearSlider" min="0" max="0" step="1" value="0">
+      <div id="yearTicks"></div>
+    </div>
+
+    <div id="statusLine"></div>
+    <div id="noteLine">Vote-share plurality per municipality — an area-level statistic, not a real single-winner seat (see repo docs/GAPS_AND_LIMITATIONS.md).</div>
+  </div>
+
+  <div id="legend">
+    <div class="legend-title">Municipalities won</div>
+    <div id="legendItems"></div>
+  </div>
+
+  <div id="loading">Loading…</div>
+  <div id="credit">Data: GERDA · Boundaries: BKG VG250 via gjrichter</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const DATA_DIR = "data/prepared";
+
+  const map = L.map("map", { zoomControl: false, attributionControl: false })
+    .setView([51.15, 10.45], 6);
+  L.control.zoom({ position: "topright" }).addTo(map);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nomatter/{z}/{x}/{y}{r}.png", {
+    maxZoom: 19,
+    subdomains: "abcd",
+  }).addTo(map);
+
+  const state = {
+    type: "federal",
+    manifest: null,
+    boundary: null,
+    geoLayer: null,
+    stateSlug: null,
+    yearIndex: 0,
+    years: [],
+    currentData: {},
+    cache: {}, // cacheKey -> {ags: record}
+    keyProp: "ags",
+    specialLayer: null,
+    specialLayerKey: null, // which special config the current specialLayer was built for
+    specialActive: false,
+    freshOutlineLayer: null,
+    nationalFreshStates: null,
+  };
+
+  // A "special" layer replaces the shared municipality boundary with a one-off, finer
+  // boundary set for a specific (type, state, year) - currently just the 2026 Berlin
+  // Abgeordnetenhauswahl, scraped live since GERDA predates that election. See
+  // map-municipality/build_berlin_2026.py.
+  function specialConfig() {
+    return state.manifest?.special?.[state.type]?.[state.stateSlug]?.[state.years[state.yearIndex]] || null;
+  }
+
+  // "National aggregate" (Landtag/Kommunalwahl only): a pseudo-"state" selection that
+  // merges all 16 states' latest available result as of the selected year into one
+  // nationwide view. Each state is on its own election schedule, so this is a "current
+  // standing" snapshot, not a simultaneous nationwide vote - see map-municipality/README.md.
+  const NATIONAL_SLUG = "__national__";
+
+  function isNationalAggregate() {
+    return isStateScoped() && state.stateSlug === NATIONAL_SLUG;
+  }
+
+  function nationalYearsUnion(type) {
+    const states = state.manifest[type].states;
+    const all = new Set();
+    Object.values(states).forEach((s) => s.years.forEach((y) => all.add(y)));
+    return Array.from(all).sort();
+  }
+
+  async function loadNationalAggregate(type, targetYear) {
+    const cacheKey = `national:${type}:${targetYear}`;
+    if (state.cache[cacheKey]) return state.cache[cacheKey];
+    const statesObj = state.manifest[type].states;
+    const merged = {};
+    const freshStates = new Set();
+    await Promise.all(Object.entries(statesObj).map(async ([slug, info]) => {
+      // A year with a "special" entry (e.g. Berlin 2026) is a one-off finer-resolution
+      // layer keyed differently (Wahlkreis, not ags) - but where one exists, there's
+      // also a plain municipality-schema rollup file at the normal path (see
+      // build_berlin_2026.py's write_citywide_rollup()), so the ordinary fetch below
+      // still resolves; no need to skip these years.
+      const eligible = info.years.filter((y) => y <= targetYear);
+      if (!eligible.length) return; // this state's first election is still ahead
+      const chosenYear = eligible[eligible.length - 1];
+      try {
+        const data = await fetchJson(`${DATA_DIR}/${type}/${slug}/${chosenYear}.json`);
+        if (chosenYear === targetYear) freshStates.add(slug);
+        Object.entries(data).forEach(([ags, rec]) => {
+          merged[ags] = Object.assign({}, rec, { _state: slug, _year: chosenYear });
+        });
+      } catch (err) {
+        console.warn(`national aggregate: failed to load ${type}/${slug}/${chosenYear}`, err);
+      }
+    }));
+    const result = { data: merged, freshStates };
+    state.cache[cacheKey] = result;
+    return result;
+  }
+
+  // Highlighting "this state just voted" as a single outline (not a border on every one
+  // of its ~hundreds/thousands of municipalities, which just looks like visual noise) -
+  // uses the real Bundesland boundary polygons (data/prepared/state_outlines.geojson,
+  // 16 features, same AGS-derived 2-digit state codes as everywhere else), not a shape
+  // estimated from the municipality data. Loaded once at init (see init()).
+  const STATE_SLUG_TO_CODE = {
+    schleswig_holstein: "01", hamburg: "02", niedersachsen: "03", bremen: "04",
+    north_rhine_westphalia: "05", hesse: "06", rhineland_palatinate: "07",
+    baden_wuerttemberg: "08", bavaria: "09", saarland: "10", berlin: "11",
+    brandenburg: "12", mecklenburg_vorpommern: "13", saxony: "14",
+    saxony_anhalt: "15", thuringia: "16",
+  };
+
+  function updateFreshOutlines() {
+    if (state.freshOutlineLayer) {
+      map.removeLayer(state.freshOutlineLayer);
+      state.freshOutlineLayer = null;
+    }
+    if (!isNationalAggregate() || !state.nationalFreshStates || !state.nationalFreshStates.size
+      || !state.stateOutlines) return;
+    const codes = new Set(Array.from(state.nationalFreshStates, (slug) => STATE_SLUG_TO_CODE[slug]));
+    const features = state.stateOutlines.features.filter((f) => codes.has(f.properties.code));
+    if (!features.length) return;
+    state.freshOutlineLayer = L.geoJSON({ type: "FeatureCollection", features }, {
+      interactive: false,
+      style: { color: "#ffffff", weight: 2, fill: false },
+    }).addTo(map);
+  }
+
+  const yearSlider = document.getElementById("yearSlider");
+  const yearLabel = document.getElementById("yearLabel");
+  const yearTicks = document.getElementById("yearTicks");
+  const statusLine = document.getElementById("statusLine");
+  const noteLine = document.getElementById("noteLine");
+  const loadingEl = document.getElementById("loading");
+  const legendItems = document.getElementById("legendItems");
+  const stateRow = document.getElementById("stateRow");
+  const stateSelect = document.getElementById("stateSelect");
+
+  function partyStyle(party) {
+    if (!state.manifest || !party) return { color: "#3a3d45", label: "No data" };
+    return state.manifest.party_info[party] || { color: state.manifest.default_fallback.color, label: party };
+  }
+
+  function fillOpacityForShare(share) {
+    if (share == null) return 0.5;
+    const clamped = Math.max(0.20, Math.min(0.70, share));
+    return 0.35 + (clamped - 0.20) * ((0.95 - 0.35) / (0.70 - 0.20));
+  }
+
+  function currentScope() {
+    return state.manifest[state.type].scope;
+  }
+
+  function isStateScoped() {
+    return currentScope() === "state";
+  }
+
+  function styleForFeature(feature) {
+    const key = feature.properties[state.keyProp];
+    const rec = state.currentData[key];
+
+    if (!state.specialActive && isStateScoped() && !isNationalAggregate()) {
+      const code = key.slice(0, 2);
+      const inState = state.stateAgsCodes && state.stateAgsCodes.has(code);
+      if (!inState) {
+        return { color: "#1a1c22", weight: 0.2, fillColor: "#12141a", fillOpacity: 0.25 };
+      }
+    }
+
+    if (!rec) {
+      return { color: "#0b0d11", weight: 0.4, fillColor: "#2b2e36", fillOpacity: 0.4 };
+    }
+    const style = partyStyle(rec.w);
+    return {
+      color: "#0b0d11",
+      weight: 0.4,
+      fillColor: style.color,
+      fillOpacity: fillOpacityForShare(rec.s),
+    };
+  }
+
+  function highlightStyle(feature) {
+    const s = styleForFeature(feature);
+    s.weight = 1.6;
+    s.color = "#ffffff";
+    return s;
+  }
+
+  function fmtPct(v) {
+    return v == null ? "—" : (v * 100).toFixed(1) + "%";
+  }
+
+  function tooltipHtml(feature) {
+    const props = feature.properties;
+    const key = props[state.keyProp];
+    const rec = state.currentData[key];
+    if (!rec) {
+      return `<div class="tt-title">${props.name}</div><div class="tt-meta">No result for this selection</div>`;
+    }
+    const style = partyStyle(rec.w);
+    let rows = "";
+    (rec.b || []).forEach(([p, v]) => {
+      const st = partyStyle(p);
+      rows += `<div class="tt-row">
+          <span class="tt-swatch" style="background:${st.color}"></span>
+          <span class="tt-party">${st.label}</span>
+          <span class="tt-share">${fmtPct(v)}</span>
+        </div>`;
+    });
+    const turnoutLine = rec.t != null ? `<div class="tt-meta">Turnout ${fmtPct(rec.t)}</div>` : "";
+    let sourceLine = "";
+    if (rec._state && rec._year) {
+      const stLabel = state.manifest[state.type].states[rec._state]?.label || rec._state;
+      sourceLine = `<div class="tt-meta">${stLabel} · ${rec._year} election</div>`;
+    }
+    let erststimmeLine = "";
+    if (rec.erst_w) {
+      const est = partyStyle(rec.erst_w);
+      erststimmeLine = `<div class="tt-meta">Direct mandate (Erststimme): <strong style="color:${est.color}">${est.label}</strong>
+        ${rec.erst_candidate ? " — " + rec.erst_candidate : ""} (${fmtPct(rec.erst_s)})</div>`;
+    }
+    return `
+      <div class="tt-title">${props.name}${props.kind ? " <span style='color:var(--text-dim);font-weight:400;'>(" + props.kind + ")</span>" : ""}</div>
+      <div class="tt-row" style="margin-bottom:6px;">
+        <span class="tt-swatch" style="background:${style.color}"></span>
+        <span class="tt-party"><strong>${style.label}</strong> leads</span>
+        <span class="tt-share">${fmtPct(rec.s)}</span>
+      </div>
+      ${rows}
+      ${turnoutLine}
+      ${sourceLine}
+      ${erststimmeLine}
+    `;
+  }
+
+  function buildLegend() {
+    const counts = {};
+    let scoped = !state.specialActive && isStateScoped() && !isNationalAggregate();
+    Object.entries(state.currentData).forEach(([key, rec]) => {
+      if (scoped && !(state.stateAgsCodes && state.stateAgsCodes.has(key.slice(0, 2)))) return;
+      counts[rec.w] = (counts[rec.w] || 0) + 1;
+    });
+    const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    legendItems.innerHTML = "";
+    const MAX_ROWS = 10;
+    ranked.slice(0, MAX_ROWS).forEach(([party, n]) => {
+      const style = partyStyle(party);
+      const div = document.createElement("div");
+      div.className = "legend-item";
+      div.innerHTML = `<span class="legend-swatch" style="background:${style.color}"></span>
+        <span>${style.label}</span>
+        <span class="legend-pct">${n}</span>`;
+      legendItems.appendChild(div);
+    });
+    if (ranked.length > MAX_ROWS) {
+      const rest = ranked.slice(MAX_ROWS).reduce((s, [, n]) => s + n, 0);
+      const div = document.createElement("div");
+      div.className = "legend-item";
+      div.innerHTML = `<span class="legend-swatch" style="background:#6f7580"></span>
+        <span>Other (${ranked.length - MAX_ROWS} more)</span>
+        <span class="legend-pct">${rest}</span>`;
+      legendItems.appendChild(div);
+    }
+  }
+
+  function dataUrlFor(type, year) {
+    if (type === "federal" || type === "european") {
+      return `${DATA_DIR}/${type}/${year}.json`;
+    }
+    return `${DATA_DIR}/${type}/${state.stateSlug}/${year}.json`;
+  }
+
+  async function fetchJson(url) {
+    if (state.cache[url]) return state.cache[url];
+    const res = await fetch(url, { cache: "no-cache" });
+    const j = await res.json();
+    state.cache[url] = j;
+    return j;
+  }
+
+  function populateStateSelect() {
+    const states = state.manifest[state.type].states;
+    const slugs = Object.keys(states).sort((a, b) => states[a].label.localeCompare(states[b].label));
+    stateSelect.innerHTML = "";
+    const natOpt = document.createElement("option");
+    natOpt.value = NATIONAL_SLUG;
+    natOpt.textContent = "★ All of Germany (current standing)";
+    stateSelect.appendChild(natOpt);
+    slugs.forEach((slug) => {
+      const opt = document.createElement("option");
+      opt.value = slug;
+      opt.textContent = states[slug].label;
+      stateSelect.appendChild(opt);
+    });
+    if (state.stateSlug !== NATIONAL_SLUG && !slugs.includes(state.stateSlug)) {
+      state.stateSlug = slugs[0];
+    }
+    stateSelect.value = state.stateSlug;
+  }
+
+  function currentYearsList() {
+    if (isNationalAggregate()) {
+      return nationalYearsUnion(state.type);
+    }
+    if (isStateScoped()) {
+      return state.manifest[state.type].states[state.stateSlug].years;
+    }
+    return state.manifest[state.type].years;
+  }
+
+  function setupYearControls(preserveYear) {
+    state.years = currentYearsList();
+    yearSlider.max = state.years.length - 1;
+    let idx = state.years.length - 1;
+    if (preserveYear) {
+      const found = state.years.indexOf(preserveYear);
+      if (found >= 0) idx = found;
+    }
+    state.yearIndex = idx;
+    yearSlider.value = idx;
+    yearLabel.textContent = state.years[idx];
+
+    yearTicks.innerHTML = "";
+    if (state.years.length > 20) {
+      // Too many distinct election years (national aggregate) to label individually.
+      const first = document.createElement("span");
+      first.textContent = state.years[0];
+      const last = document.createElement("span");
+      last.textContent = state.years[state.years.length - 1];
+      yearTicks.appendChild(first);
+      yearTicks.appendChild(last);
+    } else {
+      state.years.forEach((y) => {
+        const span = document.createElement("span");
+        span.textContent = "'" + y.slice(2);
+        yearTicks.appendChild(span);
+      });
+    }
+  }
+
+  function updateStateAgsCodes() {
+    if (!isStateScoped() || isNationalAggregate()) {
+      state.stateAgsCodes = null;
+      return;
+    }
+    const label = state.manifest[state.type].states[state.stateSlug].label;
+    const codes = new Set();
+    Object.entries(STATE_LABEL_TO_CODE).forEach(([code, name]) => {
+      if (name === label) codes.add(code);
+    });
+    state.stateAgsCodes = codes;
+  }
+
+  const STATE_LABEL_TO_CODE = {
+    "01": "Schleswig-Holstein", "02": "Hamburg", "03": "Niedersachsen", "04": "Bremen",
+    "05": "North Rhine-Westphalia", "06": "Hesse", "07": "Rhineland-Palatinate",
+    "08": "Baden-Württemberg", "09": "Bavaria", "10": "Saarland", "11": "Berlin",
+    "12": "Brandenburg", "13": "Mecklenburg-Vorpommern", "14": "Saxony",
+    "15": "Saxony-Anhalt", "16": "Thuringia",
+  };
+
+  async function loadCurrentDataFor(config) {
+    const year = state.years[state.yearIndex];
+    loadingEl.classList.add("active");
+    try {
+      if (config) {
+        return { data: await fetchJson(`data/${config.data}`), freshStates: null };
+      }
+      if (isNationalAggregate()) {
+        return await loadNationalAggregate(state.type, year);
+      }
+      return { data: await fetchJson(dataUrlFor(state.type, year)), freshStates: null };
+    } finally {
+      loadingEl.classList.remove("active");
+    }
+  }
+
+  function activeGeoLayer() {
+    return state.specialActive ? state.specialLayer : state.geoLayer;
+  }
+
+  function restyleMap() {
+    const layer = activeGeoLayer();
+    if (!layer) return;
+    layer.setStyle(styleForFeature);
+    layer.eachLayer((l) => {
+      l.setTooltipContent(tooltipHtml(l.feature));
+    });
+    buildLegend();
+    updateFreshOutlines();
+  }
+
+  function bindLayerInteractions(layer) {
+    layer.eachLayer((l) => {
+      l.bindTooltip("", { className: "muni-tooltip", sticky: true, direction: "top" });
+      l.on({
+        mouseover: (e) => e.target.setStyle(highlightStyle(l.feature)),
+        mouseout: (e) => e.target.setStyle(styleForFeature(l.feature)),
+      });
+    });
+  }
+
+  async function ensureSpecialLayer(config) {
+    const cacheKey = config.boundary;
+    if (state.specialLayer && state.specialLayerKey === cacheKey) return;
+    if (state.specialLayer) {
+      map.removeLayer(state.specialLayer);
+      state.specialLayer = null;
+    }
+    const boundary = await fetchJson(`data/${config.boundary}`);
+    state.specialLayer = L.geoJSON(boundary, {
+      style: () => ({ color: "#0b0d11", weight: 0.6, fillColor: "#2b2e36", fillOpacity: 0.4 }),
+    });
+    bindLayerInteractions(state.specialLayer);
+    state.specialLayerKey = cacheKey;
+  }
+
+  async function switchLayers() {
+    const config = specialConfig();
+    if (config) {
+      state.keyProp = config.key_prop;
+      await ensureSpecialLayer(config);
+      if (map.hasLayer(state.geoLayer)) map.removeLayer(state.geoLayer);
+      if (!map.hasLayer(state.specialLayer)) state.specialLayer.addTo(map);
+      state.specialActive = true;
+    } else {
+      state.keyProp = "ags";
+      if (state.specialLayer && map.hasLayer(state.specialLayer)) map.removeLayer(state.specialLayer);
+      if (!map.hasLayer(state.geoLayer)) state.geoLayer.addTo(map);
+      state.specialActive = false;
+    }
+  }
+
+  function maybeZoomToState() {
+    if (!isStateScoped() || isNationalAggregate()) {
+      map.setView([51.15, 10.45], 6);
+      return;
+    }
+    const bounds = state.manifest.state_bounds[state.stateSlug];
+    if (bounds) map.fitBounds(bounds, { padding: [20, 20] });
+  }
+
+  let renderToken = 0;
+
+  async function render() {
+    const myToken = ++renderToken;
+    updateStateAgsCodes();
+    const typeLabelMap = { federal: "Bundestagswahl", european: "Europawahl", landtag: "Landtagswahl", kommunal: "Kommunalwahl" };
+    const stateSuffix = isNationalAggregate() ? " · All of Germany"
+      : isStateScoped() ? ` · ${state.manifest[state.type].states[state.stateSlug].label}` : "";
+    const config = specialConfig();
+    statusLine.textContent = `${typeLabelMap[state.type]} ${state.years[state.yearIndex]}${stateSuffix}`;
+    noteLine.textContent = config
+      ? `${config.status}. Source: ${config.source_label}. ${config.note || ""}`
+      : isNationalAggregate()
+      ? "Each state shown at its own most recent election on or before this year — states vote on independent schedules, so this is a \"current standing\" snapshot, not one simultaneous nationwide vote. A white border marks a state that voted in exactly this year."
+      : "Vote-share plurality per municipality — an area-level statistic, not a real single-winner seat (see repo docs/GAPS_AND_LIMITATIONS.md).";
+    noteLine.style.display = "block";
+
+    const { data, freshStates } = await loadCurrentDataFor(config);
+    if (myToken !== renderToken) return; // a newer render() started while we were fetching
+    state.currentData = data;
+    state.nationalFreshStates = freshStates;
+    await switchLayers();
+    if (myToken !== renderToken) return; // ditto, after the (also async) layer switch
+    restyleMap();
+  }
+
+  document.getElementById("typeToggle").addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-type]");
+    if (!btn) return;
+    document.querySelectorAll("#typeToggle button").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    state.type = btn.dataset.type;
+
+    stateRow.style.display = isStateScoped() ? "block" : "none";
+    if (isStateScoped()) {
+      if (!state.stateSlug) state.stateSlug = "north_rhine_westphalia";
+      populateStateSelect();
+    }
+    setupYearControls();
+    maybeZoomToState();
+    await render();
+  });
+
+  stateSelect.addEventListener("change", async () => {
+    state.stateSlug = stateSelect.value;
+    setupYearControls();
+    maybeZoomToState();
+    await render();
+  });
+
+  yearSlider.addEventListener("input", async () => {
+    state.yearIndex = +yearSlider.value;
+    yearLabel.textContent = state.years[state.yearIndex];
+    await render();
+  });
+
+  async function init() {
+    const [manifest, boundary, stateOutlines] = await Promise.all([
+      fetch(`${DATA_DIR}/manifest.json`, { cache: "no-cache" }).then((r) => r.json()),
+      fetch(`${DATA_DIR}/gemeinden.geojson`, { cache: "no-cache" }).then((r) => r.json()),
+      fetch(`${DATA_DIR}/state_outlines.geojson`, { cache: "no-cache" }).then((r) => r.json()),
+    ]);
+    state.manifest = manifest;
+    state.boundary = boundary;
+    state.stateOutlines = stateOutlines;
+
+    state.geoLayer = L.geoJSON(boundary, {
+      style: () => ({ color: "#0b0d11", weight: 0.4, fillColor: "#2b2e36", fillOpacity: 0.4 }),
+      onEachFeature: (feature, layer) => {
+        layer.bindTooltip("", { className: "muni-tooltip", sticky: true, direction: "top" });
+        layer.on({
+          mouseover: (e) => e.target.setStyle(highlightStyle(feature)),
+          mouseout: (e) => e.target.setStyle(styleForFeature(feature)),
+        });
+      },
+    }).addTo(map);
+
+    setupYearControls();
+    await render();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

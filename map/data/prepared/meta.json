@@ -1,0 +1,85 @@
+{
+  "years": [
+    "2002",
+    "2005",
+    "2009",
+    "2013",
+    "2017",
+    "2021",
+    "2025"
+  ],
+  "party_info": {
+    "afd": {
+      "label": "AfD",
+      "color": "#009EE0"
+    },
+    "bsw": {
+      "label": "BSW",
+      "color": "#7D2E68"
+    },
+    "cdu": {
+      "label": "CDU",
+      "color": "#4D4D52"
+    },
+    "cdu_csu": {
+      "label": "CDU/CSU",
+      "color": "#4D4D52"
+    },
+    "csu": {
+      "label": "CSU",
+      "color": "#4D4D52"
+    },
+    "die_partei": {
+      "label": "Die PARTEI",
+      "color": "#A6192E"
+    },
+    "die_rechte": {
+      "label": "Die Rechte",
+      "color": "#6B3E26"
+    },
+    "fdp": {
+      "label": "FDP",
+      "color": "#FFED00"
+    },
+    "freie_wahler": {
+      "label": "Freie Wähler",
+      "color": "#FF8C00"
+    },
+    "gruene": {
+      "label": "Grüne",
+      "color": "#46962B"
+    },
+    "linke_pds": {
+      "label": "Die Linke",
+      "color": "#BE3075"
+    },
+    "npd": {
+      "label": "NPD",
+      "color": "#8B4513"
+    },
+    "piraten": {
+      "label": "Piraten",
+      "color": "#F57900"
+    },
+    "rep": {
+      "label": "REP",
+      "color": "#6E6E96"
+    },
+    "spd": {
+      "label": "SPD",
+      "color": "#E3000F"
+    },
+    "ssw": {
+      "label": "SSW",
+      "color": "#003C8F"
+    },
+    "volt": {
+      "label": "Volt",
+      "color": "#582C83"
+    }
+  },
+  "default_fallback": {
+    "label": "Sonstige",
+    "color": "#999999"
+  }
+}
