@@ -1,0 +1,116 @@
+party_gerda,party_name_ascii,party_name_short,party_name_english,party_name,family_name_short,family_name,left_right,state_market,liberty_authority,eu_anti_pro,cmp,euprofiler,ees,castles_mair,huber_inglehart,ray,benoit_laver,chess,country_id,party_id,family_id
+cdu,Christlich Demokratische Union,CDU,Christian Democratic Union,Christlich Demokratische Union,chr,Christian democracy,6.2503,6.3498,6.9333,8.5024,41521.0,116.0,1276521.0,805.0,1505.0,301.0,5943.0,301.0,54.0,808.0,3.0
+csu,Christlich Soziale Union,CSU,Christian Social Union,Christlich Soziale Union,chr,Christian democracy,7.2871,6.5615,7.8675,6.668,41521.0,117.0,1276521.0,806.0,1506.0,309.0,5943.0,308.0,54.0,1180.0,3.0
+spd,Sozialdemokratische Partei Deutschlands,SPD,Social Democratic Party of Germany,Sozialdemokratische Partei Deutschlands,soc,Social democracy,3.6451,3.8443,3.9791,7.9318,41320.0,120.0,1276320.0,803.0,1503.0,302.0,6087.0,302.0,54.0,558.0,11.0
+grune,Buendnis 90 / Die Gruenen,B90/Gru,Alliance 90 / Greens,Bündnis 90 / Die Grünen,eco,Green/Ecologist,2.9308,4.3268,1.3251,7.6101,41113.0,115.0,1276113.0,802.0,1502.0,305.0,6015.0,304.0,54.0,772.0,19.0
+fdp,Freie Demokratische Partei,FDP,Free Democratic Party,Freie Demokratische Partei,lib,Liberal,5.9233,8.2173,3.0695,8.4855,41420.0,119.0,1276420.0,804.0,1504.0,303.0,5997.0,303.0,54.0,543.0,6.0
+die_linke,PDS | Die Linke,PDS|Li,PDS | The Left,PDS | Die Linke,com,Communist/Socialist,1.2152,1.0617,3.205,4.3508,41221.0,,,,1501.0,307.0,6051.0,306.0,54.0,791.0,14.0
+pds,PDS | Die Linke,PDS|Li,PDS | The Left,PDS | Die Linke,com,Communist/Socialist,1.2152,1.0617,3.205,4.3508,41221.0,,,,1501.0,307.0,6051.0,306.0,54.0,791.0,14.0
+b90_gr,Buendnis 90 / Die Gruenen,B90/Gru,Alliance 90 / Greens,Bündnis 90 / Die Grünen,eco,Green/Ecologist,2.9308,4.3268,1.3251,7.6101,41113.0,115.0,1276113.0,802.0,1502.0,305.0,6015.0,304.0,54.0,772.0,19.0
+afd,Alternative fuer Deutschland,AfD,Alternative for Germany,Alternative für Deutschland,right,Right-wing,8.7,5.9,8.5,2.3,,,,,,,,,54.0,2253.0,40.0
+npd,Nationaldemokratische Partei Deutschlands,NPD,National Democratic Party,Nationaldemokratische Partei Deutschlands,right,Right-wing,9.8246,4.2105,9.4219,0.7989,,,,,,,6033.0,,54.0,1537.0,40.0
+rep,,,,,,,,,,,,,,,,,,,,,
+die_rechte,,,,,,,,,,,,,,,,,,,,,
+dvu,,,,,,,,,,,,,,,,,,,,,
+iii_weg,,,,,,,,,,,,,,,,,,,,,
+fap,,,,,,,,,,,,,,,,,,,,,
+ddd,,,,,,,,,,,,,,,,,,,,,
+dsu,,,,,,,,,,,,,,,,,,,,,
+dkp,Kommunistische Partei Deutschlands,KPD,Communist Party of Germany,Kommunistische Partei Deutschlands,com,Communist/Socialist,0.957,0.3618,2.6754,1.9649,41220.0,,,801.0,,308.0,5961.0,,54.0,649.0,14.0
+kpd,,,,,,,,,,,,,,,,,,,,,
+mlpd,,,,,,,,,,,,,,,,,,,,,
+sgp,,,,,,,,,,,,,,,,,,,,,
+psg,,,,,,,,,,,,,,,,,,,,,
+kbw,,,,,,,,,,,,,,,,,,,,,
+v,,,,,,,,,,,,,,,,,,,,,
+spad,,,,,,,,,,,,,,,,,,,,,
+bsa,,,,,,,,,,,,,,,,,,,,,
+x50plus,,,,,,,,,,,,,,,,,,,,,
+ab_2000,,,,,,,,,,,,,,,,,,,,,
+ad_demokraten,,,,,,,,,,,,,,,,,,,,,
+adm,,,,,,,,,,,,,,,,,,,,,
+agfg,,,,,,,,,,,,,,,,,,,,,
+apd,,,,,,,,,,,,,,,,,,,,,
+appd,,,,,,,,,,,,,,,,,,,,,
+asd,,,,,,,,,,,,,,,,,,,,,
+aufbruch,,,,,,,,,,,,,,,,,,,,,
+b,,,,,,,,,,,,,,,,,,,,,
+bfb,,,,,,,,,,,,,,,,,,,,,
+bge,,,,,,,,,,,,,,,,,,,,,
+big,,,,,,,,,,,,,,,,,,,,,
+bp,,,,,,,,,,,,,,,,,,,,,
+bundnis21,,,,,,,,,,,,,,,,,,,,,
+bundnis_21_rrp,,,,,,,,,,,,,,,,,,,,,
+bundnis_c,,,,,,,,,,,,,,,,,,,,,
+burgerbewegung,,,,,,,,,,,,,,,,,,,,,
+burgerpartei,,,,,,,,,,,,,,,,,,,,,
+buso,,,,,,,,,,,,,,,,,,,,,
+bwk,,,,,,,,,,,,,,,,,,,,,
+chance_2000,,,,,,,,,,,,,,,,,,,,,
+cbv,,,,,,,,,,,,,,,,,,,,,
+cm,,,,,,,,,,,,,,,,,,,,,
+deutschland,,,,,,,,,,,,,,,,,,,,,
+dib,,,,,,,,,,,,,,,,,,,,,
+diebasis,Basisdemokratische Partei Deutschland,dieBasis,Grassroots Democratic Party of Germany,Basisdemokratische Partei Deutschland,spec,Special issue,,,,,,,,,,,,,54.0,2821.0,16.0
+die_partei,Die PARTEI,PARTEI,The PARTY,Die PARTEI,spec,Special issue,,,,,,,,,,,,,54.0,2649.0,16.0
+die_humanisten,,,,,,,,,,,,,,,,,,,,,
+dm,,,,,,,,,,,,,,,,,,,,,
+dpd,,,,,,,,,,,,,,,,,,,,,
+du,,,,,,,,,,,,,,,,,,,,,
+eap,,,,,,,,,,,,,,,,,,,,,
+familie,,,,,,,,,,,,,,,,,,,,,
+forum,,,,,,,,,,,,,,,,,,,,,
+die_frauen,,,,,,,,,,,,,,,,,,,,,
+frauen,,,,,,,,,,,,,,,,,,,,,
+freie_wahler,Freie Waehler,FW,Free Voters,Freie Wähler,con,Conservative,7.4,6.4,6.9,7.9,,121.0,,,,,,,54.0,41.0,26.0
+fwd,,,,,,,,,,,,,,,,,,,,,
+gartenpartei,,,,,,,,,,,,,,,,,,,,,
+gesundheitsforschung,,,,,,,,,,,,,,,,,,,,,
+graue,,,,,,,,,,,,,,,,,,,,,
+die_grauen,Die Grauen -- Graue Panther,Grau,The Grays -- Gray Panthers,Die Grauen – Graue Panther,spec,Special issue,,,,,,,,,,,,,54.0,292.0,16.0
+hp,,,,,,,,,,,,,,,,,,,,,
+lfk,,,,,,,,,,,,,,,,,,,,,
+liebe,,,,,,,,,,,,,,,,,,,,,
+liga,,,,,,,,,,,,,,,,,,,,,
+lkr,,,,,,,,,,,,,,,,,,,,,
+mg,,,,,,,,,,,,,,,,,,,,,
+menschliche_welt,,,,,,,,,,,,,,,,,,,,,
+mundige,,,,,,,,,,,,,,,,,,,,,
+mundige_burger,,,,,,,,,,,,,,,,,,,,,
+naturgesetz,,,,,,,,,,,,,,,,,,,,,
+nichtwahler,,,,,,,,,,,,,,,,,,,,,
+partei_der_nichtwahler,,,,,,,,,,,,,,,,,,,,,
+odp,Okologisch-Demokratische Partei,ODP,Ecological Democratic Party,Ökologisch-Demokratische Partei,eco,Green/Ecologist,2.5,2.5,1.8,6.5,,,,,,,,,54.0,2736.0,19.0
+offensive_d,,,,,,,,,,,,,,,,,,,,,
+oko_union,,,,,,,,,,,,,,,,,,,,,
+partei_der_vernunft,,,,,,,,,,,,,,,,,,,,,
+pass,,,,,,,,,,,,,,,,,,,,,
+patrioten,,,,,,,,,,,,,,,,,,,,,
+pbc,,,,,,,,,,,,,,,,,,,,,
+pdf,,,,,,,,,,,,,,,,,,,,,
+pdv,,,,,,,,,,,,,,,,,,,,,
+piraten,Piratenpartei Deutschland,Pi,German Pirate Party,Piratenpartei Deutschland,spec,Special issue,,,,,,,,,,,,,54.0,865.0,16.0
+prg,,,,,,,,,,,,,,,,,,,,,
+pro_deutschland,,,,,,,,,,,,,,,,,,,,,
+pro_dm,,,,,,,,,,,,,,,,,,,,,
+rentner,,,,,,,,,,,,,,,,,,,,,
+rrp,,,,,,,,,,,,,,,,,,,,,
+schill,,,,,,,,,,,,,,,,,,,,,
+ssw,Suedschleswigscher Waehlerverband,SSW,South Schleswig Voter League,Südschleswigscher Wählerverband,spec,Special issue,,,,,,,,,,,,,54.0,2850.0,16.0
+statt_partei,,,,,,,,,,,,,,,,,,,,,
+tierschutz,Tierschutzpartei,Tier,Animal Protection Party,Tierschutzpartei,spec,Special issue,,,,,,,,,,,,,54.0,301.0,16.0
+die_tierschutzpartei,Tierschutzpartei,Tier,Animal Protection Party,Tierschutzpartei,spec,Special issue,,,,,,,,,,,,,54.0,301.0,16.0
+tierschutzpartei,Tierschutzpartei,Tier,Animal Protection Party,Tierschutzpartei,spec,Special issue,,,,,,,,,,,,,54.0,301.0,16.0
+team_todenhofer,,,,,,,,,,,,,,,,,,,,,
+tierschutzallianz,,,,,,,,,,,,,,,,,,,,,
+unabhangige,,,,,,,,,,,,,,,,,,,,,
+ust,,,,,,,,,,,,,,,,,,,,,
+vaa,,,,,,,,,,,,,,,,,,,,,
+violetten,,,,,,,,,,,,,,,,,,,,,
+die_violetten,,,,,,,,,,,,,,,,,,,,,
+volksabstimmung,,,,,,,,,,,,,,,,,,,,,
+volt,,,,,,,,,,,,,,,,,,,,,
+v_partei3,,,,,,,,,,,,,,,,,,,,,
+zentrum,Deutsche Zentrumspartei,DZ,Centre Party,Deutsche Zentrumspartei,chr,Christian democracy,6.2,5.7,7.1,8.3,41522.0,,,,,,,,54.0,137.0,3.0
+gruene,Buendnis 90 / Die Gruenen,B90/Gru,Alliance 90 / Greens,Bündnis 90 / Die Grünen,eco,Green/Ecologist,2.9308,4.3268,1.3251,7.6101,41113.0,115.0,1276113.0,802.0,1502.0,305.0,6015.0,304.0,54.0,772.0,19.0
+linke_pds,PDS | Die Linke,PDS|Li,PDS | The Left,PDS | Die Linke,com,Communist/Socialist,1.2152,1.0617,3.205,4.3508,41221.0,,,,1501.0,307.0,6051.0,306.0,54.0,791.0,14.0

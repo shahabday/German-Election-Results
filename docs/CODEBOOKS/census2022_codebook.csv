@@ -1,0 +1,17 @@
+variable,label,unit,source
+ags,Municipal code (Gemeindeschluessel),8-digit AGS,Zensus 2022
+municipality_name,Municipality name,text,Zensus 2022
+population_census22,Total population,count,Zensus 2022
+share_under18_census22,Share of population under 18,percent,Zensus 2022
+share_18to29_census22,Share of population aged 18-29,percent,Zensus 2022
+share_30to49_census22,Share of population aged 30-49,percent,Zensus 2022
+share_50to59_census22,Share of population aged 50-59,percent,Zensus 2022
+share_60plus_census22,Share of population aged 60+,percent,Zensus 2022
+share_foreign_census22,Share of foreign nationals,percent,Zensus 2022
+share_migration_bg_census22,Share with migration background,percent,Zensus 2022
+avg_household_size_census22,Average household size,persons,Zensus 2022
+share_single_family_census22,Share of single/two-family buildings,percent,Zensus 2022
+total_dwellings_census22,Total number of dwellings,count,Zensus 2022
+vacancy_rate_census22,Dwelling vacancy rate,percent,Zensus 2022
+share_owner_occupied_census22,Share of owner-occupied dwellings,percent,Zensus 2022
+avg_rent_per_m2_census22,Average rent per square meter,euros/m2,Zensus 2022

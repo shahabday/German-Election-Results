@@ -1,0 +1,33 @@
+variable,label,unit,category,inkar_code,notes,missing_pct
+county_code,County code (Kreisschlüssel),5-digit AGS,ID,,Matches GERDA county codes (2021 boundaries),
+year,Year of observation,year,ID,,Annual data from 1995-2022,
+share_65plus,Share of population aged 65 and older,percent,Demographics,a_bev65um,Proportion of elderly population,0.0
+median_age,Median age of population,years,Demographics,m_bev_alter,Median age in years,0.0
+share_foreign,Share of foreign population,percent,Demographics,a_ausl_bev,Non-German nationals,0.0
+share_female,Share of female population,percent,Demographics,a_bevf,Gender composition,0.0
+gdp_per_capita,GDP per capita,euros,Economy,q_bip_ew,Bruttoinlandsprodukt je Einwohner,3.6
+share_primary_sector,Primary sector share of gross value added,percent,Economy,a_bws_1sektor,"Agriculture, forestry, fishing",21.8
+share_secondary_sector,Secondary sector share of gross value added,percent,Economy,a_bws_2sektor,"Manufacturing, construction",21.4
+share_tertiary_sector,Tertiary sector share of gross value added,percent,Economy,a_bws_3sektor,Services,21.4
+share_micro_enterprises,Share of micro enterprises,percent,Economy,a_betr_kleinst,Enterprises with <10 employees,39.4
+share_large_enterprises,Share of large enterprises,percent,Economy,a_betr_groß,Enterprises with ≥250 employees,39.4
+unemployment_rate,Unemployment rate,percent,Labor Market,q_alo,Arbeitslosenquote,14.3
+share_longterm_unemployed,Share of long-term unemployed,percent,Labor Market,a_aloLang,Unemployed >12 months as % of all unemployed,0.0
+youth_unemployment_rate,Youth unemployment rate (under 25),percent,Labor Market,q_alo_u25,Unemployment rate for ages <25,46.4
+share_abitur,Share of school leavers with Abitur,percent,Education,a_schul_abi,University entrance qualification,0.2
+share_no_degree,Share of school leavers without any degree,percent,Education,a_schul_oA,School leavers without qualification,0.2
+students_per_100,University students per 100 residents aged 18-25,per 100,Education,q_stud_1825,Higher education enrollment,3.6
+apprentices_per_100,Apprentices per 100 residents aged 15-25,per 100,Education,q_azubi_1525,Vocational training enrollment,53.6
+purchasing_power,Purchasing power,euros,Income,q_kaufkraft,Kaufkraft je Einwohner,67.9
+share_low_income_hh,Share of low-income households,percent,Income,a_hheink_niedrig,Households with income <60% of median,67.9
+physician_density,"Physicians per 10,000 inhabitants",per 10k,Healthcare,q_ärzte_bev,"All physicians per 10,000 pop.",71.4
+hospital_beds_per_capita,"Hospital beds per 1,000 inhabitants",per 1k,Healthcare,q_betten_bev,"Inpatient hospital beds per 1,000 pop.",36.0
+gp_density,"General practitioners per 10,000 inhabitants",per 10k,Healthcare,q_hausarzt_bev,"Hausärzte je 10,000 Einwohner",71.4
+childcare_under3,Childcare rate for children under 3,percent,Childcare,a_betr0003_bev0003,Children under 3 in daycare as % of age group,46.4
+childcare_3to6,Childcare rate for children aged 3-6,percent,Childcare,a_betr0306_bev0306,Children aged 3-6 in daycare as % of age group,46.4
+building_permits_per_capita,"Building permits per 10,000 inhabitants",per 10k,Housing,q_gen_wo_ew,"Baugenehmigungen je 10,000 Einwohner",0.0
+rent_level,Asking rent level,euros/m2,Housing,m_mietpr,Wiedervermietungsmieten in Euro/m2,53.6
+living_space_per_capita,Living space per capita,m2,Housing,q_wofl_bev,Wohnfläche je Einwohner in m2,57.1
+cars_per_capita,"Passenger cars per 1,000 inhabitants",per 1k,Transport,q_pkw_bev,"Pkw je 1,000 Einwohner",0.0
+municipal_debt_per_capita,Municipal debt per capita,euros,Public Finances,q_gemschuld_bev,Kommunale Schulden in Euro je Einwohner,64.5
+tax_revenue_per_capita,Municipal tax revenue per capita,euros,Public Finances,q_gest_bev,Gemeindliche Steuerkraft in Euro je Einwohner,10.7

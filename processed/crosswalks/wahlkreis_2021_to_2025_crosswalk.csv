@@ -1,0 +1,300 @@
+wkr_nr,wkr_name,state,state_name,boundary_change,renamed,prior_2021_wkr_nr,prior_2021_name,recomputed_2021_eligible,actual_2021_eligible,eligible_delta
+001,Flensburg – Schleswig,01,Schleswig-Holstein,unchanged,FALSE,001,Flensburg – Schleswig,231536,231536,0
+002,Nordfriesland – Dithmarschen Nord,01,Schleswig-Holstein,unchanged,FALSE,002,Nordfriesland – Dithmarschen Nord,188267,188267,0
+003,Steinburg – Dithmarschen Süd,01,Schleswig-Holstein,unchanged,FALSE,003,Steinburg – Dithmarschen Süd,176899,176899,0
+004,Rendsburg-Eckernförde,01,Schleswig-Holstein,unchanged,FALSE,004,Rendsburg-Eckernförde,202226,202226,0
+005,Kiel,01,Schleswig-Holstein,unchanged,FALSE,005,Kiel,202482,202482,0
+006,Plön – Neumünster,01,Schleswig-Holstein,unchanged,FALSE,006,Plön – Neumünster,174908,174908,0
+007,Pinneberg,01,Schleswig-Holstein,unchanged,FALSE,007,Pinneberg,238388,238388,0
+008,Segeberg – Stormarn-Mitte,01,Schleswig-Holstein,unchanged,FALSE,008,Segeberg – Stormarn-Mitte,249202,249202,0
+009,Ostholstein – Stormarn-Nord,01,Schleswig-Holstein,unchanged,FALSE,009,Ostholstein – Stormarn-Nord,183138,183138,0
+010,Herzogtum Lauenburg – Stormarn-Süd,01,Schleswig-Holstein,unchanged,FALSE,010,Herzogtum Lauenburg – Stormarn-Süd,246277,246277,0
+011,Lübeck,01,Schleswig-Holstein,unchanged,FALSE,011,Lübeck,179394,179394,0
+012,Schwerin – Ludwigslust-Parchim I – Nordwestmecklenburg I,13,Mecklenburg-Vorpommern,unchanged,FALSE,012,Schwerin – Ludwigslust-Parchim I – Nordwestmecklenburg I,214853,214853,0
+013,Ludwigslust-Parchim II – Nordwestmecklenburg II – Landkreis Rostock I,13,Mecklenburg-Vorpommern,unchanged,FALSE,013,Ludwigslust-Parchim II – Nordwestmecklenburg II – Landkreis Rostock I,205042,205042,0
+014,Rostock – Landkreis Rostock II,13,Mecklenburg-Vorpommern,unchanged,FALSE,014,Rostock – Landkreis Rostock II,222705,222705,0
+015,Vorpommern-Rügen – Vorpommern-Greifswald I,13,Mecklenburg-Vorpommern,unchanged,FALSE,015,Vorpommern-Rügen – Vorpommern-Greifswald I,241066,241066,0
+016,Mecklenburgische Seenplatte I – Vorpommern-Greifswald II,13,Mecklenburg-Vorpommern,unchanged,FALSE,016,Mecklenburgische Seenplatte I – Vorpommern-Greifswald II,221421,221421,0
+017,Mecklenburgische Seenplatte II – Landkreis Rostock III,13,Mecklenburg-Vorpommern,unchanged,FALSE,017,Mecklenburgische Seenplatte II – Landkreis Rostock III,209348,209348,0
+018,Hamburg-Mitte,02,Hamburg,unchanged,FALSE,018,Hamburg-Mitte,242078,242078,0
+019,Hamburg-Altona,02,Hamburg,unchanged,FALSE,019,Hamburg-Altona,187705,187705,0
+020,Hamburg-Eimsbüttel,02,Hamburg,unchanged,FALSE,020,Hamburg-Eimsbüttel,193823,193823,0
+021,Hamburg-Nord,02,Hamburg,unchanged,FALSE,021,Hamburg-Nord,219909,219909,0
+022,Hamburg-Wandsbek,02,Hamburg,unchanged,FALSE,022,Hamburg-Wandsbek,233483,233483,0
+023,Hamburg-Bergedorf – Harburg,02,Hamburg,unchanged,FALSE,023,Hamburg-Bergedorf – Harburg,221794,221794,0
+024,Aurich – Emden,03,Niedersachsen,unchanged,FALSE,024,Aurich – Emden,191846,191846,0
+025,Unterems,03,Niedersachsen,unchanged,FALSE,025,Unterems,238506,238506,0
+026,Friesland – Wilhelmshaven – Wittmund,03,Niedersachsen,unchanged,FALSE,026,Friesland – Wilhelmshaven – Wittmund,189047,189047,0
+027,Oldenburg – Ammerland,03,Niedersachsen,unchanged,FALSE,027,Oldenburg – Ammerland,228705,228705,0
+028,Delmenhorst – Wesermarsch – Oldenburg-Land,03,Niedersachsen,unchanged,FALSE,028,Delmenhorst – Wesermarsch – Oldenburg-Land,226827,226827,0
+029,Cuxhaven – Stade II,03,Niedersachsen,unchanged,FALSE,029,Cuxhaven – Stade II,188602,188602,0
+030,Stade I – Rotenburg II,03,Niedersachsen,unchanged,FALSE,030,Stade I – Rotenburg II,198576,198576,0
+031,Mittelems,03,Niedersachsen,unchanged,FALSE,031,Mittelems,233253,233253,0
+032,Cloppenburg – Vechta,03,Niedersachsen,unchanged,FALSE,032,Cloppenburg – Vechta,223948,223948,0
+033,Diepholz – Nienburg I,03,Niedersachsen,unchanged,FALSE,033,Diepholz – Nienburg I,194371,194371,0
+034,Osterholz – Verden,03,Niedersachsen,unchanged,FALSE,034,Osterholz – Verden,197490,197490,0
+035,Rotenburg I – Heidekreis,03,Niedersachsen,unchanged,FALSE,035,Rotenburg I – Heidekreis,168927,168927,0
+036,Harburg,03,Niedersachsen,unchanged,FALSE,036,Harburg,201740,201740,0
+037,Lüchow-Dannenberg – Lüneburg,03,Niedersachsen,unchanged,FALSE,037,Lüchow-Dannenberg – Lüneburg,182673,182673,0
+038,Osnabrück-Land,03,Niedersachsen,unchanged,FALSE,038,Osnabrück-Land,199960,199960,0
+039,Stadt Osnabrück,03,Niedersachsen,unchanged,FALSE,039,Stadt Osnabrück,195467,195467,0
+040,Nienburg II – Schaumburg,03,Niedersachsen,unchanged,FALSE,040,Nienburg II – Schaumburg,193863,193863,0
+041,Stadt Hannover I,03,Niedersachsen,unchanged,FALSE,041,Stadt Hannover I,176770,176770,0
+042,Stadt Hannover II,03,Niedersachsen,unchanged,FALSE,042,Stadt Hannover II,190336,190336,0
+043,Hannover-Land I,03,Niedersachsen,unchanged,FALSE,043,Hannover-Land I,231250,231250,0
+044,Celle – Uelzen,03,Niedersachsen,unchanged,FALSE,044,Celle – Uelzen,214482,214482,0
+045,Gifhorn – Peine,03,Niedersachsen,unchanged,FALSE,045,Gifhorn – Peine,219966,219966,0
+046,Hameln-Pyrmont – Holzminden,03,Niedersachsen,unchanged,FALSE,046,Hameln-Pyrmont – Holzminden,184471,184471,0
+047,Hannover-Land II,03,Niedersachsen,unchanged,FALSE,047,Hannover-Land II,238323,238323,0
+048,Hildesheim,03,Niedersachsen,unchanged,FALSE,048,Hildesheim,215131,215131,0
+049,Salzgitter – Wolfenbüttel,03,Niedersachsen,unchanged,FALSE,049,Salzgitter – Wolfenbüttel,200922,200922,0
+050,Braunschweig,03,Niedersachsen,unchanged,FALSE,050,Braunschweig,187721,187721,0
+051,Helmstedt – Wolfsburg,03,Niedersachsen,unchanged,FALSE,051,Helmstedt – Wolfsburg,180147,180147,0
+052,Goslar – Northeim – Göttingen II,03,Niedersachsen,unchanged,TRUE,052,Goslar – Northeim – Osterode,197519,197519,0
+053,Göttingen I,03,Niedersachsen,unchanged,TRUE,053,Göttingen,214542,214542,0
+054,Bremen I,04,Bremen,unchanged,FALSE,054,Bremen I,245384,245384,0
+055,Bremen II – Bremerhaven,04,Bremen,unchanged,FALSE,055,Bremen II – Bremerhaven,214365,214365,0
+056,Prignitz – Ostprignitz-Ruppin – Havelland I,12,Brandenburg,unchanged,FALSE,056,Prignitz – Ostprignitz-Ruppin – Havelland I,172726,172726,0
+057,Uckermark – Barnim I,12,Brandenburg,unchanged,FALSE,057,Uckermark – Barnim I,182836,182836,0
+058,Oberhavel – Havelland II,12,Brandenburg,unchanged,FALSE,058,Oberhavel – Havelland II,249331,249331,0
+059,Märkisch-Oderland – Barnim II,12,Brandenburg,unchanged,FALSE,059,Märkisch-Oderland – Barnim II,230391,230391,0
+060,Brandenburg an der Havel – Potsdam-Mittelmark I – Havelland III – Teltow-Fläming I,12,Brandenburg,unchanged,FALSE,060,Brandenburg an der Havel – Potsdam-Mittelmark I – Havelland III – Teltow-Fläming I,202955,202955,0
+061,Potsdam – Potsdam-Mittelmark II – Teltow-Fläming II,12,Brandenburg,unchanged,FALSE,061,Potsdam – Potsdam-Mittelmark II – Teltow-Fläming II,232797,232797,0
+062,Dahme-Spreewald – Teltow-Fläming III,12,Brandenburg,new,FALSE,,,239844,,
+063,Frankfurt (Oder) – Oder-Spree,12,Brandenburg,unchanged,FALSE,063,Frankfurt (Oder) – Oder-Spree,191387,191387,0
+064,Cottbus – Spree-Neiße,12,Brandenburg,unchanged,FALSE,064,Cottbus – Spree-Neiße,171267,171267,0
+065,Elbe-Elster – Oberspreewald-Lausitz,12,Brandenburg,new,FALSE,,,175310,,
+066,Altmark – Jerichower Land,15,Sachsen-Anhalt,new,FALSE,,,234872,,
+067,Börde – Salzlandkreis,15,Sachsen-Anhalt,new,FALSE,,,223295,,
+068,Harz,15,Sachsen-Anhalt,unchanged,FALSE,068,Harz,207942,207942,0
+069,Magdeburg,15,Sachsen-Anhalt,unchanged,FALSE,069,Magdeburg,229198,229198,0
+070,Anhalt – Dessau – Wittenberg,15,Sachsen-Anhalt,new,FALSE,,,236539,,
+071,Halle,15,Sachsen-Anhalt,redrawn,FALSE,072,Halle,229809,209765,20044
+072,Burgenland – Saalekreis,15,Sachsen-Anhalt,redrawn,FALSE,073,Burgenland – Saalekreis,210378,184352,26026
+073,Mansfeld,15,Sachsen-Anhalt,redrawn,FALSE,074,Mansfeld,217742,198676,19066
+074,Berlin-Mitte,11,Berlin,unchanged,FALSE,075,Berlin-Mitte,207010,207010,0
+075,Berlin-Pankow,11,Berlin,unchanged,FALSE,076,Berlin-Pankow,233069,233069,0
+076,Berlin-Reinickendorf,11,Berlin,unchanged,FALSE,077,Berlin-Reinickendorf,175195,175195,0
+077,Berlin-Spandau – Charlottenburg Nord,11,Berlin,unchanged,FALSE,078,Berlin-Spandau – Charlottenburg Nord,179896,179896,0
+078,Berlin-Steglitz-Zehlendorf,11,Berlin,unchanged,FALSE,079,Berlin-Steglitz-Zehlendorf,217506,217506,0
+079,Berlin-Charlottenburg-Wilmersdorf,11,Berlin,unchanged,FALSE,080,Berlin-Charlottenburg-Wilmersdorf,195586,195586,0
+080,Berlin-Tempelhof-Schöneberg,11,Berlin,unchanged,FALSE,081,Berlin-Tempelhof-Schöneberg,231477,231477,0
+081,Berlin-Neukölln,11,Berlin,unchanged,FALSE,082,Berlin-Neukölln,196593,196593,0
+082,Berlin-Friedrichshain-Kreuzberg – Prenzlauer Berg Ost,11,Berlin,unchanged,FALSE,083,Berlin-Friedrichshain-Kreuzberg – Prenzlauer Berg Ost,218824,218824,0
+083,Berlin-Treptow-Köpenick,11,Berlin,unchanged,FALSE,084,Berlin-Treptow-Köpenick,206999,206999,0
+084,Berlin-Marzahn-Hellersdorf,11,Berlin,unchanged,FALSE,085,Berlin-Marzahn-Hellersdorf,198002,198002,0
+085,Berlin-Lichtenberg,11,Berlin,unchanged,FALSE,086,Berlin-Lichtenberg,200461,200461,0
+086,Aachen I,05,Nordrhein-Westfalen,unchanged,FALSE,087,Aachen I,176306,176306,0
+087,Aachen II,05,Nordrhein-Westfalen,unchanged,FALSE,088,Aachen II,226420,226420,0
+088,Heinsberg,05,Nordrhein-Westfalen,unchanged,FALSE,089,Heinsberg,192346,192346,0
+089,Düren,05,Nordrhein-Westfalen,unchanged,FALSE,090,Düren,199656,199656,0
+090,Rhein-Erft-Kreis I,05,Nordrhein-Westfalen,unchanged,FALSE,091,Rhein-Erft-Kreis I,249035,249035,0
+091,Euskirchen – Rhein-Erft-Kreis II,05,Nordrhein-Westfalen,unchanged,FALSE,092,Euskirchen – Rhein-Erft-Kreis II,249198,249198,0
+092,Köln I,05,Nordrhein-Westfalen,unchanged,FALSE,093,Köln I,190630,190630,0
+093,Köln II,05,Nordrhein-Westfalen,unchanged,FALSE,094,Köln II,242483,242483,0
+094,Köln III,05,Nordrhein-Westfalen,unchanged,FALSE,095,Köln III,204539,204539,0
+095,Bonn,05,Nordrhein-Westfalen,unchanged,FALSE,096,Bonn,230215,230215,0
+096,Rhein-Sieg-Kreis I,05,Nordrhein-Westfalen,unchanged,FALSE,097,Rhein-Sieg-Kreis I,238627,238627,0
+097,Rhein-Sieg-Kreis II,05,Nordrhein-Westfalen,unchanged,FALSE,098,Rhein-Sieg-Kreis II,216063,216063,0
+098,Oberbergischer Kreis,05,Nordrhein-Westfalen,unchanged,FALSE,099,Oberbergischer Kreis,206640,206640,0
+099,Rheinisch-Bergischer Kreis,05,Nordrhein-Westfalen,unchanged,FALSE,100,Rheinisch-Bergischer Kreis,217193,217193,0
+100,Leverkusen – Köln IV,05,Nordrhein-Westfalen,unchanged,FALSE,101,Leverkusen – Köln IV,209102,209102,0
+101,Wuppertal I,05,Nordrhein-Westfalen,unchanged,FALSE,102,Wuppertal I,202528,202528,0
+102,Solingen – Remscheid – Wuppertal II,05,Nordrhein-Westfalen,unchanged,FALSE,103,Solingen – Remscheid – Wuppertal II,220204,220204,0
+103,Mettmann I,05,Nordrhein-Westfalen,unchanged,FALSE,104,Mettmann I,203030,203030,0
+104,Mettmann II,05,Nordrhein-Westfalen,unchanged,FALSE,105,Mettmann II,160175,160175,0
+105,Düsseldorf I,05,Nordrhein-Westfalen,unchanged,FALSE,106,Düsseldorf I,220827,220827,0
+106,Düsseldorf II,05,Nordrhein-Westfalen,unchanged,FALSE,107,Düsseldorf II,190102,190102,0
+107,Neuss I,05,Nordrhein-Westfalen,unchanged,FALSE,108,Neuss I,213250,213250,0
+108,Mönchengladbach,05,Nordrhein-Westfalen,unchanged,FALSE,109,Mönchengladbach,185185,185185,0
+109,Krefeld I – Neuss II,05,Nordrhein-Westfalen,unchanged,FALSE,110,Krefeld I – Neuss II,200048,200048,0
+110,Viersen,05,Nordrhein-Westfalen,unchanged,FALSE,111,Viersen,227166,227166,0
+111,Kleve,05,Nordrhein-Westfalen,unchanged,FALSE,112,Kleve,225463,225463,0
+112,Wesel I,05,Nordrhein-Westfalen,unchanged,FALSE,113,Wesel I,206270,206270,0
+113,Krefeld II – Wesel II,05,Nordrhein-Westfalen,unchanged,FALSE,114,Krefeld II – Wesel II,175852,175852,0
+114,Duisburg I,05,Nordrhein-Westfalen,unchanged,FALSE,115,Duisburg I,163394,163394,0
+115,Duisburg II,05,Nordrhein-Westfalen,unchanged,FALSE,116,Duisburg II,155265,155265,0
+116,Oberhausen – Wesel III,05,Nordrhein-Westfalen,unchanged,FALSE,117,Oberhausen – Wesel III,199156,199156,0
+117,Mülheim – Essen I,05,Nordrhein-Westfalen,unchanged,FALSE,118,Mülheim – Essen I,182895,182895,0
+118,Essen II,05,Nordrhein-Westfalen,unchanged,FALSE,119,Essen II,156298,156298,0
+119,Essen III,05,Nordrhein-Westfalen,unchanged,FALSE,120,Essen III,190335,190335,0
+120,Recklinghausen I,05,Nordrhein-Westfalen,unchanged,FALSE,121,Recklinghausen I,165193,165193,0
+121,Recklinghausen II,05,Nordrhein-Westfalen,unchanged,FALSE,122,Recklinghausen II,186413,186413,0
+122,Gelsenkirchen,05,Nordrhein-Westfalen,unchanged,FALSE,123,Gelsenkirchen,168496,168496,0
+123,Steinfurt I – Borken I,05,Nordrhein-Westfalen,unchanged,FALSE,124,Steinfurt I – Borken I,202388,202388,0
+124,Bottrop – Recklinghausen III,05,Nordrhein-Westfalen,unchanged,FALSE,125,Bottrop – Recklinghausen III,199344,199344,0
+125,Borken II,05,Nordrhein-Westfalen,unchanged,FALSE,126,Borken II,201103,201103,0
+126,Coesfeld – Steinfurt II,05,Nordrhein-Westfalen,unchanged,FALSE,127,Coesfeld – Steinfurt II,194695,194695,0
+127,Steinfurt III,05,Nordrhein-Westfalen,unchanged,FALSE,128,Steinfurt III,195513,195513,0
+128,Münster,05,Nordrhein-Westfalen,unchanged,FALSE,129,Münster,233953,233953,0
+129,Warendorf,05,Nordrhein-Westfalen,unchanged,FALSE,130,Warendorf,208754,208754,0
+130,Gütersloh I,05,Nordrhein-Westfalen,unchanged,FALSE,131,Gütersloh I,234177,234177,0
+131,Bielefeld – Gütersloh II,05,Nordrhein-Westfalen,unchanged,FALSE,132,Bielefeld – Gütersloh II,243059,243059,0
+132,Herford – Minden-Lübbecke II,05,Nordrhein-Westfalen,unchanged,FALSE,133,Herford – Minden-Lübbecke II,226894,226894,0
+133,Minden-Lübbecke I,05,Nordrhein-Westfalen,unchanged,FALSE,134,Minden-Lübbecke I,201888,201888,0
+134,Lippe I,05,Nordrhein-Westfalen,unchanged,FALSE,135,Lippe I,224415,224415,0
+135,Höxter – Gütersloh III – Lippe II,05,Nordrhein-Westfalen,unchanged,FALSE,136,Höxter – Gütersloh III – Lippe II,172435,172435,0
+136,Paderborn,05,Nordrhein-Westfalen,unchanged,FALSE,137,Paderborn,231534,231534,0
+137,Hagen – Ennepe-Ruhr-Kreis I,05,Nordrhein-Westfalen,unchanged,FALSE,138,Hagen – Ennepe-Ruhr-Kreis I,201594,201594,0
+138,Ennepe-Ruhr-Kreis II,05,Nordrhein-Westfalen,unchanged,FALSE,139,Ennepe-Ruhr-Kreis II,175283,175283,0
+139,Bochum I,05,Nordrhein-Westfalen,unchanged,FALSE,140,Bochum I,202393,202393,0
+140,Herne – Bochum II,05,Nordrhein-Westfalen,unchanged,FALSE,141,Herne – Bochum II,173939,173939,0
+141,Dortmund I,05,Nordrhein-Westfalen,unchanged,FALSE,142,Dortmund I,206727,206727,0
+142,Dortmund II,05,Nordrhein-Westfalen,unchanged,FALSE,143,Dortmund II,199317,199317,0
+143,Unna I,05,Nordrhein-Westfalen,unchanged,FALSE,144,Unna I,194493,194493,0
+144,Hamm – Unna II,05,Nordrhein-Westfalen,unchanged,FALSE,145,Hamm – Unna II,231226,231226,0
+145,Soest,05,Nordrhein-Westfalen,unchanged,FALSE,146,Soest,231811,231811,0
+146,Hochsauerlandkreis,05,Nordrhein-Westfalen,unchanged,FALSE,147,Hochsauerlandkreis,200496,200496,0
+147,Siegen-Wittgenstein,05,Nordrhein-Westfalen,unchanged,FALSE,148,Siegen-Wittgenstein,207672,207672,0
+148,Olpe – Märkischer Kreis I,05,Nordrhein-Westfalen,unchanged,FALSE,149,Olpe – Märkischer Kreis I,203350,203350,0
+149,Märkischer Kreis II,05,Nordrhein-Westfalen,unchanged,FALSE,150,Märkischer Kreis II,195816,195816,0
+150,Nordsachsen,14,Sachsen,unchanged,FALSE,151,Nordsachsen,161279,161279,0
+151,Leipzig I,14,Sachsen,unchanged,FALSE,152,Leipzig I,224100,224100,0
+152,Leipzig II,14,Sachsen,unchanged,FALSE,153,Leipzig II,231178,231178,0
+153,Leipzig-Land,14,Sachsen,unchanged,FALSE,154,Leipzig-Land,212853,212853,0
+154,Meißen,14,Sachsen,unchanged,FALSE,155,Meißen,197004,197004,0
+155,Bautzen I,14,Sachsen,unchanged,FALSE,156,Bautzen I,206895,206895,0
+156,Görlitz,14,Sachsen,unchanged,FALSE,157,Görlitz,204105,204105,0
+157,Sächsische Schweiz-Osterzgebirge,14,Sachsen,unchanged,FALSE,158,Sächsische Schweiz-Osterzgebirge,199703,199703,0
+158,Dresden I,14,Sachsen,unchanged,FALSE,159,Dresden I,228643,228643,0
+159,Dresden II – Bautzen II,14,Sachsen,unchanged,FALSE,160,Dresden II – Bautzen II,234432,234432,0
+160,Mittelsachsen,14,Sachsen,unchanged,FALSE,161,Mittelsachsen,193828,193828,0
+161,Chemnitz,14,Sachsen,unchanged,FALSE,162,Chemnitz,188691,188691,0
+162,Chemnitzer Umland – Erzgebirgskreis II,14,Sachsen,unchanged,FALSE,163,Chemnitzer Umland – Erzgebirgskreis II,177211,177211,0
+163,Erzgebirgskreis I,14,Sachsen,unchanged,FALSE,164,Erzgebirgskreis I,210941,210941,0
+164,Zwickau,14,Sachsen,unchanged,FALSE,165,Zwickau,197831,197831,0
+165,Vogtlandkreis,14,Sachsen,unchanged,FALSE,166,Vogtlandkreis,184973,184973,0
+166,Waldeck,06,Hessen,unchanged,FALSE,167,Waldeck,184073,184073,0
+167,Kassel,06,Hessen,unchanged,FALSE,168,Kassel,218474,218474,0
+168,Werra-Meißner – Hersfeld-Rotenburg,06,Hessen,unchanged,FALSE,169,Werra-Meißner – Hersfeld-Rotenburg,171886,171886,0
+169,Schwalm-Eder,06,Hessen,unchanged,FALSE,170,Schwalm-Eder,185944,185944,0
+170,Marburg,06,Hessen,unchanged,FALSE,171,Marburg,181588,181588,0
+171,Lahn-Dill,06,Hessen,unchanged,FALSE,172,Lahn-Dill,206532,206532,0
+172,Gießen,06,Hessen,unchanged,FALSE,173,Gießen,217514,217514,0
+173,Fulda,06,Hessen,unchanged,FALSE,174,Fulda,208542,208542,0
+174,Main-Kinzig – Wetterau II – Schotten,06,Hessen,unchanged,FALSE,175,Main-Kinzig – Wetterau II – Schotten,178307,178307,0
+175,Hochtaunus,06,Hessen,unchanged,FALSE,176,Hochtaunus,179842,179842,0
+176,Wetterau I,06,Hessen,unchanged,FALSE,177,Wetterau I,176897,176897,0
+177,Rheingau-Taunus – Limburg,06,Hessen,unchanged,FALSE,178,Rheingau-Taunus – Limburg,220466,220466,0
+178,Wiesbaden,06,Hessen,unchanged,FALSE,179,Wiesbaden,186735,186735,0
+179,Hanau,06,Hessen,unchanged,FALSE,180,Hanau,176271,176271,0
+180,Main-Taunus,06,Hessen,unchanged,FALSE,181,Main-Taunus,195514,195514,0
+181,Frankfurt am Main I,06,Hessen,unchanged,FALSE,182,Frankfurt am Main I,201216,201216,0
+182,Frankfurt am Main II,06,Hessen,unchanged,FALSE,183,Frankfurt am Main II,227207,227207,0
+183,Groß-Gerau,06,Hessen,unchanged,FALSE,184,Groß-Gerau,174082,174082,0
+184,Offenbach,06,Hessen,unchanged,FALSE,185,Offenbach,219511,219511,0
+185,Darmstadt,06,Hessen,unchanged,FALSE,186,Darmstadt,240763,240763,0
+186,Odenwald,06,Hessen,unchanged,FALSE,187,Odenwald,233901,233901,0
+187,Bergstraße,06,Hessen,unchanged,FALSE,188,Bergstraße,197782,197782,0
+188,Eichsfeld – Nordhausen – Kyffhäuserkreis,16,Thüringen,redrawn,FALSE,189,Eichsfeld – Nordhausen – Kyffhäuserkreis,213593,209203,4390
+189,Eisenach – Wartburgkreis – Unstrut-Hainich-Kreis,16,Thüringen,redrawn,FALSE,190,Eisenach – Wartburgkreis – Unstrut-Hainich-Kreis,207877,212267,-4390
+190,Jena – Sömmerda – Weimarer Land I,16,Thüringen,unchanged,FALSE,191,Jena – Sömmerda – Weimarer Land I,198697,198697,0
+191,Gotha – Ilm-Kreis,16,Thüringen,unchanged,FALSE,192,Gotha – Ilm-Kreis,190519,190519,0
+192,Erfurt – Weimar – Weimarer Land II,16,Thüringen,unchanged,FALSE,193,Erfurt – Weimar – Weimarer Land II,217944,217944,0
+193,Gera – Greiz – Altenburger Land,16,Thüringen,unchanged,FALSE,194,Gera – Greiz – Altenburger Land,229588,229588,0
+194,Saalfeld-Rudolstadt – Saale-Holzland-Kreis – Saale-Orla-Kreis,16,Thüringen,unchanged,FALSE,195,Saalfeld-Rudolstadt – Saale-Holzland-Kreis – Saale-Orla-Kreis,219437,219437,0
+195,Suhl – Schmalkalden-Meiningen – Hildburghausen – Sonneberg,16,Thüringen,unchanged,FALSE,196,Suhl – Schmalkalden-Meiningen – Hildburghausen – Sonneberg,230071,230071,0
+196,Neuwied,07,Rheinland-Pfalz,unchanged,FALSE,197,Neuwied,238118,238118,0
+197,Ahrweiler,07,Rheinland-Pfalz,unchanged,FALSE,198,Ahrweiler,195109,195109,0
+198,Koblenz,07,Rheinland-Pfalz,unchanged,FALSE,199,Koblenz,193035,193035,0
+199,Mosel/Rhein-Hunsrück,07,Rheinland-Pfalz,unchanged,FALSE,200,Mosel/Rhein-Hunsrück,171102,171102,0
+200,Kreuznach,07,Rheinland-Pfalz,unchanged,FALSE,201,Kreuznach,182380,182380,0
+201,Bitburg,07,Rheinland-Pfalz,unchanged,FALSE,202,Bitburg,163493,163493,0
+202,Trier,07,Rheinland-Pfalz,unchanged,FALSE,203,Trier,190530,190530,0
+203,Montabaur,07,Rheinland-Pfalz,unchanged,FALSE,204,Montabaur,210816,210816,0
+204,Mainz,07,Rheinland-Pfalz,unchanged,FALSE,205,Mainz,249630,249630,0
+205,Worms,07,Rheinland-Pfalz,unchanged,FALSE,206,Worms,212943,212943,0
+206,Ludwigshafen/Frankenthal,07,Rheinland-Pfalz,unchanged,FALSE,207,Ludwigshafen/Frankenthal,210969,210969,0
+207,Neustadt – Speyer,07,Rheinland-Pfalz,unchanged,FALSE,208,Neustadt – Speyer,219416,219416,0
+208,Kaiserslautern,07,Rheinland-Pfalz,unchanged,FALSE,209,Kaiserslautern,224701,224701,0
+209,Pirmasens,07,Rheinland-Pfalz,unchanged,FALSE,210,Pirmasens,174093,174093,0
+210,Südpfalz,07,Rheinland-Pfalz,unchanged,FALSE,211,Südpfalz,217000,217000,0
+211,Altötting,09,Bayern,unchanged,FALSE,212,Altötting,168656,168656,0
+212,Erding – Ebersberg,09,Bayern,unchanged,FALSE,213,Erding – Ebersberg,200569,200569,0
+213,Freising,09,Bayern,unchanged,FALSE,214,Freising,237250,237250,0
+214,Fürstenfeldbruck,09,Bayern,unchanged,FALSE,215,Fürstenfeldbruck,231905,231905,0
+215,Ingolstadt,09,Bayern,unchanged,FALSE,216,Ingolstadt,238384,238384,0
+216,München-Nord,09,Bayern,unchanged,FALSE,217,München-Nord,223683,223683,0
+217,München-Ost,09,Bayern,unchanged,FALSE,218,München-Ost,242591,242591,0
+218,München-Süd,09,Bayern,unchanged,FALSE,219,München-Süd,214606,214606,0
+219,München-West/Mitte,09,Bayern,unchanged,FALSE,220,München-West/Mitte,242252,242252,0
+220,München-Land,09,Bayern,unchanged,FALSE,221,München-Land,234912,234912,0
+221,Rosenheim,09,Bayern,unchanged,FALSE,222,Rosenheim,237390,237390,0
+222,Bad Tölz-Wolfratshausen – Miesbach,09,Bayern,unchanged,FALSE,223,Bad Tölz-Wolfratshausen – Miesbach,166662,166662,0
+223,Starnberg – Landsberg am Lech,09,Bayern,unchanged,FALSE,224,Starnberg – Landsberg am Lech,214828,214828,0
+224,Traunstein,09,Bayern,unchanged,FALSE,225,Traunstein,208815,208815,0
+225,Weilheim,09,Bayern,unchanged,FALSE,226,Weilheim,168473,168473,0
+226,Deggendorf,09,Bayern,unchanged,FALSE,227,Deggendorf,166186,166186,0
+227,Landshut,09,Bayern,unchanged,FALSE,228,Landshut,246854,246854,0
+228,Passau,09,Bayern,unchanged,FALSE,229,Passau,177563,177563,0
+229,Rottal-Inn,09,Bayern,unchanged,FALSE,230,Rottal-Inn,173632,173632,0
+230,Straubing,09,Bayern,unchanged,FALSE,231,Straubing,173772,173772,0
+231,Amberg,09,Bayern,unchanged,FALSE,232,Amberg,216071,216071,0
+232,Regensburg,09,Bayern,unchanged,FALSE,233,Regensburg,248192,248192,0
+233,Schwandorf,09,Bayern,unchanged,FALSE,234,Schwandorf,222424,222424,0
+234,Weiden,09,Bayern,unchanged,FALSE,235,Weiden,165807,165807,0
+235,Bamberg,09,Bayern,unchanged,FALSE,236,Bamberg,182586,182586,0
+236,Bayreuth,09,Bayern,unchanged,FALSE,237,Bayreuth,162430,162430,0
+237,Coburg,09,Bayern,unchanged,FALSE,238,Coburg,156571,156571,0
+238,Hof,09,Bayern,unchanged,FALSE,239,Hof,162872,162872,0
+239,Kulmbach,09,Bayern,unchanged,FALSE,240,Kulmbach,168923,168923,0
+240,Ansbach,09,Bayern,unchanged,FALSE,241,Ansbach,243174,243174,0
+241,Erlangen,09,Bayern,unchanged,FALSE,242,Erlangen,187299,187299,0
+242,Fürth,09,Bayern,unchanged,FALSE,243,Fürth,250730,250730,0
+243,Nürnberg-Nord,09,Bayern,unchanged,FALSE,244,Nürnberg-Nord,188283,188283,0
+244,Nürnberg-Süd,09,Bayern,unchanged,FALSE,245,Nürnberg-Süd,177316,177316,0
+245,Roth,09,Bayern,unchanged,FALSE,246,Roth,229279,229279,0
+246,Aschaffenburg,09,Bayern,unchanged,FALSE,247,Aschaffenburg,182652,182652,0
+247,Bad Kissingen,09,Bayern,unchanged,FALSE,248,Bad Kissingen,214061,214061,0
+248,Main-Spessart,09,Bayern,unchanged,FALSE,249,Main-Spessart,194408,194408,0
+249,Schweinfurt,09,Bayern,unchanged,FALSE,250,Schweinfurt,196710,196710,0
+250,Würzburg,09,Bayern,unchanged,FALSE,251,Würzburg,224907,224907,0
+251,Augsburg-Stadt,09,Bayern,redrawn,FALSE,252,Augsburg-Stadt,187164,207543,-20379
+252,Augsburg-Land,09,Bayern,redrawn,FALSE,253,Augsburg-Land,231978,249372,-17394
+253,Donau-Ries,09,Bayern,redrawn,FALSE,254,Donau-Ries,192451,195774,-3323
+254,Neu-Ulm,09,Bayern,redrawn,FALSE,255,Neu-Ulm,214619,241919,-27300
+255,Memmingen – Unterallgäu,09,Bayern,new,FALSE,,,158711,,
+256,Oberallgäu,09,Bayern,unchanged,FALSE,256,Oberallgäu,228803,228803,0
+257,Ostallgäu,09,Bayern,redrawn,FALSE,257,Ostallgäu,160260,250575,-90315
+258,Stuttgart I,08,Baden-Württemberg,unchanged,FALSE,258,Stuttgart I,191811,191811,0
+259,Stuttgart II,08,Baden-Württemberg,unchanged,FALSE,259,Stuttgart II,178958,178958,0
+260,Böblingen,08,Baden-Württemberg,unchanged,FALSE,260,Böblingen,245553,245553,0
+261,Esslingen,08,Baden-Württemberg,unchanged,FALSE,261,Esslingen,166628,166628,0
+262,Nürtingen,08,Baden-Württemberg,unchanged,FALSE,262,Nürtingen,205967,205967,0
+263,Göppingen,08,Baden-Württemberg,unchanged,FALSE,263,Göppingen,177107,177107,0
+264,Waiblingen,08,Baden-Württemberg,unchanged,FALSE,264,Waiblingen,221775,221775,0
+265,Ludwigsburg,08,Baden-Württemberg,unchanged,FALSE,265,Ludwigsburg,215312,215312,0
+266,Neckar-Zaber,08,Baden-Württemberg,unchanged,FALSE,266,Neckar-Zaber,230738,230738,0
+267,Heilbronn,08,Baden-Württemberg,unchanged,FALSE,267,Heilbronn,240951,240951,0
+268,Schwäbisch Hall – Hohenlohe,08,Baden-Württemberg,unchanged,FALSE,268,Schwäbisch Hall – Hohenlohe,225874,225874,0
+269,Backnang – Schwäbisch Gmünd,08,Baden-Württemberg,unchanged,FALSE,269,Backnang – Schwäbisch Gmünd,177062,177062,0
+270,Aalen – Heidenheim,08,Baden-Württemberg,unchanged,FALSE,270,Aalen – Heidenheim,220686,220686,0
+271,Karlsruhe-Stadt,08,Baden-Württemberg,unchanged,FALSE,271,Karlsruhe-Stadt,205608,205608,0
+272,Karlsruhe-Land,08,Baden-Württemberg,unchanged,FALSE,272,Karlsruhe-Land,209147,209147,0
+273,Rastatt,08,Baden-Württemberg,unchanged,FALSE,273,Rastatt,204890,204890,0
+274,Heidelberg,08,Baden-Württemberg,unchanged,FALSE,274,Heidelberg,218431,218431,0
+275,Mannheim,08,Baden-Württemberg,unchanged,FALSE,275,Mannheim,196863,196863,0
+276,Odenwald – Tauber,08,Baden-Württemberg,unchanged,FALSE,276,Odenwald – Tauber,209418,209418,0
+277,Rhein-Neckar,08,Baden-Württemberg,unchanged,FALSE,277,Rhein-Neckar,196882,196882,0
+278,Bruchsal – Schwetzingen,08,Baden-Württemberg,unchanged,FALSE,278,Bruchsal – Schwetzingen,195755,195755,0
+279,Pforzheim,08,Baden-Württemberg,unchanged,FALSE,279,Pforzheim,217126,217126,0
+280,Calw,08,Baden-Württemberg,unchanged,FALSE,280,Calw,199092,199092,0
+281,Freiburg,08,Baden-Württemberg,unchanged,FALSE,281,Freiburg,224392,224392,0
+282,Lörrach – Müllheim,08,Baden-Württemberg,unchanged,FALSE,282,Lörrach – Müllheim,231076,231076,0
+283,Emmendingen – Lahr,08,Baden-Württemberg,unchanged,FALSE,283,Emmendingen – Lahr,218872,218872,0
+284,Offenburg,08,Baden-Württemberg,unchanged,FALSE,284,Offenburg,205893,205893,0
+285,Rottweil – Tuttlingen,08,Baden-Württemberg,unchanged,FALSE,285,Rottweil – Tuttlingen,198182,198182,0
+286,Schwarzwald-Baar,08,Baden-Württemberg,unchanged,FALSE,286,Schwarzwald-Baar,162800,162800,0
+287,Konstanz,08,Baden-Württemberg,unchanged,FALSE,287,Konstanz,206009,206009,0
+288,Waldshut,08,Baden-Württemberg,unchanged,FALSE,288,Waldshut,177275,177275,0
+289,Reutlingen,08,Baden-Württemberg,unchanged,FALSE,289,Reutlingen,199189,199189,0
+290,Tübingen,08,Baden-Württemberg,unchanged,FALSE,290,Tübingen,198791,198791,0
+291,Ulm,08,Baden-Württemberg,unchanged,FALSE,291,Ulm,223376,223376,0
+292,Biberach,08,Baden-Württemberg,unchanged,FALSE,292,Biberach,169147,169147,0
+293,Bodensee,08,Baden-Württemberg,unchanged,FALSE,293,Bodensee,174430,174430,0
+294,Ravensburg,08,Baden-Württemberg,unchanged,FALSE,294,Ravensburg,187817,187817,0
+295,Zollernalb – Sigmaringen,08,Baden-Württemberg,unchanged,FALSE,295,Zollernalb – Sigmaringen,182648,182648,0
+296,Saarbrücken,10,Saarland,unchanged,FALSE,296,Saarbrücken,192929,192929,0
+297,Saarlouis,10,Saarland,unchanged,FALSE,297,Saarlouis,203279,203279,0
+298,St. Wendel,10,Saarland,unchanged,FALSE,298,St. Wendel,173074,173074,0
+299,Homburg,10,Saarland,unchanged,FALSE,299,Homburg,185941,185941,0
