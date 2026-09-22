@@ -1,0 +1,26 @@
+<symbol id="illus-trend-timeseries" viewBox="0 0 300 120">
+<rect x="0" y="0" width="300" height="120" fill="#0b0d11"/>
+<line x1="10" y1="106" x2="290" y2="106" stroke="#2a2e38" stroke-width="1"/>
+<path d="M10.0,24.3 L41.1,28.7 L72.2,40.7 L103.3,33.9 L134.4,40.1 L165.6,44.2 L196.7,29.4 L227.8,44.4 L258.9,62.5 L290.0,55.1" fill="none" stroke="#4D4D52" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="10.0" cy="24.3" r="1.8" fill="#4D4D52"/>
+<circle cx="41.1" cy="28.7" r="1.8" fill="#4D4D52"/>
+<circle cx="72.2" cy="40.7" r="1.8" fill="#4D4D52"/>
+<circle cx="103.3" cy="33.9" r="1.8" fill="#4D4D52"/>
+<circle cx="134.4" cy="40.1" r="1.8" fill="#4D4D52"/>
+<circle cx="165.6" cy="44.2" r="1.8" fill="#4D4D52"/>
+<circle cx="196.7" cy="29.4" r="1.8" fill="#4D4D52"/>
+<circle cx="227.8" cy="44.4" r="1.8" fill="#4D4D52"/>
+<circle cx="258.9" cy="62.5" r="1.8" fill="#4D4D52"/>
+<circle cx="290.0" cy="55.1" r="1.8" fill="#4D4D52"/>
+<path d="M10.0,106.0 L41.1,106.0 L72.2,106.0 L103.3,106.0 L134.4,106.0 L165.6,106.0 L196.7,100.1 L227.8,84.2 L258.9,86.2 L290.0,64.9" fill="none" stroke="#009EE0" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="10.0" cy="106.0" r="1.8" fill="#009EE0"/>
+<circle cx="41.1" cy="106.0" r="1.8" fill="#009EE0"/>
+<circle cx="72.2" cy="106.0" r="1.8" fill="#009EE0"/>
+<circle cx="103.3" cy="106.0" r="1.8" fill="#009EE0"/>
+<circle cx="134.4" cy="106.0" r="1.8" fill="#009EE0"/>
+<circle cx="165.6" cy="106.0" r="1.8" fill="#009EE0"/>
+<circle cx="196.7" cy="100.1" r="1.8" fill="#009EE0"/>
+<circle cx="227.8" cy="84.2" r="1.8" fill="#009EE0"/>
+<circle cx="258.9" cy="86.2" r="1.8" fill="#009EE0"/>
+<circle cx="290.0" cy="64.9" r="1.8" fill="#009EE0"/>
+</symbol>

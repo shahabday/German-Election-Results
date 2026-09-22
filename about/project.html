@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Political — Trend Visualizations — Germany in Maps</title>
+<title>About This Project — Germany in Maps</title>
 <style>
   :root {
     --bg: #0f1115; --panel: #171a21; --panel-border: #2a2e38;
@@ -11,7 +11,7 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  body { padding-bottom: 80px; }
+  body { padding-bottom: 40px; }
   a { color: inherit; }
   .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
 
@@ -26,7 +26,7 @@
   .topnav .brand { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; flex-shrink: 0; }
   .topnav .nav-links { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
   .topnav .nav-link { white-space: nowrap; font-size: 13px; color: var(--text-dim); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
-  .topnav .nav-link:hover { color: var(--text); background: #1e222b; }
+  .topnav .nav-link:hover, .topnav .nav-link.current { color: var(--text); background: #1e222b; }
   .dropdown { position: relative; }
   .dropdown-toggle {
     font: inherit; font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer;
@@ -69,28 +69,25 @@
     .nav-toggle { display: flex; }
   }
 
-  footer.site-footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--panel-border); font-size: 11.5px; color: var(--text-dim); line-height: 1.7; }
-  footer.site-footer a { color: var(--text-dim); }
-  footer.site-footer a:hover { color: var(--text); }
-
   .breadcrumb { font-size: 12px; color: var(--text-dim); margin: 28px 0 18px; }
   .breadcrumb a:hover { text-decoration: underline; }
-  h1 { font-size: 25px; margin: 0 0 14px; font-weight: 700; }
-  p.lead { font-size: 14.5px; color: var(--text-dim); line-height: 1.65; margin: 0 0 10px; }
-  .credit { font-size: 12px; color: var(--text-dim); margin: 0 0 40px; }
+  h1 { font-size: 30px; margin: 0 0 14px; font-weight: 800; }
+  p.lead { font-size: 15px; color: var(--text-dim); line-height: 1.7; margin: 0 0 40px; }
 
-  .tool-block { padding: 26px 0; border-top: 1px solid var(--panel-border); }
-  .tool-block:first-of-type { border-top: none; }
-  .tool-block h2 { font-size: 18px; margin: 0 0 10px; font-weight: 700; }
-  .tool-block p { font-size: 13.5px; color: var(--text-dim); line-height: 1.7; margin: 0 0 10px; }
-  .open-btn {
-    display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600;
-    color: #fff; background: var(--accent); text-decoration: none; padding: 8px 14px; border-radius: 6px;
-  }
-  .open-btn:hover { filter: brightness(1.1); }
+  .section { padding: 26px 0; border-top: 1px solid var(--panel-border); }
+  .section:first-of-type { border-top: none; }
+  .section h2 { font-size: 18px; margin: 0 0 10px; font-weight: 700; }
+  .section p { font-size: 13.5px; color: var(--text-dim); line-height: 1.75; margin: 0 0 10px; }
+  .section ul { margin: 0 0 10px; padding-left: 18px; }
+  .section li { font-size: 13.5px; color: var(--text-dim); line-height: 1.7; margin-bottom: 4px; }
+  .section code { background: #1e222b; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
 
   .back-home { display: inline-block; margin-top: 30px; font-size: 12.5px; color: var(--text-dim); text-decoration: none; }
   .back-home:hover { color: var(--text); text-decoration: underline; }
+
+  footer.site-footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--panel-border); font-size: 11.5px; color: var(--text-dim); line-height: 1.7; }
+  footer.site-footer a { color: var(--text-dim); }
+  footer.site-footer a:hover { color: var(--text); }
 </style>
 </head>
 <body>
@@ -114,7 +111,7 @@
           <a href="../index.html#demo-trend">Trend visualization</a>
         </div>
       </div>
-      <a class="nav-link" href="project.html">About</a>
+      <a class="nav-link current" href="project.html">About</a>
     </div>
     <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
   </div>
@@ -131,34 +128,47 @@
 </nav>
 
 <div class="wrap">
-  <div class="breadcrumb"><a href="../index.html">Home</a> / Political / Trend visualizations</div>
-  <h1>Political — Trend Visualizations</h1>
-  <p class="lead">The same election results as the map tools, but as line charts over time — for picking specific places and watching how they've moved, rather than reading one snapshot at a time.</p>
-  <div class="credit">Data: GERDA (Heddesheimer, Hilbig, Sichart &amp; Wiedemann, 2025, <em>Nature Scientific Data</em>) &middot; Boundaries: BKG VG250, m-ad/geofeatures-ags-germany</div>
+  <div class="breadcrumb"><a href="../index.html">Home</a> / About</div>
+  <h1>About This Project</h1>
+  <p class="lead">Germany in Maps is an independent, open-data project that visualizes how Germany's political, economic, and demographic landscape has shifted over the past nearly three decades — from federal, European, state, and municipal elections down to census, income, and labor-market data.</p>
 
-  <section class="tool-block">
-    <h2>Election Results — Time Series</h2>
-    <p>Pick any states, counties, or municipalities — by clicking a mini-map, searching by name, or hovering for a quick preview before committing — and compare a party's vote share (or turnout) across every election of one type as line charts. Works in two modes: one party across several places (color = place), or several parties at once (color = party, line style = place). Landtag and Kommunalwahl are scoped to the state you pick, since they run on independent schedules; Bundestag and Europawahl are nationwide. Berlin's Landtag view includes its real 78-constituency breakdown for 2026, the one year that data exists at that resolution — every other year for Berlin is citywide only.</p>
-    <a class="open-btn" href="../map-election-timeseries/">Open tool →</a>
+  <section class="section">
+    <h2>Why this exists</h2>
+    <p>Germany's election and demographic data is public, but it's scattered across dozens of official sources in dozens of formats, and rarely presented in a way that lets you actually feel the shape of the change over time — where the AfD's rise really started, how the former East and West have (and haven't) converged economically, which places have quietly flipped from one party to another. This project gathers that data into one place and turns it into nine interactive tools, split into two themes — political and demographic/economic — each explorable as either an absolute map or a trend line.</p>
   </section>
 
-  <section class="tool-block">
-    <h2>Voting Profile — All Elections Blended</h2>
-    <p>Blends all four election types into one "who does this place actually vote for" picture, over a year window you control (full history, last 10/5 years, or just the latest election of each type). The blend is a two-step average — first within each election type, then across the (up to 4) type averages — so that Bundestag, which has run far more times since 1990 than Europawahl, doesn't dominate just by having more data points. A separate "consistency" view shows how often national, state, and local elections actually agree on the same leading party for a given place — split-ticket areas are common and real, not noise.</p>
-    <a class="open-btn" href="../map-election-profile/">Open tool →</a>
+  <section class="section">
+    <h2>How it's built</h2>
+    <p>Every tool is a fully self-contained static page: real GeoJSON boundaries, real per-year election and demographic results, and plain HTML/CSS/JavaScript with <a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a> for the maps. There's no backend and no database — each tool loads its own pre-built JSON files directly. That keeps everything fast, inspectable, and easy to keep running indefinitely.</p>
+    <p>A couple of methodology choices worth knowing about, since they apply across every tool:</p>
+    <ul>
+      <li><strong>State and county lines are simple, unweighted averages</strong> of their municipalities — a small rural municipality counts exactly as much as a big city within it, since there's no consistent multi-year population-weighting dataset covering this whole period.</li>
+      <li><strong>A colored area's "winner" is a plurality/ecological statistic</strong>, not always a real single-winner seat outcome — except where a tool is explicitly showing genuine direct-mandate constituencies (Bundestag Wahlkreise, Berlin's 2026 Abgeordnetenhaus Wahlkreise).</li>
+      <li><strong>Municipality boundaries and codes (AGS) change over time</strong> as places merge or split; a handful of areas can lag or look slightly inconsistent across years because of this administrative churn, not a data error.</li>
+    </ul>
   </section>
 
-  <section class="tool-block">
-    <h2>Germany's Current Standing — Trends</h2>
-    <p>The same rolling "most recent election, per area" composite as the map version, but as a click-to-compare trend line. Because the underlying value only moves when that specific area gets a fresh election of its own, the lines are naturally step-shaped: flat for years at a time, then a sharp jump the moment new data arrives — a dot marks exactly which years a line actually changed. This makes it easy to see, for example, that two states can reach a similar level of support for a party on completely different timelines, simply because they vote on independent schedules.</p>
-    <a class="open-btn" href="../map-current-standing-trends/">Open tool →</a>
+  <section class="section">
+    <h2>Data sources</h2>
+    <ul>
+      <li><strong>Elections:</strong> GERDA (Heddesheimer, Hilbig, Sichart &amp; Wiedemann, 2025, <em>Nature Scientific Data</em>) for the historical federal/European/state/municipal results, plus official state sources scraped directly for the 2026 Landtag and Kommunalwahl results (including Berlin's real 78-constituency breakdown) as soon as they were available.</li>
+      <li><strong>Demographics:</strong> Zensus 2022 (German census) at municipality resolution.</li>
+      <li><strong>Economy &amp; labor market:</strong> VGRdL (Volkswirtschaftliche Gesamtrechnungen der Länder) and INKAR, at county resolution, as a multi-year time series back to the 1990s.</li>
+      <li><strong>Boundaries:</strong> BKG VG250 and the <code>m-ad/geofeatures-ags-germany</code> project.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Who made this</h2>
+    <p>Built and maintained by <strong>@shahabday</strong>. If you spot a data issue, have a tool idea, or just want to say hi, the contact details are in the footer below.</p>
   </section>
 
   <a class="back-home" href="../index.html">← Back to all tools</a>
-<footer class="site-footer">
-  Made with ❤️ by @shahabday<br>
-  Email: <a href="mailto:shahabdaiani@gmail.com">shahabdaiani@gmail.com</a> · Instagram: <a href="https://instagram.com/shahabday" target="_blank" rel="noopener">@shahabday</a> · Website: <a href="https://shahabwrites.com" target="_blank" rel="noopener">shahabwrites.com</a>
-</footer>
+
+  <footer class="site-footer">
+    Made with ❤️ by @shahabday<br>
+    Email: <a href="mailto:shahabdaiani@gmail.com">shahabdaiani@gmail.com</a> · Instagram: <a href="https://instagram.com/shahabday" target="_blank" rel="noopener">@shahabday</a> · Website: <a href="https://shahabwrites.com" target="_blank" rel="noopener">shahabwrites.com</a>
+  </footer>
 </div>
 
 <script>
