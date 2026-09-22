@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>German Election Results — Time Series Compare</title>
+<title>Germany's Current Standing — Trend Lines</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <style>
   :root {
@@ -23,11 +23,18 @@
     padding: 14px 16px; overflow-y: auto; z-index: 10;
   }
   #panel h1 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
-  #panel .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
+  #panel .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; line-height: 1.5; }
 
   .row { margin-bottom: 12px; }
   .row:last-child { margin-bottom: 0; }
   .row-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+
+  .action-row { display: flex; gap: 8px; }
+  .action-btn {
+    flex: 1 1 auto; background: #1e222b; color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 6px; padding: 7px 8px; font-size: 12px; cursor: pointer; text-align: center;
+  }
+  .action-btn:hover { background: #262b36; border-color: #3a3f4b; }
 
   .toggle-group { display: flex; border: 1px solid var(--panel-border); border-radius: 6px; overflow: hidden; flex-wrap: wrap; }
   .toggle-group button {
@@ -36,22 +43,13 @@
   }
   .toggle-group button.active { background: var(--accent); color: #fff; }
   .toggle-group button:not(.active):hover { background: #20242e; color: var(--text); }
-  .toggle-group button:disabled { opacity: 0.35; cursor: not-allowed; }
 
   select, input[type="text"] {
     width: 100%; background: #1e222b; color: var(--text); border: 1px solid var(--panel-border);
     border-radius: 6px; padding: 7px 8px; font-size: 12.5px;
   }
 
-  #miniMap { height: 340px; border-radius: 8px; border: 1px solid var(--panel-border); background: #0b0d11; }
-  #miniMapNote { font-size: 10.5px; color: var(--text-dim); margin-top: 5px; line-height: 1.4; }
-
-  .action-row { display: flex; gap: 8px; }
-  .action-btn {
-    flex: 1 1 auto; background: #1e222b; color: var(--text); border: 1px solid var(--panel-border);
-    border-radius: 6px; padding: 7px 8px; font-size: 12px; cursor: pointer; text-align: center;
-  }
-  .action-btn:hover { background: #262b36; border-color: #3a3f4b; }
+  #miniMap { height: 300px; border-radius: 8px; border: 1px solid var(--panel-border); background: #0b0d11; }
 
   #searchResults { margin-top: 4px; border-radius: 6px; overflow: hidden; }
   .search-result {
@@ -74,7 +72,7 @@
   .chip .remove:hover { color: #fff; }
   #selectedEmpty { font-size: 11px; color: var(--text-dim); font-style: italic; }
 
-  #partyDescription, #metricDescription { font-size: 11px; color: var(--text-dim); margin-top: 6px; line-height: 1.4; }
+  #partyDescription { font-size: 11px; color: var(--text-dim); margin-top: 6px; line-height: 1.4; }
   #noteLine { font-size: 10.5px; color: var(--text-dim); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--panel-border); }
 
   #partyChecklist { display: flex; flex-direction: column; gap: 2px; max-height: 220px; overflow-y: auto; }
@@ -87,17 +85,6 @@
   .party-check .swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
   .party-check .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  #multiLegend {
-    position: absolute; top: 16px; right: 16px; z-index: 6; display: none;
-    background: rgba(23, 26, 33, 0.92); border: 1px solid var(--panel-border); border-radius: 8px;
-    padding: 8px 10px; font-size: 11px; max-width: 220px; max-height: calc(100% - 32px); overflow-y: auto;
-  }
-  .mlegend-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin: 6px 0 3px; }
-  .mlegend-title:first-child { margin-top: 0; }
-  .mlegend-row { display: flex; align-items: center; gap: 6px; padding: 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .mlegend-swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
-  .mlegend-line { flex-shrink: 0; }
-
   #chartWrap { flex: 1 1 auto; position: relative; background: #0b0d11; }
   #chartTitle { position: absolute; top: 16px; left: 20px; z-index: 5; font-size: 14px; font-weight: 600; }
   #chartSvg { width: 100%; height: 100%; display: block; }
@@ -109,6 +96,17 @@
   .series-dot { stroke: #0b0d11; stroke-width: 1; }
   .series-end-label { font-size: 10px; font-weight: 600; }
   .hover-guide { stroke: #4a4f5c; stroke-width: 1; stroke-dasharray: 3 3; }
+
+  #multiLegend {
+    position: absolute; top: 16px; right: 16px; z-index: 6; display: none;
+    background: rgba(23, 26, 33, 0.92); border: 1px solid var(--panel-border); border-radius: 8px;
+    padding: 8px 10px; font-size: 11px; max-width: 220px; max-height: calc(100% - 32px); overflow-y: auto;
+  }
+  .mlegend-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin: 6px 0 3px; }
+  .mlegend-title:first-child { margin-top: 0; }
+  .mlegend-row { display: flex; align-items: center; gap: 6px; padding: 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mlegend-swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+  .mlegend-line { flex-shrink: 0; }
 
   #emptyState {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -125,6 +123,7 @@
   #chartTooltip .tt-swatch { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
   #chartTooltip .tt-name { flex: 1; color: var(--text-dim); }
   #chartTooltip .tt-val { font-variant-numeric: tabular-nums; }
+  #chartTooltip .tt-src { color: var(--text-dim); font-size: 10px; margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--panel-border); }
 
   #loading {
     position: absolute; top: 16px; right: 16px; z-index: 1000;
@@ -137,7 +136,7 @@
     #app { flex-direction: column; height: auto; min-height: 100vh; }
     #panel { flex: 0 0 auto; width: 100%; max-height: 52vh; border-right: none; border-bottom: 1px solid var(--panel-border); }
     #chartWrap { flex: 1 1 auto; width: 100%; min-height: 320px; }
-    #miniMap { height: 220px; }
+    #miniMap { height: 200px; }
     #multiLegend { max-width: 150px; font-size: 10px; padding: 6px 8px; }
   }
 </style>
@@ -145,29 +144,14 @@
 <body>
 <div id="app">
   <div id="panel">
-    <h1>Election Results Over Time</h1>
-    <div class="subtitle">Click the map or search to compare party vote share / turnout</div>
+    <h1>Germany's Current Standing — Trends</h1>
+    <div class="subtitle">The same rolling "most recent election, per area" composite as the map — but as a trend line, so you can see exactly when each place's picture actually changed.</div>
 
     <div class="row">
       <div class="action-row">
         <button type="button" class="action-btn" id="resetBtn">↺ Reset</button>
         <button type="button" class="action-btn" id="sampleBtn">✨ Sample</button>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="row-label">Election</div>
-      <div class="toggle-group" id="typeToggle">
-        <button data-type="federal" class="active">Bundestag</button>
-        <button data-type="european">Europawahl</button>
-        <button data-type="landtag">Landtag</button>
-        <button data-type="kommunal">Kommunalwahl</button>
-      </div>
-    </div>
-
-    <div class="row" id="stateRow" style="display:none;">
-      <div class="row-label">State</div>
-      <select id="stateSelect"></select>
     </div>
 
     <div class="row">
@@ -205,7 +189,6 @@
 
     <div class="row">
       <div id="miniMap"></div>
-      <div id="miniMapNote"></div>
     </div>
 
     <div class="row">
@@ -246,9 +229,8 @@
     "#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f", "#edc948",
     "#b07aa1", "#ff9da7", "#9c755f", "#bab0ac", "#86bcb6", "#d37295",
   ];
-  // In multi-party mode, color already encodes the party, so the place is instead
-  // encoded as a line dash pattern (cycles if more places than patterns).
   const DASH_PATTERNS = ["", "6 3", "2 2", "9 3 2 3", "1 3", "10 2 2 2"];
+  const SRC_LABELS = { federal: "Bundestagswahl", european: "Europawahl", landtag: "Landtagswahl", kommunal: "Kommunalwahl" };
 
   const STATE_SLUG_TO_CODE = {
     schleswig_holstein: "01", hamburg: "02", niedersachsen: "03", bremen: "04",
@@ -259,8 +241,6 @@
   };
   const CODE_TO_STATE_SLUG = Object.fromEntries(Object.entries(STATE_SLUG_TO_CODE).map(([s, c]) => [c, s]));
 
-  // Short, neutral one-liners for the party dropdown - not exhaustive (very
-  // minor/historical parties fall back to a generic line).
   const PARTY_DESCRIPTIONS = {
     cdu_csu: "Christian Democrats — center-right (CSU is its Bavaria-only sister party).",
     cdu: "Christian Democrats — center-right; runs everywhere except Bavaria, where CSU stands instead.",
@@ -310,20 +290,16 @@
     muniBoundary: null,
     countyBoundary: null,
     stateBoundary: null,
-    type: "federal",
-    stateSlug: null,
+    years: [],
     metricMode: "party",
     party: null,
-    partyMode: "single",   // "single" | "multi"
-    partyOptions: [],      // party keys available in the "multi" checklist, for current context
-    parties: [],            // party keys checked in "multi" mode
+    partyMode: "single",
+    partyOptions: [],
+    parties: [],
     miniRes: "state",
     selected: [],
     preview: null,
-    dataCache: {},     // "type:stateSlug:year" -> {ags: {w,s,b,t}}
-    berlinWkrBoundary: null,   // Berlin's 78 real Abgeordnetenhaus constituencies (2026 only)
-    berlinWkrData: null,      // gebiet_nr -> {w,s,b,t} for the 2026 election only
-    berlinWkrPromise: null,
+    dataCache: {},   // year -> {ags: {w,s,b,t,y,src}}
     nextColorIdx: 0,
     miniMap: null,
     miniLayer: null,
@@ -338,73 +314,15 @@
   }
   function setLoading(on) { document.getElementById("loading").classList.toggle("active", on); }
 
-  function isStateScoped() { return state.type === "landtag" || state.type === "kommunal"; }
-  function isBerlinLandtag() { return state.type === "landtag" && state.stateSlug === "berlin"; }
-  function partyInfo(key) { return state.manifest.party_info[key] || { label: key, color: "#999999" }; }
-
-  // Berlin's 78 real Abgeordnetenhaus constituencies - a one-off dataset that only
-  // covers the 2026 election (see build_election_timeseries_data.py), fetched lazily
-  // since most sessions never touch Berlin's Landtag context.
-  function ensureBerlinWkrLoaded() {
-    if (state.berlinWkrBoundary && state.berlinWkrData) return Promise.resolve();
-    if (state.berlinWkrPromise) return state.berlinWkrPromise;
-    state.berlinWkrPromise = Promise.all([
-      fetchJson(`${DATA_DIR}/special/berlin_2026/wahlkreise.geojson`),
-      fetchJson(`${DATA_DIR}/special/berlin_2026/muni_format.json`),
-    ]).then(([boundary, data]) => {
-      state.berlinWkrBoundary = boundary;
-      state.berlinWkrData = data;
-    });
-    return state.berlinWkrPromise;
-  }
-
-  function berlinWkrValue(gebietNr, year, metricKey) {
-    if (String(year) !== "2026" || !state.berlinWkrData) return null;
-    const rec = state.berlinWkrData[gebietNr];
-    if (!rec) return null;
-    if (metricKey === "__turnout__") return rec.t == null ? null : rec.t;
-    const entry = (rec.b || []).find((kv) => kv[0] === metricKey);
-    return entry ? entry[1] : null;
-  }
-
-  function currentYears() {
-    if (isStateScoped()) {
-      const s = state.manifest[state.type].states[state.stateSlug];
-      return s ? s.years : [];
-    }
-    return state.manifest[state.type].years;
-  }
-
-  function cacheKey(year) { return `${state.type}:${state.stateSlug || ""}:${year}`; }
-  function dataUrlForYear(year) {
-    return isStateScoped()
-      ? `${DATA_DIR}/${state.type}/${state.stateSlug}/${year}.json`
-      : `${DATA_DIR}/${state.type}/${year}.json`;
-  }
-  function ensureYearsLoaded(years) {
-    const missing = years.filter((y) => !state.dataCache[cacheKey(y)]);
-    return Promise.all(missing.map((y) =>
-      fetchJson(dataUrlForYear(y)).then((d) => { state.dataCache[cacheKey(y)] = d; })
-    ));
-  }
-
-  function nextColor() {
-    const used = new Set(state.selected.map((s) => s.color));
-    for (let i = 0; i < PALETTE.length; i++) {
-      const c = PALETTE[(state.nextColorIdx + i) % PALETTE.length];
-      if (!used.has(c)) { state.nextColorIdx += i + 1; return c; }
-    }
-    const c = PALETTE[state.nextColorIdx % PALETTE.length];
-    state.nextColorIdx++;
-    return c;
-  }
+  function partyInfo(key) { return state.manifest.party_info[key] || { label: key, color: state.manifest.default_fallback.color }; }
 
   // ---------- value lookup ----------
-  // "Not in an area's top 5" is left as null (no data), not 0 - unlike map-trends'
-  // swing math, this is a plain absolute level, and treating "outside top 5" as "got
-  // 0%" would misrepresent a party that's simply not locally prominent.
+  // Reads directly from the pre-built "current standing" composite - each year's file
+  // already IS the correct rolling snapshot, so no extra carry-forward logic is needed
+  // here. A party outside an area's local top 5 is left blank (not 0), same convention
+  // as map-election-timeseries - this is a plain absolute level, not a swing/blend.
   function municipalityValue(ags, year, metricKey) {
-    const rec = (state.dataCache[cacheKey(year)] || {})[ags];
+    const rec = (state.dataCache[year] || {})[ags];
     if (!rec) return null;
     if (metricKey === "__turnout__") return rec.t == null ? null : rec.t;
     const entry = (rec.b || []).find((kv) => kv[0] === metricKey);
@@ -412,7 +330,7 @@
   }
 
   function groupValue(prefix, year, metricKey) {
-    const yearData = state.dataCache[cacheKey(year)] || {};
+    const yearData = state.dataCache[year] || {};
     let sum = 0, count = 0;
     for (const ags in yearData) {
       if (!ags.startsWith(prefix)) continue;
@@ -424,18 +342,25 @@
 
   function valueFor(item, year, metricKey) {
     if (item.type === "municipality") return municipalityValue(item.key, year, metricKey);
-    if (item.type === "berlin_wkr") return berlinWkrValue(item.key, year, metricKey);
     if (item.type === "county") return groupValue(item.key, year, metricKey);
     if (item.type === "state") return groupValue(STATE_SLUG_TO_CODE[item.key], year, metricKey);
     return null;
   }
 
   function metricKeyNow() { return state.metricMode === "turnout" ? "__turnout__" : state.party; }
-  function metricUnitLabel() { return state.metricMode === "turnout" ? "Turnout" : (state.party ? partyInfo(state.party).label + " vote share" : "Vote share"); }
+  function metricUnitLabel() { return state.metricMode === "turnout" ? "Turnout" : (state.party ? partyInfo(state.party).label + " — current standing" : "Current standing"); }
 
   // ---------- party list ----------
-  function deriveTopParties(year) {
-    const yearData = state.dataCache[cacheKey(year)] || {};
+  function deriveTopPartiesByPresence(year, limit) {
+    const yearData = state.dataCache[year] || {};
+    const counts = {};
+    for (const ags in yearData) {
+      for (const [p] of yearData[ags].b || []) counts[p] = (counts[p] || 0) + 1;
+    }
+    return Object.keys(counts).sort((a, b) => counts[b] - counts[a]).slice(0, limit);
+  }
+  function deriveTopPartiesByWins(year) {
+    const yearData = state.dataCache[year] || {};
     const counts = {};
     for (const ags in yearData) {
       const w = yearData[ags].w;
@@ -445,46 +370,28 @@
   }
 
   function populatePartySelect() {
-    const years = currentYears();
-    const latest = years[years.length - 1];
-    return ensureYearsLoaded([latest]).then(() => {
-      const parties = deriveTopParties(latest);
-      const sel = document.getElementById("partySelect");
-      sel.innerHTML = "";
-      for (const key of parties) {
-        const opt = document.createElement("option");
-        opt.value = key;
-        opt.textContent = partyInfo(key).label;
-        sel.appendChild(opt);
-      }
-      if (!state.party || !parties.includes(state.party)) state.party = parties[0];
-      sel.value = state.party;
-      updatePartyDescription();
-    });
+    const latest = state.years[state.years.length - 1];
+    const parties = deriveTopPartiesByWins(latest);
+    const sel = document.getElementById("partySelect");
+    sel.innerHTML = "";
+    for (const key of parties) {
+      const opt = document.createElement("option");
+      opt.value = key;
+      opt.textContent = partyInfo(key).label;
+      sel.appendChild(opt);
+    }
+    if (!state.party || !parties.includes(state.party)) state.party = parties[0];
+    sel.value = state.party;
+    updatePartyDescription();
+
+    state.partyOptions = deriveTopPartiesByPresence(latest, 12);
+    state.parties = state.parties.filter((p) => state.partyOptions.includes(p));
+    renderPartyChecklist();
   }
 
   function updatePartyDescription() {
     document.getElementById("partyDescription").textContent =
       state.metricMode === "party" && state.party ? partyDescription(state.party) : "";
-  }
-
-  // Ranks parties by how often they APPEAR in an area's top-5 (not just wins), so
-  // e.g. FDP shows up as an option even though it rarely tops any single area.
-  function deriveTopPartiesByPresence(year, limit) {
-    const yearData = state.dataCache[cacheKey(year)] || {};
-    const counts = {};
-    for (const ags in yearData) {
-      for (const [p] of yearData[ags].b || []) counts[p] = (counts[p] || 0) + 1;
-    }
-    return Object.keys(counts).sort((a, b) => counts[b] - counts[a]).slice(0, limit);
-  }
-
-  function populatePartyChecklist() {
-    const years = currentYears();
-    const latest = years[years.length - 1];
-    state.partyOptions = deriveTopPartiesByPresence(latest, 12);
-    state.parties = state.parties.filter((p) => state.partyOptions.includes(p));
-    renderPartyChecklist();
   }
 
   function renderPartyChecklist() {
@@ -506,7 +413,24 @@
     }
   }
 
+  function updatePartyRowsVisibility() {
+    const showPartyControls = state.metricMode === "party";
+    document.getElementById("partyModeRow").style.display = showPartyControls ? "block" : "none";
+    document.getElementById("partyRow").style.display = showPartyControls && state.partyMode === "single" ? "block" : "none";
+    document.getElementById("multiPartyRow").style.display = showPartyControls && state.partyMode === "multi" ? "block" : "none";
+  }
+
   // ---------- selection management ----------
+  function nextColor() {
+    const used = new Set(state.selected.map((s) => s.color));
+    for (let i = 0; i < PALETTE.length; i++) {
+      const c = PALETTE[(state.nextColorIdx + i) % PALETTE.length];
+      if (!used.has(c)) { state.nextColorIdx += i + 1; return c; }
+    }
+    const c = PALETTE[state.nextColorIdx % PALETTE.length];
+    state.nextColorIdx++;
+    return c;
+  }
   function findSelectedIndex(type, key) { return state.selected.findIndex((s) => s.type === type && s.key === key); }
 
   function toggleSelection(type, key, label) {
@@ -547,51 +471,32 @@
     loadMiniLayer();
   }
 
-  function effectiveMiniRes() {
-    return isStateScoped() ? "county" : state.miniRes;
-  }
-
   function miniBoundaryFeatures() {
-    if (isBerlinLandtag() && state.berlinWkrBoundary) return state.berlinWkrBoundary.features;
-    if (effectiveMiniRes() === "state") return state.stateBoundary.features;
-    const all = state.countyBoundary.features;
-    if (!isStateScoped() || !state.stateSlug) return all;
-    const code = STATE_SLUG_TO_CODE[state.stateSlug];
-    return all.filter((f) => f.properties.county.startsWith(code));
+    return state.miniRes === "state" ? state.stateBoundary.features : state.countyBoundary.features;
   }
-
-  // A feature carries `gebiet_nr` only when it's one of Berlin's 78 real Wahlkreise
-  // (see ensureBerlinWkrLoaded) - every other boundary layer uses `code` (state) or
-  // `county` (county) as its key property instead.
-  function miniFeatureIdentity(f) {
-    if (f.properties.gebiet_nr != null) return { type: "berlin_wkr", key: String(f.properties.gebiet_nr), label: f.properties.name };
-    const type = effectiveMiniRes();
-    if (type === "state") return { type, key: CODE_TO_STATE_SLUG[f.properties.code], label: stateLabel(f.properties.code) };
-    return { type, key: f.properties.county, label: f.properties.name };
+  function stateLabel(code) {
+    if (!state.stateBoundary) return code;
+    const f = state.stateBoundary.features.find((f) => f.properties.code === code);
+    return f ? f.properties.name : code;
   }
 
   function styleForMiniFeature(f) {
-    const { type, key } = miniFeatureIdentity(f);
+    const type = state.miniRes;
+    const key = type === "state" ? CODE_TO_STATE_SLUG[f.properties.code] : f.properties.county;
     const idx = findSelectedIndex(type, key);
     if (idx >= 0) return { color: "#ffffff", weight: 1.2, fillColor: state.selected[idx].color, fillOpacity: 0.85 };
     return { color: "#3a3f4b", weight: 0.5, fillColor: "#2a2e38", fillOpacity: 0.5 };
   }
 
   function loadMiniLayer() {
-    if (isBerlinLandtag()) {
-      ensureBerlinWkrLoaded().then(() => { if (isBerlinLandtag()) renderMiniLayerNow(); });
-      return;
-    }
-    renderMiniLayerNow();
-  }
-
-  function renderMiniLayerNow() {
     if (state.miniLayer) { state.miniMap.removeLayer(state.miniLayer); state.miniLayer = null; }
+    const type = state.miniRes;
     const features = miniBoundaryFeatures();
     state.miniLayer = L.geoJSON({ type: "FeatureCollection", features }, {
       style: styleForMiniFeature,
       onEachFeature: (f, layer) => {
-        const { type, key, label } = miniFeatureIdentity(f);
+        const key = type === "state" ? CODE_TO_STATE_SLUG[f.properties.code] : f.properties.county;
+        const label = type === "state" ? stateLabel(f.properties.code) : f.properties.name;
         layer.on("click", () => toggleSelection(type, key, label));
         layer.on("mouseover", () => {
           layer.setStyle({ weight: 1.4, color: "#ffffff" });
@@ -601,37 +506,14 @@
       },
     }).addTo(state.miniMap);
     fitMiniMapToLayer();
-    updateMiniMapNote(features.length);
-  }
-  function stateLabel(code) {
-    const slug = CODE_TO_STATE_SLUG[code];
-    return slug ? (state.manifest.landtag.states[slug]?.label || slug) : code;
   }
 
-  // Zooms the mini map to whatever it's currently showing - all of Germany when
-  // browsing nationwide, or just the selected state's counties once one is picked -
-  // instead of leaving it at a fixed all-Germany zoom that wastes most of the panel.
   function fitMiniMapToLayer() {
     if (!state.miniLayer) return;
     try {
       const bounds = state.miniLayer.getBounds();
       if (bounds.isValid()) state.miniMap.fitBounds(bounds, { padding: [8, 8] });
-    } catch (e) { /* geometry not ready yet - keep the current view */ }
-  }
-
-  // Hamburg is a single-Kreis city-state and Bremen is two - this dataset has no
-  // Landtag/Kommunalwahl breakdown below that (real intra-city Wahlkreise aren't in
-  // the source data for them), so the mini map genuinely has only 1-2 clickable areas
-  // there. Berlin is the one exception (see isBerlinLandtag/ensureBerlinWkrLoaded).
-  function updateMiniMapNote(featureCount) {
-    const note = document.getElementById("miniMapNote");
-    if (isBerlinLandtag()) {
-      note.textContent = "Berlin's 78 real Abgeordnetenhaus constituencies - district-level results only exist for the 2026 election, so every other year will be blank for these areas.";
-    } else if (isStateScoped() && featureCount <= 2) {
-      note.textContent = `${stateLabel(STATE_SLUG_TO_CODE[state.stateSlug])} has only ${featureCount} county-level area${featureCount > 1 ? "s" : ""} in this dataset (it's a city-state) - there's no finer within-city breakdown to click here.`;
-    } else {
-      note.textContent = "";
-    }
+    } catch (e) { /* geometry not ready yet */ }
   }
 
   function restyleMiniMap() { if (state.miniLayer) state.miniLayer.setStyle(styleForMiniFeature); }
@@ -642,40 +524,17 @@
     loadMiniLayer();
   }
 
-  // ---------- search (municipalities only) ----------
+  // ---------- search ----------
   function runSearch(q) {
     const container = document.getElementById("searchResults");
     container.innerHTML = "";
     const query = q.trim().toLowerCase();
-    if (query.length < 2) return;
-
-    if (isBerlinLandtag() && state.berlinWkrBoundary) {
-      const wkrResults = state.berlinWkrBoundary.features
-        .filter((f) => f.properties.name.toLowerCase().includes(query))
-        .slice(0, 10)
-        .map((f) => ({ type: "berlin_wkr", key: String(f.properties.gebiet_nr), label: f.properties.name, sub: "Wahlkreis" }));
-      for (const r of wkrResults) {
-        const div = document.createElement("div");
-        div.className = "search-result";
-        div.innerHTML = `${r.label}<span class="sr-type">${r.sub}</span>`;
-        div.addEventListener("click", () => {
-          toggleSelection(r.type, r.key, r.label);
-          document.getElementById("searchInput").value = "";
-          container.innerHTML = "";
-        });
-        container.appendChild(div);
-      }
-      return;
-    }
-
-    if (!state.muniBoundary) return;
-    const code = isStateScoped() ? STATE_SLUG_TO_CODE[state.stateSlug] : null;
+    if (query.length < 2 || !state.muniBoundary) return;
     const results = [];
     for (const f of state.muniBoundary.features) {
       if (results.length >= 10) break;
-      if (code && !f.properties.ags.startsWith(code)) continue;
       if (f.properties.name.toLowerCase().includes(query)) {
-        results.push({ type: "municipality", key: f.properties.ags, label: f.properties.name, sub: f.properties.kind || "Municipality" });
+        results.push({ key: f.properties.ags, label: f.properties.name, sub: f.properties.kind || "Municipality" });
       }
     }
     for (const r of results) {
@@ -691,14 +550,11 @@
     }
   }
 
-  // ---------- chart (same design as map-timeseries) ----------
+  // ---------- chart ----------
   const CHART_PAD = { left: 70, right: 185, top: 30, bottom: 40 };
   const VB_W = 1000, VB_H = 600;
 
-  function fmtValue(v) {
-    if (v == null) return "—";
-    return `${(v * 100).toFixed(1)}%`;
-  }
+  function fmtValue(v) { if (v == null) return "—"; return `${(v * 100).toFixed(1)}%`; }
   function svgEl(tag, attrs) {
     const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
     for (const k in attrs) el.setAttribute(k, attrs[k]);
@@ -714,7 +570,7 @@
     const placeItems = state.preview ? [...state.selected, state.preview] : state.selected;
 
     if (isMultiParty()) {
-      document.getElementById("chartTitle").textContent = "Party vote share — multiple parties";
+      document.getElementById("chartTitle").textContent = "Current standing — multiple parties";
       if (!placeItems.length || !state.parties.length) {
         empty.textContent = "Pick at least one place and check at least one party to compare.";
         empty.style.display = "flex";
@@ -722,12 +578,7 @@
         return;
       }
       empty.style.display = "none";
-      const years = currentYears();
-      const token = ++state.renderToken;
-      ensureYearsLoaded(years).then(() => {
-        if (token !== state.renderToken) return;
-        drawMultiPartyChart(years, placeItems);
-      });
+      drawMultiPartyChart(state.years, placeItems);
       return;
     }
 
@@ -740,12 +591,7 @@
       return;
     }
     empty.style.display = "none";
-    const years = currentYears();
-    const token = ++state.renderToken;
-    ensureYearsLoaded(years).then(() => {
-      if (token !== state.renderToken) return;
-      drawChart(years, placeItems, metricKey);
-    });
+    drawChart(state.years, placeItems, metricKey);
   }
 
   function drawAxes(svg, years, xFor, yFor, vMin, vMax) {
@@ -771,7 +617,9 @@
     svg.appendChild(svgEl("line", { class: "axis-line", x1: CHART_PAD.left, x2: CHART_PAD.left, y1: CHART_PAD.top, y2: VB_H - CHART_PAD.bottom }));
   }
 
-  // series: [{ label, color, points, isPreview, dash? }]
+  // series: [{ label, color, points, isPreview, dash? }] - points are drawn as a
+  // continuous step-like line since the underlying value only moves when that area's
+  // own next election lands, and otherwise repeats unchanged year after year.
   function buildSeriesLines(svg, series, xFor, yFor, opts) {
     opts = opts || {};
     for (const s of series) {
@@ -787,7 +635,10 @@
         if (s.dash) attrs["stroke-dasharray"] = s.dash;
         svg.appendChild(svgEl("path", attrs));
         if (!s.isPreview) {
-          for (const p of r) svg.appendChild(svgEl("circle", { class: "series-dot", cx: xFor(p.year), cy: yFor(p.value), r: opts.dotR || 2.6, fill: s.color }));
+          for (const p of r) {
+            if (!p.fresh) continue; // only mark the years the value actually CHANGED
+            svg.appendChild(svgEl("circle", { class: "series-dot", cx: xFor(p.year), cy: yFor(p.value), r: opts.dotR || 3, fill: s.color }));
+          }
         }
       }
       if (opts.showEndLabels) {
@@ -818,6 +669,17 @@
     return (year) => CHART_PAD.left + (yearNums[years.indexOf(year)] - yMin) / Math.max(1, (yMax - yMin)) * plotW;
   }
 
+  // A point is "fresh" when this area's OWN record actually updated that year -
+  // distinct from every other year, where the line is just carrying forward.
+  function pointsFor(item, years, metricKey) {
+    return years.map((y) => {
+      const value = valueFor(item, y, metricKey);
+      const rec = item.type === "municipality" ? (state.dataCache[y] || {})[item.key] : null;
+      const fresh = item.type === "municipality" ? !!(rec && rec.y === y) : null;
+      return { year: y, value, fresh };
+    });
+  }
+
   function drawChart(years, items, metricKey) {
     const svg = document.getElementById("chartSvg");
     svg.innerHTML = "";
@@ -826,7 +688,7 @@
 
     const series = items.map((item) => ({
       label: item.label, color: item.color, isPreview: item === state.preview,
-      points: years.map((y) => ({ year: y, value: valueFor(item, y, metricKey) })),
+      points: pointsFor(item, years, metricKey),
     }));
     const domain = valueDomain(series);
     if (!domain) {
@@ -856,7 +718,7 @@
           color: partyInfo(partyKey).color,
           dash: DASH_PATTERNS[pIdx % DASH_PATTERNS.length],
           isPreview: place === state.preview,
-          points: years.map((y) => ({ year: y, value: valueFor(place, y, partyKey) })),
+          points: pointsFor(place, years, partyKey),
         });
       });
     });
@@ -891,11 +753,8 @@
     document.getElementById("multiLegendParties").innerHTML = `<div class="mlegend-title">Party = color</div>${partiesHtml}`;
     document.getElementById("multiLegendPlaces").innerHTML = `<div class="mlegend-title">Place = line style</div>${placesHtml}`;
   }
-  function hideMultiLegend() {
-    document.getElementById("multiLegend").style.display = "none";
-  }
+  function hideMultiLegend() { document.getElementById("multiLegend").style.display = "none"; }
 
-  // series: [{ label, color, points }]
   function attachHover(svg, years, xFor, yFor, series) {
     const overlay = svgEl("rect", {
       x: CHART_PAD.left, y: CHART_PAD.top, width: VB_W - CHART_PAD.left - CHART_PAD.right,
@@ -935,46 +794,7 @@
     });
   }
 
-  // ---------- wiring ----------
-  function populateStateSelect() {
-    const sel = document.getElementById("stateSelect");
-    sel.innerHTML = "";
-    const states = state.manifest[state.type].states;
-    const slugs = Object.keys(states);
-    for (const slug of slugs) {
-      const opt = document.createElement("option");
-      opt.value = slug;
-      opt.textContent = states[slug].label;
-      sel.appendChild(opt);
-    }
-    if (!state.stateSlug || !slugs.includes(state.stateSlug)) state.stateSlug = slugs.includes("berlin") ? "berlin" : slugs[0];
-    sel.value = state.stateSlug;
-  }
-
-  function updatePartyRowsVisibility() {
-    const showPartyControls = state.metricMode === "party";
-    document.getElementById("partyModeRow").style.display = showPartyControls ? "block" : "none";
-    document.getElementById("partyRow").style.display = showPartyControls && state.partyMode === "single" ? "block" : "none";
-    document.getElementById("multiPartyRow").style.display = showPartyControls && state.partyMode === "multi" ? "block" : "none";
-  }
-
-  function onContextChange() {
-    // Type/state changed: the data source changed entirely, so old selections may no
-    // longer resolve (a Cologne pick doesn't exist under a Bavaria-scoped Landtag
-    // fetch) - clearest behavior is to drop them rather than silently show gaps.
-    state.selected = [];
-    state.preview = null;
-    state.parties = [];
-    renderSelectedList();
-    document.getElementById("stateRow").style.display = isStateScoped() ? "block" : "none";
-    if (isStateScoped()) populateStateSelect();
-    document.getElementById("resToggle").querySelector('[data-res="state"]').disabled = isStateScoped();
-    if (isStateScoped() && state.miniRes === "state") state.miniRes = "county";
-    document.querySelectorAll("#resToggle button").forEach((b) => b.classList.toggle("active", b.dataset.res === state.miniRes));
-    loadMiniLayer();
-    return populatePartySelect().then(() => { populatePartyChecklist(); renderChart(); });
-  }
-
+  // ---------- reset / sample ----------
   function resetAll() {
     state.selected = [];
     state.preview = null;
@@ -987,46 +807,33 @@
     renderChart();
   }
 
-  // Demonstrates the tool with a concrete, real comparison: AfD's vote share in two
-  // states with very different trajectories (Baden-Württemberg vs Saxony-Anhalt).
   function applySample() {
     if (!state.manifest) return;
-    state.type = "federal";
-    document.querySelectorAll("#typeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.type === "federal"));
-    onContextChange().then(() => {
-      state.metricMode = "party";
-      document.querySelectorAll("#metricModeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.mode === "party"));
-      state.partyMode = "single";
-      document.querySelectorAll("#partyModeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.mode === "single"));
-      updatePartyRowsVisibility();
-      state.party = "afd";
-      const sel = document.getElementById("partySelect");
-      if ([...sel.options].some((o) => o.value === "afd")) sel.value = "afd";
-      updatePartyDescription();
+    state.metricMode = "party";
+    document.querySelectorAll("#metricModeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.mode === "party"));
+    state.partyMode = "single";
+    document.querySelectorAll("#partyModeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.mode === "single"));
+    updatePartyRowsVisibility();
+    state.party = "afd";
+    const sel = document.getElementById("partySelect");
+    if ([...sel.options].some((o) => o.value === "afd")) sel.value = "afd";
+    updatePartyDescription();
 
-      const bw = state.manifest.landtag.states.baden_wuerttemberg;
-      const sa = state.manifest.landtag.states.saxony_anhalt;
-      state.selected = [
-        { type: "state", key: "baden_wuerttemberg", label: bw ? bw.label : "Baden-Württemberg", color: nextColor() },
-        { type: "state", key: "saxony_anhalt", label: sa ? sa.label : "Saxony-Anhalt", color: nextColor() },
-      ];
-      renderSelectedList();
-      restyleMiniMap();
-      renderChart();
-    });
+    state.miniRes = "state";
+    document.querySelectorAll("#resToggle button").forEach((b) => b.classList.toggle("active", b.dataset.res === "state"));
+    loadMiniLayer();
+
+    const bwLabel = stateLabel("08"), saLabel = stateLabel("15");
+    state.selected = [
+      { type: "state", key: "baden_wuerttemberg", label: bwLabel, color: nextColor() },
+      { type: "state", key: "saxony_anhalt", label: saLabel, color: nextColor() },
+    ];
+    renderSelectedList();
+    restyleMiniMap();
+    renderChart();
   }
 
-  document.getElementById("typeToggle").addEventListener("click", (e) => {
-    const btn = e.target.closest("button");
-    if (!btn) return;
-    state.type = btn.dataset.type;
-    document.querySelectorAll("#typeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.type === state.type));
-    onContextChange();
-  });
-  document.getElementById("stateSelect").addEventListener("change", (e) => {
-    state.stateSlug = e.target.value;
-    onContextChange();
-  });
+  // ---------- wiring ----------
   document.getElementById("metricModeToggle").addEventListener("click", (e) => {
     const btn = e.target.closest("button");
     if (!btn) return;
@@ -1051,7 +858,7 @@
   });
   document.getElementById("resToggle").addEventListener("click", (e) => {
     const btn = e.target.closest("button");
-    if (btn && !btn.disabled) onResChange(btn.dataset.res);
+    if (btn) onResChange(btn.dataset.res);
   });
   document.getElementById("searchInput").addEventListener("input", (e) => runSearch(e.target.value));
   document.getElementById("resetBtn").addEventListener("click", resetAll);
@@ -1059,21 +866,28 @@
 
   function init() {
     setLoading(true);
-    Promise.all([
-      fetchJson(`${DATA_DIR}/manifest.json`),
-      fetchJson(`${DATA_DIR}/gemeinden.geojson`),
-      fetchJson(`${DATA_DIR}/counties.geojson`),
-      fetchJson(`${DATA_DIR}/state_outlines.geojson`),
-    ]).then(([manifest, muniBoundary, countyBoundary, stateBoundary]) => {
+    fetchJson(`${DATA_DIR}/manifest.json`).then((manifest) => {
       state.manifest = manifest;
+      state.years = manifest.years;
+      document.getElementById("noteLine").textContent =
+        "Loading every year of the current-standing composite up front (about 65MB, once) so every click afterward is instant…";
+
+      return Promise.all([
+        fetchJson(`${DATA_DIR}/gemeinden.geojson`),
+        fetchJson(`${DATA_DIR}/counties.geojson`),
+        fetchJson(`${DATA_DIR}/state_outlines.geojson`),
+        ...state.years.map((y) => fetchJson(`${DATA_DIR}/${y}.json`).then((d) => { state.dataCache[y] = d; })),
+      ]);
+    }).then(([muniBoundary, countyBoundary, stateBoundary]) => {
       state.muniBoundary = muniBoundary;
       state.countyBoundary = countyBoundary;
       state.stateBoundary = stateBoundary;
       initMiniMap();
       document.getElementById("noteLine").textContent =
-        "A party's value is only shown for years/areas where it placed in that area's local top 5 - left blank (not zero) otherwise, since \"outside the top 5\" could mean anything from 4% to 0%. State/county lines are a simple (unweighted) average of their municipalities, not population-weighted. Switching election type or state clears the current comparison, since the underlying data source changes entirely.";
+        "Each line reads a place's current-standing value directly from the same rolling composite as the map: flat while nothing changes there, and only moving the moment that area gets a fresh election of its own. A dot marks the years a line actually updated. State/county lines are a simple (unweighted) average of their municipalities, not population-weighted. A party outside a local top 5 is left blank, not 0.";
+      populatePartySelect();
       updatePartyRowsVisibility();
-      populatePartySelect().then(() => { populatePartyChecklist(); renderChart(); });
+      renderChart();
     }).catch((err) => {
       document.getElementById("noteLine").textContent = `Failed to load: ${err.message}`;
     }).finally(() => setLoading(false));

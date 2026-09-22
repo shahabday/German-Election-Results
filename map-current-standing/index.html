@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Germany's Current Standing — Rolling Election Composite</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e8eaed;
+    --text-dim: #9aa0ab;
+    --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  #app { position: relative; height: 100vh; width: 100vw; }
+  #map { position: absolute; inset: 0; background: #0b0d11; }
+
+  #panel {
+    position: absolute; top: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 14px 16px; width: 320px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  #panel h1 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+  #panel .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; line-height: 1.5; }
+
+  .row { margin-bottom: 12px; }
+  .row:last-child { margin-bottom: 0; }
+  .row-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+
+  #yearSlider { width: 100%; accent-color: var(--accent); }
+  #yearLabel { font-size: 22px; font-weight: 700; text-align: center; margin: 2px 0 6px; }
+  #yearTicks { display: flex; justify-content: space-between; font-size: 8px; color: var(--text-dim); padding: 0 2px; }
+
+  #eventLine { font-size: 11.5px; color: var(--text); background: #1e222b; border: 1px solid var(--panel-border); border-radius: 6px; padding: 7px 9px; line-height: 1.5; }
+  #eventLine .nation { color: #fff; font-weight: 600; }
+  #eventLine .locals { color: var(--text-dim); }
+
+  .toggle-group { display: flex; border: 1px solid var(--panel-border); border-radius: 6px; overflow: hidden; }
+  .toggle-group button {
+    flex: 1; background: transparent; color: var(--text-dim); border: none; padding: 6px 4px;
+    font-size: 11px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .toggle-group button.active { background: var(--accent); color: #fff; }
+  .toggle-group button:not(.active):hover { background: #20242e; color: var(--text); }
+
+  #statusLine { font-size: 11px; color: var(--text-dim); margin-top: 10px; min-height: 14px; }
+
+  #legend {
+    position: absolute; bottom: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 10px 14px; font-size: 11px; max-width: 220px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  #legend .legend-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; cursor: help; }
+  .legend-swatch { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); }
+  .legend-pct { color: var(--text-dim); margin-left: auto; font-variant-numeric: tabular-nums; }
+  #legendNote { font-size: 10px; color: var(--text-dim); margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--panel-border); line-height: 1.4; }
+  #legendNote .fresh-swatch { display: inline-block; width: 9px; height: 9px; border: 1.5px solid #fff; background: transparent; vertical-align: middle; margin: 0 3px -1px 0; }
+
+  .leaflet-tooltip.muni-tooltip {
+    background: rgba(15, 17, 21, 0.96); color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    max-width: 240px;
+  }
+  .muni-tooltip .tt-title { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+  .muni-tooltip .tt-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+  .muni-tooltip .tt-swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+  .muni-tooltip .tt-party { flex: 1; }
+  .muni-tooltip .tt-share { font-variant-numeric: tabular-nums; color: var(--text-dim); }
+  .muni-tooltip .tt-meta { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--panel-border); color: var(--text-dim); font-size: 10.5px; line-height: 1.5; }
+  .muni-tooltip .tt-fresh { color: #fff; font-weight: 600; }
+
+  #loading {
+    position: absolute; top: 16px; right: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    padding: 6px 12px; font-size: 11px; color: var(--text-dim); display: none;
+  }
+  #loading.active { display: block; }
+
+  #credit {
+    position: absolute; bottom: 8px; right: 8px; z-index: 999;
+    font-size: 10px; color: var(--text-dim); background: rgba(15,17,21,0.7);
+    padding: 3px 8px; border-radius: 6px;
+  }
+
+  #panelHeaderRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  #panelHeaderRow h1 { margin: 0; }
+  #panelToggle {
+    display: none; flex: 0 0 auto; width: 26px; height: 26px; align-items: center; justify-content: center;
+    background: #1e222b; border: 1px solid var(--panel-border); border-radius: 6px; color: var(--text-dim);
+    font-size: 12px; cursor: pointer; padding: 0;
+  }
+  @media (max-width: 760px) {
+    #panel { width: calc(100vw - 32px); max-width: 380px; }
+    #panelToggle { display: flex; }
+    #panelBody { max-height: 0; overflow: hidden; }
+    #panel.expanded #panelBody { max-height: calc(100vh - 160px); overflow-y: auto; }
+    #legend { max-width: 190px; padding: 8px 10px; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="map"></div>
+
+  <div id="panel">
+    <h1>Germany's Current Standing</h1>
+    <div class="subtitle">Every area shown at its own most recent election — a rolling, always-up-to-date composite, not one simultaneous vote.</div>
+
+    <div class="row">
+      <div id="yearLabel">2025</div>
+      <input type="range" id="yearSlider" min="0" max="0" step="1" value="0">
+      <div id="yearTicks"></div>
+    </div>
+
+    <div class="row">
+      <div class="row-label">This year</div>
+      <div id="eventLine"></div>
+    </div>
+
+    <div class="row">
+      <div class="row-label">View</div>
+      <div class="toggle-group" id="viewToggle">
+        <button data-mode="all" class="active">All areas</button>
+        <button data-mode="changes">Just this year's changes</button>
+      </div>
+    </div>
+
+    <div id="statusLine"></div>
+  </div>
+
+  <script>
+  (function () {
+    var panel = document.getElementById("panel");
+    if (!panel) return;
+    var h1 = panel.querySelector("h1");
+    if (!h1) return;
+    var subtitle = panel.querySelector(".subtitle");
+    var headerRow = document.createElement("div");
+    headerRow.id = "panelHeaderRow";
+    var toggle = document.createElement("button");
+    toggle.id = "panelToggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-label", "Toggle controls");
+    toggle.textContent = "▾";
+    panel.insertBefore(headerRow, h1);
+    headerRow.appendChild(h1);
+    headerRow.appendChild(toggle);
+    var body = document.createElement("div");
+    body.id = "panelBody";
+    Array.prototype.slice.call(panel.children).forEach(function (el) {
+      if (el === headerRow || el === subtitle) return;
+      body.appendChild(el);
+    });
+    panel.appendChild(body);
+    toggle.addEventListener("click", function () {
+      var expanded = panel.classList.toggle("expanded");
+      toggle.textContent = expanded ? "▴" : "▾";
+    });
+  })();
+  </script>
+
+  <div id="legend">
+    <div class="legend-title">Leading party, nationwide</div>
+    <div id="legendItems"></div>
+    <div id="legendNote"><span class="fresh-swatch"></span>Bold white state border = that state voted in exactly this year</div>
+  </div>
+
+  <div id="loading">Loading…</div>
+  <div id="credit">Data: GERDA / Bundeswahlleiterin / Landeswahlleiter*innen · Boundaries: BKG VG250</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const DATA_DIR = "data/prepared";
+  const SRC_LABELS = { federal: "Bundestagswahl", european: "Europawahl", landtag: "Landtagswahl", kommunal: "Kommunalwahl" };
+  const NATIONWIDE_LABELS = { federal: "Bundestagswahl (nationwide)", european: "Europawahl (nationwide)" };
+  const STATE_SLUG_TO_CODE = {
+    schleswig_holstein: "01", hamburg: "02", niedersachsen: "03", bremen: "04",
+    north_rhine_westphalia: "05", hesse: "06", rhineland_palatinate: "07",
+    baden_wuerttemberg: "08", bavaria: "09", saarland: "10", berlin: "11",
+    brandenburg: "12", mecklenburg_vorpommern: "13", saxony: "14",
+    saxony_anhalt: "15", thuringia: "16",
+  };
+  const CODE_TO_STATE_SLUG = Object.fromEntries(Object.entries(STATE_SLUG_TO_CODE).map(([s, c]) => [c, s]));
+
+  const map = L.map("map", { zoomControl: false, attributionControl: false })
+    .setView([51.15, 10.45], 6);
+  L.control.zoom({ position: "topright" }).addTo(map);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nomatter/{z}/{x}/{y}{r}.png", {
+    maxZoom: 19,
+    subdomains: "abcd",
+  }).addTo(map);
+
+  const state = {
+    manifest: null,
+    muniBoundary: null,
+    geoLayer: null,
+    stateOutlineBoundary: null,
+    stateOutlineLayer: null,
+    years: [],
+    yearIndex: 0,
+    year: null,
+    dataCache: {},   // year -> {ags: {w,s,b,t,y,src}}
+    highlightChanges: false,
+    renderToken: 0,
+  };
+
+  const yearSlider = document.getElementById("yearSlider");
+  const yearLabel = document.getElementById("yearLabel");
+  const yearTicks = document.getElementById("yearTicks");
+  const eventLine = document.getElementById("eventLine");
+  const statusLine = document.getElementById("statusLine");
+  const loadingEl = document.getElementById("loading");
+  const legendItems = document.getElementById("legendItems");
+
+  function fetchJson(url) {
+    return fetch(url, { cache: "no-cache" }).then((r) => {
+      if (!r.ok) throw new Error(`${url}: ${r.status}`);
+      return r.json();
+    });
+  }
+  function setLoading(on) { loadingEl.classList.toggle("active", on); }
+
+  // Short, neutral one-liners for the legend's title="" tooltip.
+  const PARTY_DESCRIPTIONS = {
+    cdu_csu: "Christian Democrats — center-right (CSU is its Bavaria-only sister party).",
+    cdu: "Christian Democrats — center-right; runs everywhere except Bavaria, where CSU stands instead.",
+    csu: "Christian Social Union — CDU's center-right sister party, contesting Bavaria only.",
+    spd: "Social Democrats — center-left, Germany's oldest major party, rooted in the labor movement.",
+    gruene: "Greens — environmentalist and socially liberal, left-of-center.",
+    fdp: "Free Democrats — pro-business economic liberals, fiscally conservative.",
+    linke_pds: "The Left — democratic socialist, descended from East Germany's former ruling SED party.",
+    die_linke: "The Left — democratic socialist, descended from East Germany's former ruling SED party.",
+    afd: "Alternative for Germany — right-wing populist and anti-immigration; strongest in the former East.",
+    bsw: "Sahra Wagenknecht Alliance — economically left, socially conservative, anti-immigration; split from Die Linke in 2023.",
+    npd: "National Democratic Party — far-right, ethno-nationalist; marginal, later rebranded as HEIMAT.",
+    heimat: "HEIMAT (formerly NPD) — far-right, ethno-nationalist; marginal.",
+    die_rechte: "Die Rechte — far-right, ethno-nationalist; marginal.",
+    rep: "The Republicans — national-conservative; prominent regionally in the 1990s, now marginal.",
+    freie_wahler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    freie_waehler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    fr_waehler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    piraten: "Pirate Party — digital rights and government-transparency focused; prominent around 2009-2013.",
+    volt: "Volt — pro-European, pan-European progressive party.",
+    ssw: "South Schleswig Voters' Association — represents the Danish/Frisian minority in Schleswig-Holstein; exempt from the 5% threshold there.",
+    die_partei: "Die PARTEI — satirical party founded by comedians and journalists.",
+    buendnis_90: "Alliance 90 — East German civil-rights movement that merged with the Greens in 1993.",
+    oedp: "Ecological Democratic Party — conservative environmentalist, small.",
+    tierschutzpartei: "Animal-welfare-focused single-issue party.",
+    tierschutzallianz: "Animal-welfare-focused single-issue party.",
+    mieterpartei: "Tenants'-rights-focused single-issue party (Berlin).",
+    die_urbane: "Left-wing party focused on urban and migrant communities (Berlin).",
+    dkp: "German Communist Party — small orthodox communist party.",
+    kpd: "Communist Party of Germany — small orthodox communist party (post-war revival).",
+    sgp: "Socialist Equality Party — small Trotskyist party.",
+    mera25: "MERA25 — German branch of DiEM25, Yanis Varoufakis's pan-European left-wing movement.",
+    pdf: "Party der Humanisten — small secular-humanist liberal party.",
+    pdh: "Party der Humanisten — small secular-humanist liberal party.",
+    bundnis_c: "Bündnis C — small Christian-conservative party.",
+    diebasis: "dieBasis — founded in opposition to COVID-19 restrictions; direct-democracy focused.",
+    gartenpartei: "Small allotment-garden-interest party.",
+    einzelbewerber: "An independent candidate running without a party.",
+    other: "Smaller parties and independents too numerous to list individually.",
+  };
+  function partyDescription(party) {
+    return PARTY_DESCRIPTIONS[party] || "A smaller regional or single-issue party.";
+  }
+
+  function partyStyle(party) {
+    if (!state.manifest) return { color: "#999999", label: party || "—" };
+    return state.manifest.party_info[party] || { color: state.manifest.default_fallback.color, label: party || "—" };
+  }
+
+  function recordFor(ags) {
+    const yearData = state.dataCache[state.year];
+    return yearData ? yearData[ags] : null;
+  }
+
+  function fillOpacityForShare(share) {
+    if (share == null) return 0.4;
+    const clamped = Math.max(0.20, Math.min(0.65, share));
+    return 0.35 + (clamped - 0.20) * ((0.95 - 0.35) / (0.65 - 0.20));
+  }
+
+  function styleFeature(feature) {
+    const rec = recordFor(feature.properties.ags);
+    if (!rec) return { color: "#22262f", weight: 0.3, fillColor: "#161920", fillOpacity: 0.5 };
+    const style = partyStyle(rec.w);
+
+    // "Highlight changes" mode: a fresh election very often does NOT flip the winning
+    // party, so the normal choropleth color stays identical and a same-year update is
+    // easy to miss entirely, especially for a single state out of 16. This mode makes
+    // "what just changed" obvious regardless of whether the color itself moved, by
+    // sharply dimming everything that DIDN'T change this year. Which STATE(S) just
+    // voted is shown separately, via the bold state-border overlay - not per-muni
+    // borders here, which got noisy and unreadable at ~10,900 areas.
+    if (state.highlightChanges) {
+      const fresh = rec.y === state.year;
+      if (fresh) return { color: "#0b0d11", weight: 0.35, fillColor: style.color, fillOpacity: 0.9 };
+      return { color: "#1c1f27", weight: 0.2, fillColor: "#22262f", fillOpacity: 0.25 };
+    }
+
+    return {
+      color: "#0b0d11",
+      weight: 0.35,
+      fillColor: style.color,
+      fillOpacity: fillOpacityForShare(rec.s),
+    };
+  }
+
+  function highlightStyle(feature) {
+    const s = styleFeature(feature);
+    s.weight = 2;
+    s.color = "#ffffff";
+    return s;
+  }
+
+  function fmtPct(v) { return v == null ? "—" : (v * 100).toFixed(1) + "%"; }
+
+  function tooltipContent(feature) {
+    const rec = recordFor(feature.properties.ags);
+    const name = feature.properties.name;
+    if (!rec) {
+      return `<div class="tt-title">${name}</div><div class="tt-meta">No election on record for this area yet as of ${state.year}.</div>`;
+    }
+    const style = partyStyle(rec.w);
+    let rows = "";
+    (rec.b || []).slice(0, 5).forEach(([p, v]) => {
+      const st = partyStyle(p);
+      rows += `<div class="tt-row">
+          <span class="tt-swatch" style="background:${st.color}"></span>
+          <span class="tt-party">${st.label}</span>
+          <span class="tt-share">${fmtPct(v)}</span>
+        </div>`;
+    });
+    const fresh = rec.y === state.year;
+    const srcLabel = SRC_LABELS[rec.src] || rec.src;
+    return `
+      <div class="tt-title">${name}</div>
+      <div class="tt-row" style="margin-bottom:6px;">
+        <span class="tt-swatch" style="background:${style.color}"></span>
+        <span class="tt-party"><strong>${style.label}</strong> leads</span>
+        <span class="tt-share">${fmtPct(rec.s)}</span>
+      </div>
+      ${rows}
+      <div class="tt-meta">
+        Turnout ${fmtPct(rec.t)}<br>
+        Data from: ${srcLabel} ${rec.y}${fresh ? ' <span class="tt-fresh">(just updated)</span>' : ""}
+      </div>
+    `;
+  }
+
+  function buildLegend() {
+    const yearData = state.dataCache[state.year];
+    if (!yearData) { legendItems.innerHTML = ""; return; }
+    document.querySelector("#legend .legend-title").textContent =
+      state.highlightChanges ? "Leading party, areas that just voted" : "Leading party, nationwide";
+    const counts = {};
+    for (const ags in yearData) {
+      const rec = yearData[ags];
+      if (state.highlightChanges && rec.y !== state.year) continue;
+      if (rec.w) counts[rec.w] = (counts[rec.w] || 0) + 1;
+    }
+    const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    legendItems.innerHTML = "";
+    ranked.forEach(([party, n]) => {
+      const style = partyStyle(party);
+      const div = document.createElement("div");
+      div.className = "legend-item";
+      div.title = partyDescription(party);
+      div.innerHTML = `<span class="legend-swatch" style="background:${style.color}"></span>
+        <span>${style.label}</span>
+        <span class="legend-pct">${n}</span>`;
+      legendItems.appendChild(div);
+    });
+  }
+
+  function updateEventLine() {
+    const events = state.manifest.year_events[state.year];
+    if (!events) { eventLine.textContent = ""; return; }
+    const parts = [];
+    if (events.nationwide) {
+      parts.push(`<div class="nation">${NATIONWIDE_LABELS[events.nationwide]} — whole country refreshed</div>`);
+    }
+    const localSlugs = Object.keys(events.states || {});
+    if (localSlugs.length) {
+      const labels = localSlugs.map((slug) => state.manifest.state_labels[slug] || slug);
+      const kinds = new Set(Object.values(events.states));
+      const kindLabel = kinds.size === 1 ? SRC_LABELS[[...kinds][0]] : "state elections";
+      parts.push(`<div class="locals">${kindLabel} in: ${labels.join(", ")}</div>`);
+    }
+    if (!parts.length) parts.push(`<div class="locals">No election this year — every area still shows its last known result.</div>`);
+    eventLine.innerHTML = parts.join("");
+  }
+
+  function ensureYearLoaded(year) {
+    if (state.dataCache[year]) return Promise.resolve();
+    setLoading(true);
+    return fetchJson(`${DATA_DIR}/${year}.json`)
+      .then((d) => { state.dataCache[year] = d; })
+      .finally(() => setLoading(false));
+  }
+
+  // Whether a given state (by its 2-digit code) had an election - of ANY type - land
+  // in `state.year`: true for every state on a nationwide (Bundestag/Europawahl) year,
+  // or just the specific state(s) on a Landtag/Kommunalwahl year.
+  function isStateFreshThisYear(code) {
+    const events = state.manifest.year_events[state.year];
+    if (!events) return false;
+    if (events.nationwide) return true;
+    const slug = CODE_TO_STATE_SLUG[code];
+    return !!(slug && events.states && events.states[slug]);
+  }
+
+  function stateOutlineStyle(feature) {
+    if (isStateFreshThisYear(feature.properties.code)) {
+      return { color: "#ffffff", weight: 2.5, fill: false, opacity: 0.95 };
+    }
+    return { color: "#000000", weight: 0, fill: false, opacity: 0 };
+  }
+
+  function render() {
+    const year = state.years[state.yearIndex];
+    state.year = year;
+    yearLabel.textContent = year;
+    statusLine.textContent = `Showing the country as of ${year}`;
+    updateEventLine();
+
+    const token = ++state.renderToken;
+    ensureYearLoaded(year).then(() => {
+      if (token !== state.renderToken) return;
+      if (state.geoLayer) state.geoLayer.setStyle(styleFeature);
+      if (state.stateOutlineLayer) state.stateOutlineLayer.setStyle(stateOutlineStyle);
+      buildLegend();
+    });
+  }
+
+  yearSlider.addEventListener("input", () => {
+    state.yearIndex = +yearSlider.value;
+    render();
+  });
+
+  document.getElementById("viewToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-mode]");
+    if (!btn) return;
+    document.querySelectorAll("#viewToggle button").forEach((b) => b.classList.toggle("active", b === btn));
+    state.highlightChanges = btn.dataset.mode === "changes";
+    if (state.geoLayer) state.geoLayer.setStyle(styleFeature);
+    buildLegend();
+  });
+
+  function initLayer() {
+    state.geoLayer = L.geoJSON(state.muniBoundary, {
+      style: styleFeature,
+      onEachFeature: (feature, layer) => {
+        layer.bindTooltip(() => tooltipContent(feature), {
+          className: "muni-tooltip",
+          sticky: true,
+          direction: "top",
+        });
+        layer.on({
+          mouseover: (e) => e.target.setStyle(highlightStyle(feature)),
+          mouseout: (e) => e.target.setStyle(styleFeature(feature)),
+        });
+      },
+    }).addTo(map);
+
+    // Drawn on top of the municipality layer, boundary-only (no fill, not
+    // interactive) - a bold state-level outline is a much cleaner "this just voted"
+    // signal than bordering thousands of individual municipalities.
+    state.stateOutlineLayer = L.geoJSON(state.stateOutlineBoundary, {
+      style: stateOutlineStyle,
+      interactive: false,
+    }).addTo(map);
+  }
+
+  function init() {
+    setLoading(true);
+    Promise.all([
+      fetchJson(`${DATA_DIR}/manifest.json`),
+      fetchJson(`${DATA_DIR}/gemeinden.geojson`),
+      fetchJson(`${DATA_DIR}/state_outlines.geojson`),
+    ]).then(([manifest, muniBoundary, stateOutlineBoundary]) => {
+      state.manifest = manifest;
+      state.muniBoundary = muniBoundary;
+      state.stateOutlineBoundary = stateOutlineBoundary;
+      state.years = manifest.years;
+      state.yearIndex = state.years.length - 1;
+      yearSlider.max = state.years.length - 1;
+      yearSlider.value = state.yearIndex;
+
+      const tickYears = state.years.filter((y, i) => i % 4 === 0 || i === state.years.length - 1);
+      yearTicks.innerHTML = "";
+      tickYears.forEach((y) => {
+        const span = document.createElement("span");
+        span.textContent = "'" + y.slice(2);
+        yearTicks.appendChild(span);
+      });
+
+      initLayer();
+      render();
+    }).catch((err) => {
+      statusLine.textContent = `Failed to load: ${err.message}`;
+    }).finally(() => setLoading(false));
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Political — Map Visualizations — Germany in Maps</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel-border: #2a2e38;
+    --text: #e8eaed; --text-dim: #9aa0ab; --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  body { padding-bottom: 80px; }
+  a { color: inherit; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  .topnav {
+    position: sticky; top: 0; z-index: 100; background: rgba(15, 17, 21, 0.96);
+    backdrop-filter: blur(6px); border-bottom: 1px solid var(--panel-border);
+  }
+  .topnav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 54px;
+    display: flex; align-items: center; gap: 22px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .topnav-inner::-webkit-scrollbar { display: none; }
+  .topnav .brand { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+  .topnav .nav-links { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .topnav .nav-link { white-space: nowrap; }
+  .dropdown-toggle { white-space: nowrap; }
+  .topnav .nav-link { font-size: 13px; color: var(--text-dim); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
+  .topnav .nav-link:hover { color: var(--text); background: #1e222b; }
+  .dropdown { position: relative; }
+  .dropdown-toggle {
+    font: inherit; font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer;
+    padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px;
+  }
+  .dropdown-toggle:hover, .dropdown:focus-within .dropdown-toggle { color: var(--text); background: #1e222b; }
+  .dropdown-caret { font-size: 9px; transition: transform 0.15s; }
+  .dropdown:hover .dropdown-caret, .dropdown:focus-within .dropdown-caret { transform: rotate(180deg); }
+  .dropdown-menu {
+    position: absolute; top: 100%; left: 0; margin-top: 4px; min-width: 170px;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5); padding: 6px; display: none; flex-direction: column; gap: 2px;
+  }
+  .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { display: flex; }
+  .dropdown-menu a { font-size: 12.5px; color: var(--text-dim); text-decoration: none; padding: 7px 9px; border-radius: 6px; }
+  .dropdown-menu a:hover { color: var(--text); background: #20242e; }
+
+  .breadcrumb { font-size: 12px; color: var(--text-dim); margin: 28px 0 18px; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  h1 { font-size: 25px; margin: 0 0 14px; font-weight: 700; }
+  p.lead { font-size: 14.5px; color: var(--text-dim); line-height: 1.65; margin: 0 0 40px; }
+
+  .tool-block { padding: 26px 0; border-top: 1px solid var(--panel-border); }
+  .tool-block:first-of-type { border-top: none; }
+  .tool-block h2 { font-size: 18px; margin: 0 0 10px; font-weight: 700; }
+  .tool-block p { font-size: 13.5px; color: var(--text-dim); line-height: 1.7; margin: 0 0 10px; }
+  .tool-block ul { margin: 0 0 14px; padding-left: 18px; }
+  .tool-block li { font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-bottom: 4px; }
+  .open-btn {
+    display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600;
+    color: #fff; background: var(--accent); text-decoration: none; padding: 8px 14px; border-radius: 6px;
+  }
+  .open-btn:hover { filter: brightness(1.1); }
+
+  .back-home { display: inline-block; margin-top: 30px; font-size: 12.5px; color: var(--text-dim); text-decoration: none; }
+  .back-home:hover { color: var(--text); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html">Germany in Maps</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Home</a>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#political-map">Map visualizations</a>
+          <a href="../index.html#political-trend">Trend visualizations</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#demo-map">Map visualization</a>
+          <a href="../index.html#demo-trend">Trend visualization</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="breadcrumb"><a href="../index.html">Home</a> / Political / Map visualizations</div>
+  <h1>Political — Map Visualizations</h1>
+  <p class="lead">Four maps, four different ways of looking at the same underlying election results: a single election's real results, all four election types together, the swing between consecutive elections, and a rolling composite that's always showing each area's most recent vote.</p>
+
+  <section class="tool-block">
+    <h2>Bundestag Wahlkreis Map</h2>
+    <p>The real federal constituency map. Germany's Bundestag elections have 299 (fewer in some years) single-member direct-mandate seats, decided by Erststimme (first vote); a separate Zweitstimme (second vote, party list) determines each party's overall seat share nationally. This tool shows both, toggleable, on the actual constituency (Wahlkreis) boundaries for each of the 7 elections from 2002 to 2025 — the boundaries themselves get redrawn between elections as population shifts, so each year uses its own real geometry rather than a fixed approximation.</p>
+    <a class="open-btn" href="../map/">Open tool →</a>
+  </section>
+
+  <section class="tool-block">
+    <h2>Municipality Election Map</h2>
+    <p>All four election types — Bundestag (federal), Europawahl (European), Landtag (state parliament), and Kommunalwahl (municipal council) — at municipality resolution, nationwide, 1990–2026 (~10,900 municipalities). Landtag and Kommunalwahl each run on their own state's independent schedule rather than simultaneously, so this tool includes a nationwide "current standing" view that shows every state at its own most recent election. It also includes 2026 results scraped directly from official state sources — including Berlin's real 78-constituency (Wahlkreis) breakdown, not just a single citywide number — days before most public datasets had them.</p>
+    <p>One honest caveat: the color shown is each area's plurality winner, an ecological/aggregate statistic — not a real single-winner seat outcome, except for the actual Bundestag Wahlkreise and Berlin's 2026 Abgeordnetenhaus Wahlkreise, which are genuine direct-mandate seats.</p>
+    <a class="open-btn" href="../map-municipality/">Open tool →</a>
+  </section>
+
+  <section class="tool-block">
+    <h2>Election Trends — Swing Map</h2>
+    <p>Shows the swing between two consecutive elections of the same type: which party gained or lost ground, which areas flipped to a new winner, and which areas are "at risk" of flipping to a party you pick. Swing is measured in percentage points (this year's share minus last time's), not relative percent growth — a brand-new party going from 0% to 8% would show as "infinite" relative growth, which is misleading; pp swing handles that correctly. CDU and CSU are merged into one party for swing purposes, since they never actually compete against each other (CSU only runs in Bavaria, CDU everywhere else).</p>
+    <a class="open-btn" href="../map-trends/">Open tool →</a>
+  </section>
+
+  <section class="tool-block">
+    <h2>Germany's Current Standing</h2>
+    <p>A single, continuously updated picture of "how would the whole country vote right now" — built by walking through every year from 1990 to 2026 and, for each area, keeping whatever its most recent applicable election showed. A nationwide election (Bundestag, or Europawahl in years without one) refreshes every area in the country at once; a state election (Landtag, or Kommunalwahl) refreshes just that state, while everywhere else simply keeps showing its last known result. Hovering any area always states plainly which year/election its number actually comes from, since neighboring areas can legitimately be showing different source years at the same point on the timeline. A "highlight this year's changes" view and a bold state-border overlay make it obvious, at a glance, which part of the country just voted.</p>
+    <a class="open-btn" href="../map-current-standing/">Open tool →</a>
+  </section>
+
+  <a class="back-home" href="../index.html">← Back to all tools</a>
+</div>
+</body>
+</html>

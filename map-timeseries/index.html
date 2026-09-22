@@ -42,7 +42,14 @@
     border-radius: 6px; padding: 7px 8px; font-size: 12.5px;
   }
 
-  #miniMap { height: 230px; border-radius: 8px; border: 1px solid var(--panel-border); background: #0b0d11; }
+  #miniMap { height: 340px; border-radius: 8px; border: 1px solid var(--panel-border); background: #0b0d11; }
+
+  .action-row { display: flex; gap: 8px; }
+  .action-btn {
+    flex: 1 1 auto; background: #1e222b; color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 6px; padding: 7px 8px; font-size: 12px; cursor: pointer; text-align: center;
+  }
+  .action-btn:hover { background: #262b36; border-color: #3a3f4b; }
 
   #searchResults { margin-top: 4px; border-radius: 6px; overflow: hidden; }
   .search-result {
@@ -109,7 +116,7 @@
     #app { flex-direction: column; height: auto; min-height: 100vh; }
     #panel { flex: 0 0 auto; width: 100%; max-height: 52vh; border-right: none; border-bottom: 1px solid var(--panel-border); }
     #chartWrap { flex: 1 1 auto; width: 100%; min-height: 320px; }
-    #miniMap { height: 180px; }
+    #miniMap { height: 220px; }
   }
 </style>
 </head>
@@ -118,6 +125,13 @@
   <div id="panel">
     <h1>States &amp; Counties Over Time</h1>
     <div class="subtitle">Click the map or search to compare metrics across areas</div>
+
+    <div class="row">
+      <div class="action-row">
+        <button type="button" class="action-btn" id="resetBtn">↺ Reset</button>
+        <button type="button" class="action-btn" id="sampleBtn">✨ Sample</button>
+      </div>
+    </div>
 
     <div class="row">
       <div class="row-label">Metric</div>
@@ -333,10 +347,21 @@
         });
       },
     }).addTo(state.miniMap);
+    fitMiniMapToLayer();
   }
   function metricLabelForState(code) {
     const s = state.manifest.states.find((s) => s.code === code);
     return s ? s.label : code;
+  }
+
+  // Zooms the mini map to fill the panel with whatever it's currently showing,
+  // instead of a fixed all-Germany zoom that leaves the container mostly empty.
+  function fitMiniMapToLayer() {
+    if (!state.miniLayer) return;
+    try {
+      const bounds = state.miniLayer.getBounds();
+      if (bounds.isValid()) state.miniMap.fitBounds(bounds, { padding: [8, 8] });
+    } catch (e) { /* geometry not ready yet - keep the current view */ }
   }
 
   function restyleMiniMap() {
@@ -588,6 +613,41 @@
     if (btn) onResChange(btn.dataset.res);
   });
   document.getElementById("searchInput").addEventListener("input", (e) => runSearch(e.target.value));
+  document.getElementById("resetBtn").addEventListener("click", resetAll);
+  document.getElementById("sampleBtn").addEventListener("click", applySample);
+
+  function resetAll() {
+    state.selected = [];
+    state.preview = null;
+    document.getElementById("searchInput").value = "";
+    document.getElementById("searchResults").innerHTML = "";
+    renderSelectedList();
+    restyleMiniMap();
+    renderChart();
+  }
+
+  // Demonstrates the tool with a concrete, real comparison: average gross wage in
+  // Bavaria vs Saxony, showing the west/east gap slowly narrowing over time.
+  function applySample() {
+    if (!state.manifest) return;
+    state.metric = "gross_wage";
+    const metricSel = document.getElementById("metricSelect");
+    if ([...metricSel.options].some((o) => o.value === "gross_wage")) metricSel.value = "gross_wage";
+    updateMetricDescription();
+    state.miniRes = "state";
+    document.querySelectorAll("#resToggle button").forEach((b) => b.classList.toggle("active", b.dataset.res === "state"));
+    loadMiniLayer();
+
+    const bavaria = state.manifest.states.find((s) => s.slug === "bavaria");
+    const saxony = state.manifest.states.find((s) => s.slug === "saxony");
+    state.selected = [
+      { type: "state", key: "bavaria", label: bavaria ? bavaria.label : "Bavaria", color: nextColor() },
+      { type: "state", key: "saxony", label: saxony ? saxony.label : "Saxony", color: nextColor() },
+    ];
+    renderSelectedList();
+    restyleMiniMap();
+    renderChart();
+  }
 
   function init() {
     setLoading(true);

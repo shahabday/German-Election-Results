@@ -25,6 +25,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 MUNI_SRC = ROOT / "map-municipality" / "data" / "prepared"
+MUNI_SPECIAL_SRC = ROOT / "map-municipality" / "data" / "special"
 DEMO_SRC = ROOT / "map-demographics" / "data" / "prepared"
 TRENDS_SRC = ROOT / "map-trends" / "data" / "prepared"
 OUT = Path(__file__).resolve().parent / "data" / "prepared"
@@ -56,6 +57,19 @@ def main():
         if dst.exists():
             shutil.rmtree(dst)
         shutil.copytree(src, dst)
+
+    # Berlin's Landtag (Abgeordnetenhaus) is one municipality (AGS 11000000) everywhere
+    # else in this dataset, so its own Landtag time series is a single flat line - the
+    # 2026 election is the one exception, with a real 78-Wahlkreis breakdown scraped
+    # from wahlen-berlin.de (see map-municipality/build_berlin_2026.py). Copying just
+    # those two small files lets the frontend offer Berlin's districts as click targets,
+    # even though only the 2026 point will have data - every other year stays blank for
+    # those areas, which the frontend explains inline.
+    print("copying Berlin 2026 Wahlkreis special layer...")
+    berlin_out = OUT / "special" / "berlin_2026"
+    berlin_out.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(MUNI_SPECIAL_SRC / "berlin_2026" / "wahlkreise.geojson", berlin_out / "wahlkreise.geojson")
+    shutil.copyfile(MUNI_SPECIAL_SRC / "berlin_2026" / "muni_format.json", berlin_out / "muni_format.json")
 
     muni_manifest = load(MUNI_SRC / "manifest.json")
     manifest = {
