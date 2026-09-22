@@ -103,6 +103,13 @@
     padding: 6px 12px; font-size: 11px; color: var(--text-dim); display: none;
   }
   #loading.active { display: block; }
+
+  @media (max-width: 760px) {
+    #app { flex-direction: column; height: auto; min-height: 100vh; }
+    #panel { flex: 0 0 auto; width: 100%; max-height: 52vh; border-right: none; border-bottom: 1px solid var(--panel-border); }
+    #chartWrap { flex: 1 1 auto; width: 100%; min-height: 320px; }
+    #miniMap { height: 170px; }
+  }
 </style>
 </head>
 <body>

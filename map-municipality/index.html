@@ -86,6 +86,21 @@
     font-size: 10px; color: var(--text-dim); background: rgba(15,17,21,0.7);
     padding: 3px 8px; border-radius: 6px;
   }
+
+  #panelHeaderRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  #panelHeaderRow h1 { margin: 0; }
+  #panelToggle {
+    display: none; flex: 0 0 auto; width: 26px; height: 26px; align-items: center; justify-content: center;
+    background: #1e222b; border: 1px solid var(--panel-border); border-radius: 6px; color: var(--text-dim);
+    font-size: 12px; cursor: pointer; padding: 0;
+  }
+  @media (max-width: 760px) {
+    #panel { width: calc(100vw - 32px); max-width: 360px; }
+    #panelToggle { display: flex; }
+    #panelBody { max-height: 0; overflow: hidden; }
+    #panel.expanded #panelBody { max-height: calc(100vh - 160px); overflow-y: auto; }
+    #legend { max-width: 190px; padding: 8px 10px; font-size: 10px; }
+  }
 </style>
 </head>
 <body>
@@ -120,6 +135,37 @@
     <div id="statusLine"></div>
     <div id="noteLine">Vote-share plurality per municipality — an area-level statistic, not a real single-winner seat (see repo docs/GAPS_AND_LIMITATIONS.md).</div>
   </div>
+
+  <script>
+  (function () {
+    var panel = document.getElementById("panel");
+    if (!panel) return;
+    var h1 = panel.querySelector("h1");
+    if (!h1) return;
+    var subtitle = panel.querySelector(".subtitle");
+    var headerRow = document.createElement("div");
+    headerRow.id = "panelHeaderRow";
+    var toggle = document.createElement("button");
+    toggle.id = "panelToggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-label", "Toggle controls");
+    toggle.textContent = "▾";
+    panel.insertBefore(headerRow, h1);
+    headerRow.appendChild(h1);
+    headerRow.appendChild(toggle);
+    var body = document.createElement("div");
+    body.id = "panelBody";
+    Array.prototype.slice.call(panel.children).forEach(function (el) {
+      if (el === headerRow || el === subtitle) return;
+      body.appendChild(el);
+    });
+    panel.appendChild(body);
+    toggle.addEventListener("click", function () {
+      var expanded = panel.classList.toggle("expanded");
+      toggle.textContent = expanded ? "▴" : "▾";
+    });
+  })();
+  </script>
 
   <div id="legend">
     <div class="legend-title">Municipalities won</div>
