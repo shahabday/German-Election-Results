@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German States &amp; Counties — Time Series Compare</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e8eaed;
+    --text-dim: #9aa0ab;
+    --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  #app { position: relative; height: 100vh; width: 100vw; display: flex; }
+
+  #panel {
+    flex: 0 0 340px; background: var(--panel); border-right: 1px solid var(--panel-border);
+    padding: 14px 16px; overflow-y: auto; z-index: 10;
+  }
+  #panel h1 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+  #panel .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
+
+  .row { margin-bottom: 12px; }
+  .row:last-child { margin-bottom: 0; }
+  .row-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+
+  .toggle-group { display: flex; border: 1px solid var(--panel-border); border-radius: 6px; overflow: hidden; }
+  .toggle-group button {
+    flex: 1 1 auto; background: transparent; color: var(--text-dim); border: none; padding: 7px 4px;
+    font-size: 12px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .toggle-group button.active { background: var(--accent); color: #fff; }
+  .toggle-group button:not(.active):hover { background: #20242e; color: var(--text); }
+
+  select, input[type="text"] {
+    width: 100%; background: #1e222b; color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 6px; padding: 7px 8px; font-size: 12.5px;
+  }
+
+  #miniMap { height: 230px; border-radius: 8px; border: 1px solid var(--panel-border); background: #0b0d11; }
+
+  #searchResults { margin-top: 4px; border-radius: 6px; overflow: hidden; }
+  .search-result {
+    padding: 6px 8px; font-size: 12px; background: #1e222b; border: 1px solid var(--panel-border);
+    border-top: none; cursor: pointer;
+  }
+  .search-result:first-child { border-top: 1px solid var(--panel-border); border-radius: 6px 6px 0 0; }
+  .search-result:last-child { border-radius: 0 0 6px 6px; }
+  .search-result:hover { background: #262b36; }
+  .search-result .sr-type { color: var(--text-dim); font-size: 10px; margin-left: 6px; }
+
+  #selectedList { display: flex; flex-direction: column; gap: 4px; }
+  .chip {
+    display: flex; align-items: center; gap: 6px; background: #1e222b; border: 1px solid var(--panel-border);
+    border-radius: 6px; padding: 5px 8px; font-size: 12px;
+  }
+  .chip .swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .chip .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chip .remove { cursor: pointer; color: var(--text-dim); font-size: 14px; line-height: 1; padding: 0 2px; }
+  .chip .remove:hover { color: #fff; }
+  #selectedEmpty { font-size: 11px; color: var(--text-dim); font-style: italic; }
+
+  #noteLine { font-size: 10.5px; color: var(--text-dim); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--panel-border); }
+  #metricDescription { font-size: 11px; color: var(--text-dim); margin-top: 6px; line-height: 1.4; }
+
+  #chartWrap { flex: 1 1 auto; position: relative; background: #0b0d11; }
+  #chartTitle {
+    position: absolute; top: 16px; left: 20px; z-index: 5; font-size: 14px; font-weight: 600;
+  }
+  #chartSvg { width: 100%; height: 100%; display: block; }
+  .axis-line { stroke: #2a2e38; stroke-width: 1; }
+  .grid-line { stroke: #1c1f27; stroke-width: 1; }
+  .axis-label { fill: #9aa0ab; font-size: 11px; font-variant-numeric: tabular-nums; }
+  .series-path { fill: none; stroke-width: 2.2; }
+  .series-path.preview { stroke-dasharray: 4 3; opacity: 0.6; }
+  .series-dot { stroke: #0b0d11; stroke-width: 1; }
+  .series-end-label { font-size: 10px; font-weight: 600; }
+  .hover-guide { stroke: #4a4f5c; stroke-width: 1; stroke-dasharray: 3 3; }
+
+  #emptyState {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: var(--text-dim); font-size: 13px; text-align: center; padding: 0 40px;
+  }
+
+  #chartTooltip {
+    position: absolute; z-index: 20; background: rgba(15, 17, 21, 0.97); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 8px 10px; font-size: 11.5px; box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    pointer-events: none; display: none; min-width: 140px;
+  }
+  #chartTooltip .tt-year { font-weight: 700; font-size: 12.5px; margin-bottom: 4px; }
+  #chartTooltip .tt-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+  #chartTooltip .tt-swatch { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  #chartTooltip .tt-name { flex: 1; color: var(--text-dim); }
+  #chartTooltip .tt-val { font-variant-numeric: tabular-nums; }
+
+  #loading {
+    position: absolute; top: 16px; right: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    padding: 6px 12px; font-size: 11px; color: var(--text-dim); display: none;
+  }
+  #loading.active { display: block; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="panel">
+    <h1>States &amp; Counties Over Time</h1>
+    <div class="subtitle">Click the map or search to compare metrics across areas</div>
+
+    <div class="row">
+      <div class="row-label">Metric</div>
+      <select id="metricSelect"></select>
+      <div id="metricDescription"></div>
+    </div>
+
+    <div class="row">
+      <div class="row-label">Pick on map</div>
+      <div class="toggle-group" id="resToggle">
+        <button data-res="state" class="active">States (16)</button>
+        <button data-res="county">Counties (~400)</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="miniMap"></div>
+    </div>
+
+    <div class="row">
+      <div class="row-label">Search a county or city</div>
+      <input type="text" id="searchInput" placeholder="e.g. München, Köln…" autocomplete="off">
+      <div id="searchResults"></div>
+    </div>
+
+    <div class="row">
+      <div class="row-label">Comparing</div>
+      <div id="selectedList"><div id="selectedEmpty">Nothing selected yet</div></div>
+    </div>
+
+    <div id="noteLine"></div>
+  </div>
+
+  <div id="chartWrap">
+    <div id="chartTitle"></div>
+    <svg id="chartSvg" viewBox="0 0 1000 600" preserveAspectRatio="none"></svg>
+    <div id="emptyState">Click a state on the mini map, or search for a county/city, to start comparing.</div>
+    <div id="chartTooltip"></div>
+  </div>
+
+  <div id="loading">Loading…</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const DATA_DIR = "data/prepared";
+  const PALETTE = [
+    "#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f", "#edc948",
+    "#b07aa1", "#ff9da7", "#9c755f", "#bab0ac", "#86bcb6", "#d37295",
+  ];
+
+  const state = {
+    manifest: null,
+    countyBoundary: null,
+    stateBoundary: null,
+    miniRes: "state",
+    metric: null,
+    selected: [],      // [{type:'state'|'county', key, label, color}]
+    preview: null,      // same shape, temporary hover item, or null
+    stateCache: {},     // year -> {slug: {metric: val}}
+    countyCache: {},    // year -> {county5: {metric: val}}
+    nextColorIdx: 0,
+    miniMap: null,
+    miniLayer: null,
+    renderToken: 0,
+  };
+
+  function fetchJson(url) {
+    return fetch(url, { cache: "no-cache" }).then((r) => {
+      if (!r.ok) throw new Error(`${url}: ${r.status}`);
+      return r.json();
+    });
+  }
+  function setLoading(on) {
+    document.getElementById("loading").classList.toggle("active", on);
+  }
+
+  function metricInfo(key) {
+    return state.manifest.metrics.find((m) => m.key === key);
+  }
+
+  function nextColor() {
+    const used = new Set(state.selected.map((s) => s.color));
+    for (let i = 0; i < PALETTE.length; i++) {
+      const c = PALETTE[(state.nextColorIdx + i) % PALETTE.length];
+      if (!used.has(c)) { state.nextColorIdx += i + 1; return c; }
+    }
+    const c = PALETTE[state.nextColorIdx % PALETTE.length];
+    state.nextColorIdx++;
+    return c;
+  }
+
+  // ---------- data caching ----------
+  function ensureYearsLoaded(years) {
+    const missingState = years.filter((y) => !state.stateCache[y]);
+    const missingCounty = years.filter((y) => !state.countyCache[y]);
+    const tasks = [
+      ...missingState.map((y) => fetchJson(`${DATA_DIR}/state/${y}.json`).then((d) => { state.stateCache[y] = d; })),
+      ...missingCounty.map((y) => fetchJson(`${DATA_DIR}/county/${y}.json`).then((d) => { state.countyCache[y] = d; })),
+    ];
+    return Promise.all(tasks);
+  }
+
+  function seriesFor(item, metricKey, years) {
+    const cache = item.type === "state" ? state.stateCache : state.countyCache;
+    return years.map((y) => {
+      const rec = cache[y] && cache[y][item.key];
+      const v = rec ? rec[metricKey] : null;
+      return { year: y, value: v == null ? null : v };
+    });
+  }
+
+  // ---------- selection management ----------
+  function findSelectedIndex(type, key) {
+    return state.selected.findIndex((s) => s.type === type && s.key === key);
+  }
+
+  function toggleSelection(type, key, label) {
+    const idx = findSelectedIndex(type, key);
+    if (idx >= 0) {
+      state.selected.splice(idx, 1);
+    } else {
+      state.selected.push({ type, key, label, color: nextColor() });
+    }
+    renderSelectedList();
+    restyleMiniMap();
+    renderChart();
+  }
+
+  function removeSelection(type, key) {
+    const idx = findSelectedIndex(type, key);
+    if (idx >= 0) state.selected.splice(idx, 1);
+    renderSelectedList();
+    restyleMiniMap();
+    renderChart();
+  }
+
+  function renderSelectedList() {
+    const container = document.getElementById("selectedList");
+    container.innerHTML = "";
+    if (!state.selected.length) {
+      container.innerHTML = `<div id="selectedEmpty">Nothing selected yet</div>`;
+      return;
+    }
+    for (const item of state.selected) {
+      const div = document.createElement("div");
+      div.className = "chip";
+      div.innerHTML = `<span class="swatch" style="background:${item.color}"></span><span class="name">${item.label}</span><span class="remove">×</span>`;
+      div.querySelector(".remove").addEventListener("click", () => removeSelection(item.type, item.key));
+      container.appendChild(div);
+    }
+  }
+
+  // ---------- mini map ----------
+  function initMiniMap() {
+    state.miniMap = L.map("miniMap", {
+      zoomControl: false, attributionControl: false, dragging: false,
+      scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, touchZoom: false, keyboard: false,
+    });
+    state.miniMap.setView([51.15, 10.45], 5);
+    loadMiniLayer();
+  }
+
+  function miniKeyProp() {
+    return state.miniRes === "state" ? "code" : "county";
+  }
+  function miniBoundary() {
+    return state.miniRes === "state" ? state.stateBoundary : state.countyBoundary;
+  }
+  function miniType() {
+    return state.miniRes === "state" ? "state" : "county";
+  }
+  function slugForStateCode(code) {
+    const s = state.manifest.states.find((s) => s.code === code);
+    return s ? s.slug : code;
+  }
+
+  function styleForMiniFeature(f) {
+    const type = miniType();
+    const key = type === "state" ? slugForStateCode(f.properties.code) : f.properties.county;
+    const idx = findSelectedIndex(type, key);
+    if (idx >= 0) {
+      return { color: "#ffffff", weight: 1.2, fillColor: state.selected[idx].color, fillOpacity: 0.85 };
+    }
+    return { color: "#3a3f4b", weight: 0.5, fillColor: "#2a2e38", fillOpacity: 0.5 };
+  }
+
+  function loadMiniLayer() {
+    if (state.miniLayer) { state.miniMap.removeLayer(state.miniLayer); state.miniLayer = null; }
+    const boundary = miniBoundary();
+    if (!boundary) return;
+    const type = miniType();
+    state.miniLayer = L.geoJSON(boundary, {
+      style: styleForMiniFeature,
+      onEachFeature: (f, layer) => {
+        const key = type === "state" ? slugForStateCode(f.properties.code) : f.properties.county;
+        const label = type === "state" ? metricLabelForState(f.properties.code) : f.properties.name;
+        layer.on("click", () => toggleSelection(type, key, label));
+        layer.on("mouseover", () => {
+          layer.setStyle({ weight: 1.4, color: "#ffffff" });
+          if (findSelectedIndex(type, key) < 0) {
+            state.preview = { type, key, label, color: "#ffffff" };
+            renderChart();
+          }
+        });
+        layer.on("mouseout", () => {
+          state.miniLayer.resetStyle(layer);
+          state.preview = null;
+          renderChart();
+        });
+      },
+    }).addTo(state.miniMap);
+  }
+  function metricLabelForState(code) {
+    const s = state.manifest.states.find((s) => s.code === code);
+    return s ? s.label : code;
+  }
+
+  function restyleMiniMap() {
+    if (state.miniLayer) state.miniLayer.setStyle(styleForMiniFeature);
+  }
+
+  function onResChange(res) {
+    state.miniRes = res;
+    document.querySelectorAll("#resToggle button").forEach((b) => b.classList.toggle("active", b.dataset.res === res));
+    loadMiniLayer();
+  }
+
+  // ---------- search ----------
+  function runSearch(q) {
+    const container = document.getElementById("searchResults");
+    container.innerHTML = "";
+    const query = q.trim().toLowerCase();
+    if (query.length < 2) return;
+    const results = [];
+    for (const s of state.manifest.states) {
+      if (s.label.toLowerCase().includes(query)) results.push({ type: "state", key: s.slug, label: s.label, sub: "State" });
+    }
+    if (state.countyBoundary) {
+      for (const f of state.countyBoundary.features) {
+        if (results.length >= 10) break;
+        if (f.properties.name.toLowerCase().includes(query)) {
+          results.push({ type: "county", key: f.properties.county, label: f.properties.name, sub: f.properties.district_type || "County" });
+        }
+      }
+    }
+    for (const r of results.slice(0, 10)) {
+      const div = document.createElement("div");
+      div.className = "search-result";
+      div.innerHTML = `${r.label}<span class="sr-type">${r.sub}</span>`;
+      div.addEventListener("click", () => {
+        toggleSelection(r.type, r.key, r.label);
+        document.getElementById("searchInput").value = "";
+        container.innerHTML = "";
+      });
+      container.appendChild(div);
+    }
+  }
+
+  // ---------- chart ----------
+  // SVG clips anything outside its viewBox by default, so these need enough room for
+  // both the widest y-axis number (e.g. "35,145") on the left and the longest state
+  // name (e.g. "North Rhine-Westphalia") as an end-of-line label on the right.
+  const CHART_PAD = { left: 105, right: 185, top: 30, bottom: 40 };
+  const VB_W = 1000, VB_H = 600;
+
+  function fmtValue(v, unit) {
+    if (v == null) return "—";
+    const rounded = Math.abs(v) >= 100 ? Math.round(v).toLocaleString() : (Math.round(v * 10) / 10).toLocaleString();
+    return unit === "%" ? `${rounded}%` : `${rounded} ${unit || ""}`.trim();
+  }
+
+  function svgEl(tag, attrs) {
+    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  function renderChart() {
+    const svg = document.getElementById("chartSvg");
+    svg.innerHTML = "";
+    const info = metricInfo(state.metric);
+    document.getElementById("chartTitle").textContent = info ? `${info.label} (${info.unit})` : "";
+
+    const items = state.preview ? [...state.selected, state.preview] : state.selected;
+    const empty = document.getElementById("emptyState");
+    if (!info || !items.length) {
+      empty.style.display = "flex";
+      return;
+    }
+    empty.style.display = "none";
+
+    const years = info.years;
+    const token = ++state.renderToken;
+    ensureYearsLoaded(years).then(() => {
+      if (token !== state.renderToken) return;
+      drawChart(info, years, items);
+    });
+  }
+
+  function drawChart(info, years, items) {
+    const svg = document.getElementById("chartSvg");
+    svg.innerHTML = "";
+    const plotW = VB_W - CHART_PAD.left - CHART_PAD.right;
+    const plotH = VB_H - CHART_PAD.top - CHART_PAD.bottom;
+
+    const yearNums = years.map((y) => parseInt(y, 10));
+    const yMin = yearNums[0], yMax = yearNums[yearNums.length - 1];
+    const xFor = (year) => CHART_PAD.left + (yearNums[years.indexOf(year)] - yMin) / Math.max(1, (yMax - yMin)) * plotW;
+
+    const allSeries = items.map((item) => ({ item, points: seriesFor(item, info.key, years) }));
+    const allVals = allSeries.flatMap((s) => s.points.map((p) => p.value)).filter((v) => v != null);
+    if (!allVals.length) {
+      document.getElementById("emptyState").style.display = "flex";
+      document.getElementById("emptyState").textContent = "No data for the selected area(s) with this metric.";
+      return;
+    }
+    let vMin = Math.min(...allVals), vMax = Math.max(...allVals);
+    if (vMin === vMax) { vMin -= 1; vMax += 1; }
+    const pad = (vMax - vMin) * 0.1;
+    vMin -= pad; vMax += pad;
+    const yFor = (v) => CHART_PAD.top + plotH - (v - vMin) / (vMax - vMin) * plotH;
+
+    // gridlines + y labels
+    const ticks = 5;
+    for (let i = 0; i <= ticks; i++) {
+      const v = vMin + (vMax - vMin) * (i / ticks);
+      const y = yFor(v);
+      svg.appendChild(svgEl("line", { class: "grid-line", x1: CHART_PAD.left, x2: VB_W - CHART_PAD.right, y1: y, y2: y }));
+      const label = svgEl("text", { class: "axis-label", x: CHART_PAD.left - 8, y: y + 4, "text-anchor": "end" });
+      label.textContent = fmtValue(v, info.unit);
+      svg.appendChild(label);
+    }
+    // x labels (thin out if too many years)
+    const maxLabels = 10;
+    const step = Math.max(1, Math.ceil(years.length / maxLabels));
+    years.forEach((y, i) => {
+      if (i % step !== 0 && i !== years.length - 1) return;
+      const x = xFor(y);
+      const label = svgEl("text", { class: "axis-label", x, y: VB_H - CHART_PAD.bottom + 18, "text-anchor": "middle" });
+      label.textContent = y;
+      svg.appendChild(label);
+    });
+    svg.appendChild(svgEl("line", { class: "axis-line", x1: CHART_PAD.left, x2: VB_W - CHART_PAD.right, y1: VB_H - CHART_PAD.bottom, y2: VB_H - CHART_PAD.bottom }));
+    svg.appendChild(svgEl("line", { class: "axis-line", x1: CHART_PAD.left, x2: CHART_PAD.left, y1: CHART_PAD.top, y2: VB_H - CHART_PAD.bottom }));
+
+    for (const { item, points } of allSeries) {
+      const isPreview = item === state.preview;
+      // split into contiguous runs so gaps in data don't get bridged by a straight line
+      let run = [];
+      const runs = [];
+      for (const p of points) {
+        if (p.value == null) { if (run.length) runs.push(run); run = []; continue; }
+        run.push(p);
+      }
+      if (run.length) runs.push(run);
+
+      for (const r of runs) {
+        const d = r.map((p, i) => `${i === 0 ? "M" : "L"} ${xFor(p.year).toFixed(1)} ${yFor(p.value).toFixed(1)}`).join(" ");
+        svg.appendChild(svgEl("path", {
+          class: `series-path${isPreview ? " preview" : ""}`, d, stroke: item.color,
+        }));
+        if (!isPreview) {
+          for (const p of r) {
+            svg.appendChild(svgEl("circle", { class: "series-dot", cx: xFor(p.year), cy: yFor(p.value), r: 2.6, fill: item.color }));
+          }
+        }
+      }
+      const lastRun = runs[runs.length - 1];
+      if (lastRun) {
+        const last = lastRun[lastRun.length - 1];
+        const label = svgEl("text", {
+          class: "series-end-label", x: xFor(last.year) + 6, y: yFor(last.value) + 4, fill: item.color,
+        });
+        label.textContent = item.label;
+        svg.appendChild(label);
+      }
+    }
+
+    attachHover(svg, years, xFor, yFor, allSeries, info);
+  }
+
+  function attachHover(svg, years, xFor, yFor, allSeries, info) {
+    const overlay = svgEl("rect", {
+      x: CHART_PAD.left, y: CHART_PAD.top, width: VB_W - CHART_PAD.left - CHART_PAD.right,
+      height: VB_H - CHART_PAD.top - CHART_PAD.bottom, fill: "transparent",
+    });
+    svg.appendChild(overlay);
+    const tooltip = document.getElementById("chartTooltip");
+    const wrap = document.getElementById("chartWrap");
+
+    overlay.addEventListener("mousemove", (e) => {
+      const rect = svg.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width * VB_W;
+      const yearNums = years.map((y) => parseInt(y, 10));
+      let nearestIdx = 0, best = Infinity;
+      years.forEach((y, i) => {
+        const dx = Math.abs(xFor(y) - px);
+        if (dx < best) { best = dx; nearestIdx = i; }
+      });
+      const year = years[nearestIdx];
+
+      let guide = svg.querySelector(".hover-guide");
+      if (!guide) {
+        guide = svgEl("line", { class: "hover-guide", y1: CHART_PAD.top, y2: VB_H - CHART_PAD.bottom });
+        svg.appendChild(guide);
+      }
+      guide.setAttribute("x1", xFor(year));
+      guide.setAttribute("x2", xFor(year));
+
+      let html = `<div class="tt-year">${year}</div>`;
+      for (const { item, points } of allSeries) {
+        const p = points[nearestIdx];
+        html += `<div class="tt-row"><span class="tt-swatch" style="background:${item.color}"></span><span class="tt-name">${item.label}</span><span class="tt-val">${fmtValue(p ? p.value : null, info.unit)}</span></div>`;
+      }
+      tooltip.innerHTML = html;
+      tooltip.style.display = "block";
+      const wrapRect = wrap.getBoundingClientRect();
+      let left = e.clientX - wrapRect.left + 14;
+      let top = e.clientY - wrapRect.top + 14;
+      if (left + 200 > wrapRect.width) left = e.clientX - wrapRect.left - 214;
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+    });
+    overlay.addEventListener("mouseleave", () => {
+      tooltip.style.display = "none";
+      const guide = svg.querySelector(".hover-guide");
+      if (guide) guide.remove();
+    });
+  }
+
+  // ---------- wiring ----------
+  function populateMetricSelect() {
+    const sel = document.getElementById("metricSelect");
+    sel.innerHTML = "";
+    const byCategory = {};
+    for (const m of state.manifest.metrics) (byCategory[m.category] = byCategory[m.category] || []).push(m);
+    for (const category in byCategory) {
+      const group = document.createElement("optgroup");
+      group.label = category;
+      for (const m of byCategory[category]) {
+        const opt = document.createElement("option");
+        opt.value = m.key;
+        opt.textContent = m.label;
+        group.appendChild(opt);
+      }
+      sel.appendChild(group);
+    }
+    state.metric = state.manifest.metrics[0].key;
+    sel.value = state.metric;
+    updateMetricDescription();
+  }
+
+  function updateMetricDescription() {
+    document.getElementById("metricDescription").textContent = metricInfo(state.metric)?.description || "";
+  }
+
+  document.getElementById("metricSelect").addEventListener("change", (e) => {
+    state.metric = e.target.value;
+    updateMetricDescription();
+    renderChart();
+  });
+  document.getElementById("resToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (btn) onResChange(btn.dataset.res);
+  });
+  document.getElementById("searchInput").addEventListener("input", (e) => runSearch(e.target.value));
+
+  function init() {
+    setLoading(true);
+    Promise.all([
+      fetchJson(`${DATA_DIR}/manifest.json`),
+      fetchJson(`${DATA_DIR}/counties.geojson`),
+      fetchJson(`${DATA_DIR}/state_outlines.geojson`),
+    ]).then(([manifest, countyBoundary, stateBoundary]) => {
+      state.manifest = manifest;
+      state.countyBoundary = countyBoundary;
+      state.stateBoundary = stateBoundary;
+      populateMetricSelect();
+      initMiniMap();
+      document.getElementById("noteLine").textContent =
+        "State lines are a simple (unweighted) average of that state's counties, not population-weighted - a small county counts the same as a big city within its state. County-level data only (1995-2021ish, varies by metric); the 2022 census snapshot has no other year to plot against.";
+      renderChart();
+    }).catch((err) => {
+      document.getElementById("noteLine").textContent = `Failed to load: ${err.message}`;
+    }).finally(() => setLoading(false));
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

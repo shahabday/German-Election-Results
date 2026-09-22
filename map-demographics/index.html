@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German Demographics &amp; Economy Map</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e8eaed;
+    --text-dim: #9aa0ab;
+    --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  #app { position: relative; height: 100vh; width: 100vw; }
+  #map { position: absolute; inset: 0; background: #0b0d11; }
+
+  #panel {
+    position: absolute; top: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 14px 16px; width: 320px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    max-height: calc(100vh - 32px); overflow-y: auto;
+  }
+  #panel h1 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+  #panel .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
+
+  .row { margin-bottom: 12px; }
+  .row:last-child { margin-bottom: 0; }
+  .row-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+
+  .toggle-group { display: flex; border: 1px solid var(--panel-border); border-radius: 6px; overflow: hidden; }
+  .toggle-group button {
+    flex: 1 1 auto; background: transparent; color: var(--text-dim); border: none; padding: 7px 4px;
+    font-size: 12px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .toggle-group button.active { background: var(--accent); color: #fff; }
+  .toggle-group button:not(.active):hover { background: #20242e; color: var(--text); }
+
+  select {
+    width: 100%; background: #1e222b; color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 6px; padding: 7px 8px; font-size: 12.5px;
+  }
+
+  #yearSlider { width: 100%; accent-color: var(--accent); }
+  #yearLabel { font-size: 18px; font-weight: 700; text-align: center; margin: 2px 0 6px; }
+
+  #statsBar { display: flex; gap: 6px; margin-top: 4px; }
+  .stat { flex: 1; background: #1e222b; border: 1px solid var(--panel-border); border-radius: 6px; padding: 6px 4px; text-align: center; }
+  .stat .n { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.03em; }
+
+  #statusLine { font-size: 11px; color: var(--text-dim); margin-top: 10px; min-height: 14px; }
+  #noteLine { font-size: 10.5px; color: var(--text-dim); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--panel-border); }
+  #metricDescription { font-size: 11px; color: var(--text-dim); margin-top: 6px; line-height: 1.4; }
+
+  #legend {
+    position: absolute; bottom: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 10px 14px; font-size: 11px; max-width: 240px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  #legend .legend-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+  .legend-gradient { height: 12px; border-radius: 3px; margin-bottom: 4px; }
+  .legend-scale-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+  .leaflet-tooltip.demo-tooltip {
+    background: rgba(15, 17, 21, 0.97); color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.5); max-width: 260px;
+  }
+  .demo-tooltip .tt-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .demo-tooltip .tt-main { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .demo-tooltip .tt-row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 2px; color: var(--text-dim); font-size: 11px; }
+  .demo-tooltip .tt-row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+
+  #loading {
+    position: absolute; top: 16px; right: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    padding: 6px 12px; font-size: 11px; color: var(--text-dim); display: none;
+  }
+  #loading.active { display: block; }
+
+  #credit {
+    position: absolute; bottom: 8px; right: 8px; z-index: 999;
+    font-size: 10px; color: var(--text-dim); background: rgba(15,17,21,0.7);
+    padding: 3px 8px; border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="map"></div>
+
+  <div id="panel">
+    <h1>German Demographics &amp; Economy</h1>
+    <div class="subtitle">Zensus 2022 · county-level income &amp; INKAR indicators</div>
+
+    <div class="row">
+      <div class="row-label">Resolution</div>
+      <div class="toggle-group" id="scopeToggle">
+        <button data-scope="municipality" class="active">Municipality (2022)</button>
+        <button data-scope="county">County (by year)</button>
+      </div>
+    </div>
+
+    <div class="row" id="viewRow" style="display:none;">
+      <div class="row-label">View</div>
+      <div class="toggle-group" id="viewToggle">
+        <button data-view="level" class="active">Level</button>
+        <button data-view="growth">Growth vs. prev. year</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-label">Metric</div>
+      <select id="metricSelect"></select>
+      <div id="metricDescription"></div>
+    </div>
+
+    <div class="row" id="scaleRow" style="display:none;">
+      <div class="row-label">Scale</div>
+      <div class="toggle-group" id="scaleToggle">
+        <button data-scale="dynamic" class="active">This year</button>
+        <button data-scale="fixed">Fixed (whole period)</button>
+      </div>
+    </div>
+
+    <div class="row" id="yearRow" style="display:none;">
+      <div id="yearLabel">—</div>
+      <input type="range" id="yearSlider" min="0" max="0" step="1" value="0">
+    </div>
+
+    <div class="row" id="statsBar">
+      <div class="stat"><div class="n" id="statMin">—</div><div class="l">Min</div></div>
+      <div class="stat"><div class="n" id="statMedian">—</div><div class="l">Median</div></div>
+      <div class="stat"><div class="n" id="statMax">—</div><div class="l">Max</div></div>
+    </div>
+
+    <div id="statusLine"></div>
+    <div id="noteLine"></div>
+  </div>
+
+  <div id="legend">
+    <div class="legend-title" id="legendTitle">Legend</div>
+    <div class="legend-gradient" id="legendGradient"></div>
+    <div class="legend-scale-labels" id="legendLabels"></div>
+  </div>
+
+  <div id="loading">Loading…</div>
+  <div id="credit">Census: Zensus 2022 · County: VGRdL/INKAR · Boundaries: BKG VG250 / m-ad</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const DATA_DIR = "data/prepared";
+
+  const map = L.map("map", { zoomControl: false, attributionControl: false })
+    .setView([51.15, 10.45], 6);
+  L.control.zoom({ position: "topright" }).addTo(map);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nomatter/{z}/{x}/{y}{r}.png", {
+    maxZoom: 19,
+    subdomains: "abcd",
+  }).addTo(map);
+
+  const state = {
+    scope: "municipality",
+    view: "level",       // "level" | "growth" (county only)
+    scaleMode: "dynamic", // "dynamic" (this year's percentiles) | "fixed" (whole-period percentiles from the manifest)
+    manifest: null,
+    muniBoundary: null,
+    countyBoundary: null,
+    geoLayer: null,
+    metric: null,
+    year: null,
+    data: {},
+    prevYear: null,
+    prevData: {},
+    renderToken: 0,
+  };
+
+  function fetchJson(url) {
+    return fetch(url, { cache: "no-cache" }).then((r) => {
+      if (!r.ok) throw new Error(`${url}: ${r.status}`);
+      return r.json();
+    });
+  }
+  function setLoading(on) {
+    document.getElementById("loading").classList.toggle("active", on);
+  }
+
+  // ---------- color ----------
+  function hexToRgb(hex) {
+    const h = hex.replace("#", "");
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+  }
+  function rgbToHex([r, g, b]) {
+    return "#" + [r, g, b].map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join("");
+  }
+  function blend(hexA, hexB, t) {
+    const a = hexToRgb(hexA), b = hexToRgb(hexB);
+    return rgbToHex(a.map((v, i) => v + (b[i] - v) * t));
+  }
+  // Sequential ramp for absolute levels (not signed change, so no diverging red/blue
+  // here - that vocabulary belongs to map-trends). Dark/desaturated = low, warm gold =
+  // high; deliberately different from map-trends' palette so the two apps' colors are
+  // never mistaken for meaning the same thing.
+  const RAMP_LOW = "#1b2838";
+  const RAMP_HIGH = "#f2b84b";
+  function colorForValue(v, lo, hi) {
+    if (v == null || hi <= lo) return "#20242e";
+    const t = Math.max(0, Math.min((v - lo) / (hi - lo), 1));
+    return blend(RAMP_LOW, RAMP_HIGH, t);
+  }
+  // Growth mode shows signed change, not a level - reuses map-trends' diverging
+  // language (blue = more, red = less) rather than the sequential gold ramp above, so
+  // the two kinds of question ("how much" vs "how much did it change") never look alike.
+  const WHITE = "#e8e8ec";
+  const GAIN_COLOR = "#2f80c7";
+  const LOSS_COLOR = "#c0392b";
+  function colorForDelta(delta, cap) {
+    if (delta == null || cap <= 0) return "#20242e";
+    const t = Math.min(Math.abs(delta) / cap, 1);
+    return delta >= 0 ? blend(WHITE, GAIN_COLOR, t) : blend(WHITE, LOSS_COLOR, t);
+  }
+
+  function isCounty() {
+    return state.scope === "county";
+  }
+  function isGrowth() {
+    return isCounty() && state.view === "growth";
+  }
+
+  function metricsForScope() {
+    return isCounty() ? state.manifest.county.metrics : state.manifest.municipality.metrics;
+  }
+
+  function currentMetricInfo() {
+    return metricsForScope().find((m) => m.key === state.metric);
+  }
+
+  function populateMetricSelect() {
+    const sel = document.getElementById("metricSelect");
+    sel.innerHTML = "";
+    const metrics = metricsForScope();
+    const byCategory = {};
+    for (const m of metrics) {
+      (byCategory[m.category] = byCategory[m.category] || []).push(m);
+    }
+    for (const category in byCategory) {
+      const group = document.createElement("optgroup");
+      group.label = category;
+      for (const m of byCategory[category]) {
+        const opt = document.createElement("option");
+        opt.value = m.key;
+        opt.textContent = m.label;
+        group.appendChild(opt);
+      }
+      sel.appendChild(group);
+    }
+    if (!state.metric || !metrics.some((m) => m.key === state.metric)) {
+      state.metric = metrics[0].key;
+    }
+    sel.value = state.metric;
+    updateMetricDescription();
+  }
+
+  function updateMetricDescription() {
+    const info = currentMetricInfo();
+    document.getElementById("metricDescription").textContent = info ? (info.description || "") : "";
+  }
+
+  // In growth mode a year is only selectable if the metric also has data for the year
+  // right before it (nothing to diff the very first year against), so the slider walks
+  // over years.slice(1) there instead of the full list.
+  function selectableYears(info) {
+    if (!info) return [];
+    return isGrowth() ? info.years.slice(1) : info.years;
+  }
+
+  function prevYearFor(info, year) {
+    const idx = info.years.indexOf(year);
+    return idx > 0 ? info.years[idx - 1] : null;
+  }
+
+  function populateYearSlider() {
+    const row = document.getElementById("yearRow");
+    if (!isCounty()) {
+      row.style.display = "none";
+      return;
+    }
+    row.style.display = "block";
+    const info = currentMetricInfo();
+    const years = selectableYears(info);
+    const slider = document.getElementById("yearSlider");
+    slider.max = String(Math.max(0, years.length - 1));
+    let idx = years.indexOf(state.year);
+    if (idx < 0) idx = years.length - 1; // default to most recent selectable year
+    slider.value = String(idx);
+    state.year = years[idx];
+    state.prevYear = info && state.year ? prevYearFor(info, state.year) : null;
+    document.getElementById("yearLabel").textContent = state.year
+      ? (isGrowth() ? `${state.prevYear} → ${state.year}` : state.year)
+      : "—";
+    slider._years = years;
+  }
+
+  function dataUrl(year) {
+    return isCounty()
+      ? `${DATA_DIR}/county/${year}.json`
+      : `${DATA_DIR}/municipality_2022.json`;
+  }
+
+  function boundary() {
+    return isCounty() ? state.countyBoundary : state.muniBoundary;
+  }
+
+  function keyProp() {
+    return isCounty() ? "county" : "ags";
+  }
+
+  function fmtValue(v, unit) {
+    if (v == null) return "—";
+    const rounded = Math.abs(v) >= 100 ? Math.round(v).toLocaleString() : (Math.round(v * 10) / 10).toLocaleString();
+    return unit === "%" ? `${rounded}%` : `${rounded} ${unit || ""}`.trim();
+  }
+
+  function computeDomain(values) {
+    if (!values.length) return [0, 1];
+    const sorted = [...values].sort((a, b) => a - b);
+    const pct = (p) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.round(p * (sorted.length - 1))))];
+    return [pct(0.05), pct(0.95)];
+  }
+
+  // Symmetric cap for the diverging growth scale: 95th percentile of |delta| among
+  // whatever's currently loaded. A fixed cap can't work here since metrics span wildly
+  // different scales (wage deltas in thousands of euros vs. a percentage-point delta).
+  function computeDeltaCap(deltas) {
+    if (!deltas.length) return 1;
+    const abs = deltas.map(Math.abs).sort((a, b) => a - b);
+    return abs[Math.min(abs.length - 1, Math.round(0.95 * (abs.length - 1)))] || 1;
+  }
+
+  function loadAndRender() {
+    const token = ++state.renderToken;
+    setLoading(true);
+    const fetches = [fetchJson(dataUrl(state.year))];
+    if (isGrowth() && state.prevYear) fetches.push(fetchJson(dataUrl(state.prevYear)));
+    Promise.all(fetches)
+      .then(([data, prevData]) => {
+        if (token !== state.renderToken) return;
+        state.data = data;
+        state.prevData = prevData || {};
+        render();
+      })
+      .catch((err) => {
+        if (token !== state.renderToken) return;
+        document.getElementById("statusLine").textContent = `Failed to load: ${err.message}`;
+      })
+      .finally(() => {
+        if (token === state.renderToken) setLoading(false);
+      });
+  }
+
+  // Unifies "level" and "growth" into one number per area, so the rest of render/
+  // tooltip/stats code doesn't need to branch on mode.
+  function displayValue(areaKey, info) {
+    const rec = state.data[areaKey];
+    if (!rec || rec[info.key] == null) return null;
+    if (!isGrowth()) return rec[info.key];
+    const prevRec = state.prevData[areaKey];
+    if (!prevRec || prevRec[info.key] == null) return null;
+    return rec[info.key] - prevRec[info.key];
+  }
+
+  function tooltipHtml(name, areaKey, info, allMetrics) {
+    let html = `<div class="tt-title">${name}</div>`;
+    const rec = state.data[areaKey];
+    if (isGrowth()) {
+      const v = displayValue(areaKey, info);
+      const prevRec = state.prevData[areaKey];
+      const prevVal = prevRec ? prevRec[info.key] : null;
+      const currVal = rec ? rec[info.key] : null;
+      if (v == null) {
+        html += `<div class="tt-row"><span>No data for both ${state.prevYear} and ${state.year}</span></div>`;
+        return html;
+      }
+      const sign = v >= 0 ? "+" : "";
+      html += `<div class="tt-main">${sign}${fmtValue(v, info.unit)}</div>`;
+      if (prevVal) {
+        const pct = Math.abs(prevVal) > 1e-9 ? `${v >= 0 ? "+" : ""}${Math.round((currVal / prevVal - 1) * 100)}% rel.` : "";
+        html += `<div class="tt-row"><span>${state.prevYear} → ${state.year}</span><span>${fmtValue(prevVal, info.unit)} → ${fmtValue(currVal, info.unit)}${pct ? " (" + pct + ")" : ""}</span></div>`;
+      }
+      return html;
+    }
+    const val = rec ? rec[info.key] : null;
+    html += `<div class="tt-main">${fmtValue(val, info.unit)}</div>`;
+    if (rec) {
+      const sameCategory = allMetrics.filter((m) => m.category === info.category && m.key !== info.key).slice(0, 4);
+      for (const m of sameCategory) {
+        if (rec[m.key] == null) continue;
+        html += `<div class="tt-row"><span>${m.label}</span><span>${fmtValue(rec[m.key], m.unit)}</span></div>`;
+      }
+    } else {
+      html += `<div class="tt-row"><span>No data for this area</span></div>`;
+    }
+    return html;
+  }
+
+  function updateStatsAndLegend(values, info, domain) {
+    const sorted = [...values].sort((a, b) => a - b);
+    const median = sorted.length ? sorted[Math.floor(sorted.length / 2)] : null;
+    const sign = (v) => (isGrowth() && v != null && v >= 0 ? "+" : "");
+    document.getElementById("statMin").textContent = sorted.length ? sign(sorted[0]) + fmtValue(sorted[0], info.unit) : "—";
+    document.getElementById("statMedian").textContent = median != null ? sign(median) + fmtValue(median, info.unit) : "—";
+    document.getElementById("statMax").textContent = sorted.length ? sign(sorted[sorted.length - 1]) + fmtValue(sorted[sorted.length - 1], info.unit) : "—";
+
+    const scaleTag = state.scaleMode === "fixed" ? " (fixed scale)" : "";
+    document.getElementById("legendTitle").textContent = isGrowth()
+      ? `${info.label} — change ${state.prevYear}→${state.year}${scaleTag}`
+      : `${info.label}${scaleTag}`;
+    document.getElementById("legendGradient").style.background = isGrowth()
+      ? `linear-gradient(to right, ${LOSS_COLOR}, ${WHITE}, ${GAIN_COLOR})`
+      : `linear-gradient(to right, ${RAMP_LOW}, ${RAMP_HIGH})`;
+    document.getElementById("legendLabels").innerHTML = isGrowth()
+      ? `<span>-${fmtValue(domain[1], info.unit)}</span><span>0</span><span>+${fmtValue(domain[1], info.unit)}</span>`
+      : `<span>${fmtValue(domain[0], info.unit)}</span><span>${fmtValue(domain[1], info.unit)}</span>`;
+  }
+
+  function render() {
+    const info = currentMetricInfo();
+    if (!info) return;
+    const allMetrics = metricsForScope();
+    const kp = keyProp();
+    const growth = isGrowth();
+
+    const areaKeys = growth
+      ? Object.keys(state.data).filter((k) => state.prevData[k])
+      : Object.keys(state.data);
+    const values = areaKeys.map((k) => displayValue(k, info)).filter((v) => v != null);
+
+    let domain;
+    if (growth) {
+      const cap = (state.scaleMode === "fixed" && info.global_delta_cap) ? info.global_delta_cap : computeDeltaCap(values);
+      domain = [0, cap];
+    } else if (state.scaleMode === "fixed" && info.global_domain) {
+      domain = info.global_domain;
+    } else {
+      domain = computeDomain(values);
+    }
+
+    if (state.geoLayer) { map.removeLayer(state.geoLayer); state.geoLayer = null; }
+    state.geoLayer = L.geoJSON(boundary(), {
+      style: (f) => {
+        const areaKey = f.properties[kp];
+        const v = displayValue(areaKey, info);
+        return {
+          color: "#3a3f4b", weight: 0.4,
+          fillColor: growth ? colorForDelta(v, domain[1]) : colorForValue(v, domain[0], domain[1]),
+          fillOpacity: v == null ? 0.15 : 0.88,
+        };
+      },
+      onEachFeature: (f, layer) => {
+        const areaKey = f.properties[kp];
+        layer.bindTooltip(tooltipHtml(f.properties.name, areaKey, info, allMetrics), {
+          className: "demo-tooltip", sticky: true, direction: "top",
+        });
+        layer.on("mouseover", () => layer.setStyle({ weight: 1.6, color: "#ffffff" }));
+        layer.on("mouseout", () => state.geoLayer.resetStyle(layer));
+      },
+    }).addTo(map);
+
+    updateStatsAndLegend(values, info, domain);
+
+    const scopeLabel = isCounty()
+      ? (growth ? `County · ${state.prevYear}→${state.year}` : `County · ${state.year}`)
+      : "Municipality · 2022 census";
+    document.getElementById("statusLine").textContent = `${scopeLabel} · ${values.length} areas with data`;
+    document.getElementById("noteLine").textContent = isCounty()
+      ? (growth
+          ? "Change vs. the previous year this metric has data for (not always exactly one calendar year apart - see the year label). Delta = current minus previous, so it's always finite even near zero, same convention as map-trends' swing. \"This year\" scale sets red/blue intensity from this one year pair's spread; \"Fixed\" uses one cap for the whole series (95th percentile of every year-over-year change on record), so a given € or point change always reads the same color no matter which year you're on."
+          : "County-level income (VGRdL) and INKAR indicators. Not every metric covers every year (INKAR coverage thins out before ~2005, and a few series stop around 2019-2021) - the year slider only offers years this metric actually has data for. \"Fixed\" scale colors every year against the same whole-period range, so color is comparable across years, not just within one. County boundaries: m-ad/geofeatures-ags-germany (GADM-derived), so exact borders are approximate, not the official BKG line.")
+      : "Zensus 2022 (German census), one snapshot in time - no earlier years exist at this resolution. Municipality boundaries are the same file map-municipality and map-trends use.";
+  }
+
+  function fitDefault() {
+    map.setView([51.15, 10.45], 6);
+  }
+
+  // ---------- wiring ----------
+  function updateRowVisibility() {
+    document.getElementById("viewRow").style.display = isCounty() ? "block" : "none";
+    document.getElementById("scaleRow").style.display = isCounty() ? "block" : "none";
+    const scaleLabel = document.querySelector("#scaleRow .row-label");
+    scaleLabel.textContent = isGrowth() ? "Scale (change magnitude)" : "Scale (level)";
+  }
+
+  function onScopeChange(scope) {
+    state.scope = scope;
+    if (!isCountyScope(scope)) state.view = "level";
+    document.querySelectorAll("#scopeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.scope === scope));
+    document.querySelectorAll("#viewToggle button").forEach((b) => b.classList.toggle("active", b.dataset.view === state.view));
+    state.metric = null;
+    updateRowVisibility();
+    populateMetricSelect();
+    populateYearSlider();
+    loadAndRender();
+  }
+  function isCountyScope(scope) {
+    return scope === "county";
+  }
+
+  function onViewChange(view) {
+    state.view = view;
+    document.querySelectorAll("#viewToggle button").forEach((b) => b.classList.toggle("active", b.dataset.view === view));
+    updateRowVisibility();
+    populateYearSlider();
+    loadAndRender();
+  }
+
+  function onScaleChange(scaleMode) {
+    state.scaleMode = scaleMode;
+    document.querySelectorAll("#scaleToggle button").forEach((b) => b.classList.toggle("active", b.dataset.scale === scaleMode));
+    render();
+  }
+
+  document.getElementById("scopeToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (btn) onScopeChange(btn.dataset.scope);
+  });
+  document.getElementById("viewToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (btn) onViewChange(btn.dataset.view);
+  });
+  document.getElementById("scaleToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (btn) onScaleChange(btn.dataset.scale);
+  });
+  document.getElementById("metricSelect").addEventListener("change", (e) => {
+    state.metric = e.target.value;
+    updateMetricDescription();
+    populateYearSlider();
+    loadAndRender();
+  });
+  document.getElementById("yearSlider").addEventListener("input", (e) => {
+    const years = e.target._years || [];
+    const idx = parseInt(e.target.value, 10);
+    state.year = years[idx];
+    const info = currentMetricInfo();
+    state.prevYear = info && state.year ? prevYearFor(info, state.year) : null;
+    document.getElementById("yearLabel").textContent = state.year
+      ? (isGrowth() ? `${state.prevYear} → ${state.year}` : state.year)
+      : "—";
+    loadAndRender();
+  });
+
+  function init() {
+    setLoading(true);
+    Promise.all([
+      fetchJson(`${DATA_DIR}/metrics_manifest.json`),
+      fetchJson(`${DATA_DIR}/gemeinden.geojson`),
+      fetchJson(`${DATA_DIR}/counties.geojson`),
+    ]).then(([manifest, muniBoundary, countyBoundary]) => {
+      state.manifest = manifest;
+      state.muniBoundary = muniBoundary;
+      state.countyBoundary = countyBoundary;
+      updateRowVisibility();
+      populateMetricSelect();
+      populateYearSlider();
+      fitDefault();
+      loadAndRender();
+    }).catch((err) => {
+      document.getElementById("statusLine").textContent = `Failed to load: ${err.message}`;
+    }).finally(() => setLoading(false));
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

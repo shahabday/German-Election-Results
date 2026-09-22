@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German Election Results — Time Series Compare</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e8eaed;
+    --text-dim: #9aa0ab;
+    --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  #app { position: relative; height: 100vh; width: 100vw; display: flex; }
+
+  #panel {
+    flex: 0 0 340px; background: var(--panel); border-right: 1px solid var(--panel-border);
+    padding: 14px 16px; overflow-y: auto; z-index: 10;
+  }
+  #panel h1 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+  #panel .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
+
+  .row { margin-bottom: 12px; }
+  .row:last-child { margin-bottom: 0; }
+  .row-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+
+  .toggle-group { display: flex; border: 1px solid var(--panel-border); border-radius: 6px; overflow: hidden; flex-wrap: wrap; }
+  .toggle-group button {
+    flex: 1 1 auto; min-width: 25%; background: transparent; color: var(--text-dim); border: none; padding: 7px 4px;
+    font-size: 11.5px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .toggle-group button.active { background: var(--accent); color: #fff; }
+  .toggle-group button:not(.active):hover { background: #20242e; color: var(--text); }
+  .toggle-group button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  select, input[type="text"] {
+    width: 100%; background: #1e222b; color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 6px; padding: 7px 8px; font-size: 12.5px;
+  }
+
+  #miniMap { height: 210px; border-radius: 8px; border: 1px solid var(--panel-border); background: #0b0d11; }
+
+  #searchResults { margin-top: 4px; border-radius: 6px; overflow: hidden; }
+  .search-result {
+    padding: 6px 8px; font-size: 12px; background: #1e222b; border: 1px solid var(--panel-border);
+    border-top: none; cursor: pointer;
+  }
+  .search-result:first-child { border-top: 1px solid var(--panel-border); border-radius: 6px 6px 0 0; }
+  .search-result:last-child { border-radius: 0 0 6px 6px; }
+  .search-result:hover { background: #262b36; }
+  .search-result .sr-type { color: var(--text-dim); font-size: 10px; margin-left: 6px; }
+
+  #selectedList { display: flex; flex-direction: column; gap: 4px; }
+  .chip {
+    display: flex; align-items: center; gap: 6px; background: #1e222b; border: 1px solid var(--panel-border);
+    border-radius: 6px; padding: 5px 8px; font-size: 12px;
+  }
+  .chip .swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .chip .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chip .remove { cursor: pointer; color: var(--text-dim); font-size: 14px; line-height: 1; padding: 0 2px; }
+  .chip .remove:hover { color: #fff; }
+  #selectedEmpty { font-size: 11px; color: var(--text-dim); font-style: italic; }
+
+  #partyDescription, #metricDescription { font-size: 11px; color: var(--text-dim); margin-top: 6px; line-height: 1.4; }
+  #noteLine { font-size: 10.5px; color: var(--text-dim); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--panel-border); }
+
+  #chartWrap { flex: 1 1 auto; position: relative; background: #0b0d11; }
+  #chartTitle { position: absolute; top: 16px; left: 20px; z-index: 5; font-size: 14px; font-weight: 600; }
+  #chartSvg { width: 100%; height: 100%; display: block; }
+  .axis-line { stroke: #2a2e38; stroke-width: 1; }
+  .grid-line { stroke: #1c1f27; stroke-width: 1; }
+  .axis-label { fill: #9aa0ab; font-size: 11px; font-variant-numeric: tabular-nums; }
+  .series-path { fill: none; stroke-width: 2.2; }
+  .series-path.preview { stroke-dasharray: 4 3; opacity: 0.6; }
+  .series-dot { stroke: #0b0d11; stroke-width: 1; }
+  .series-end-label { font-size: 10px; font-weight: 600; }
+  .hover-guide { stroke: #4a4f5c; stroke-width: 1; stroke-dasharray: 3 3; }
+
+  #emptyState {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: var(--text-dim); font-size: 13px; text-align: center; padding: 0 40px;
+  }
+
+  #chartTooltip {
+    position: absolute; z-index: 20; background: rgba(15, 17, 21, 0.97); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 8px 10px; font-size: 11.5px; box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    pointer-events: none; display: none; min-width: 140px;
+  }
+  #chartTooltip .tt-year { font-weight: 700; font-size: 12.5px; margin-bottom: 4px; }
+  #chartTooltip .tt-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+  #chartTooltip .tt-swatch { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  #chartTooltip .tt-name { flex: 1; color: var(--text-dim); }
+  #chartTooltip .tt-val { font-variant-numeric: tabular-nums; }
+
+  #loading {
+    position: absolute; top: 16px; right: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    padding: 6px 12px; font-size: 11px; color: var(--text-dim); display: none;
+  }
+  #loading.active { display: block; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="panel">
+    <h1>Election Results Over Time</h1>
+    <div class="subtitle">Click the map or search to compare party vote share / turnout</div>
+
+    <div class="row">
+      <div class="row-label">Election</div>
+      <div class="toggle-group" id="typeToggle">
+        <button data-type="federal" class="active">Bundestag</button>
+        <button data-type="european">Europawahl</button>
+        <button data-type="landtag">Landtag</button>
+        <button data-type="kommunal">Kommunalwahl</button>
+      </div>
+    </div>
+
+    <div class="row" id="stateRow" style="display:none;">
+      <div class="row-label">State</div>
+      <select id="stateSelect"></select>
+    </div>
+
+    <div class="row">
+      <div class="row-label">Metric</div>
+      <div class="toggle-group" id="metricModeToggle">
+        <button data-mode="party" class="active">Party vote share</button>
+        <button data-mode="turnout">Turnout</button>
+      </div>
+    </div>
+
+    <div class="row" id="partyRow">
+      <select id="partySelect"></select>
+      <div id="partyDescription"></div>
+    </div>
+
+    <div class="row">
+      <div class="row-label">Pick on map</div>
+      <div class="toggle-group" id="resToggle">
+        <button data-res="state" class="active">States (16)</button>
+        <button data-res="county">Counties (~400)</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="miniMap"></div>
+    </div>
+
+    <div class="row">
+      <div class="row-label">Search a municipality</div>
+      <input type="text" id="searchInput" placeholder="e.g. München, Köln…" autocomplete="off">
+      <div id="searchResults"></div>
+    </div>
+
+    <div class="row">
+      <div class="row-label">Comparing</div>
+      <div id="selectedList"><div id="selectedEmpty">Nothing selected yet</div></div>
+    </div>
+
+    <div id="noteLine"></div>
+  </div>
+
+  <div id="chartWrap">
+    <div id="chartTitle"></div>
+    <svg id="chartSvg" viewBox="0 0 1000 600" preserveAspectRatio="none"></svg>
+    <div id="emptyState">Click a state on the mini map, or search for a municipality, to start comparing.</div>
+    <div id="chartTooltip"></div>
+  </div>
+
+  <div id="loading">Loading…</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const DATA_DIR = "data/prepared";
+  const PALETTE = [
+    "#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f", "#edc948",
+    "#b07aa1", "#ff9da7", "#9c755f", "#bab0ac", "#86bcb6", "#d37295",
+  ];
+
+  const STATE_SLUG_TO_CODE = {
+    schleswig_holstein: "01", hamburg: "02", niedersachsen: "03", bremen: "04",
+    north_rhine_westphalia: "05", hesse: "06", rhineland_palatinate: "07",
+    baden_wuerttemberg: "08", bavaria: "09", saarland: "10", berlin: "11",
+    brandenburg: "12", mecklenburg_vorpommern: "13", saxony: "14",
+    saxony_anhalt: "15", thuringia: "16",
+  };
+  const CODE_TO_STATE_SLUG = Object.fromEntries(Object.entries(STATE_SLUG_TO_CODE).map(([s, c]) => [c, s]));
+
+  // Short, neutral one-liners for the party dropdown - not exhaustive (very
+  // minor/historical parties fall back to a generic line).
+  const PARTY_DESCRIPTIONS = {
+    cdu_csu: "Christian Democrats — center-right (CSU is its Bavaria-only sister party).",
+    cdu: "Christian Democrats — center-right; runs everywhere except Bavaria, where CSU stands instead.",
+    csu: "Christian Social Union — CDU's center-right sister party, contesting Bavaria only.",
+    spd: "Social Democrats — center-left, Germany's oldest major party, rooted in the labor movement.",
+    gruene: "Greens — environmentalist and socially liberal, left-of-center.",
+    fdp: "Free Democrats — pro-business economic liberals, fiscally conservative.",
+    linke_pds: "The Left — democratic socialist, descended from East Germany's former ruling SED party.",
+    die_linke: "The Left — democratic socialist, descended from East Germany's former ruling SED party.",
+    afd: "Alternative for Germany — right-wing populist and anti-immigration; strongest in the former East.",
+    bsw: "Sahra Wagenknecht Alliance — economically left, socially conservative, anti-immigration; split from Die Linke in 2023.",
+    npd: "National Democratic Party — far-right, ethno-nationalist; marginal, later rebranded as HEIMAT.",
+    heimat: "HEIMAT (formerly NPD) — far-right, ethno-nationalist; marginal.",
+    die_rechte: "Die Rechte — far-right, ethno-nationalist; marginal.",
+    rep: "The Republicans — national-conservative; prominent regionally in the 1990s, now marginal.",
+    freie_wahler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    freie_waehler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    fr_waehler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    piraten: "Pirate Party — digital rights and government-transparency focused; prominent around 2009-2013.",
+    volt: "Volt — pro-European, pan-European progressive party.",
+    ssw: "South Schleswig Voters' Association — represents the Danish/Frisian minority in Schleswig-Holstein; exempt from the 5% threshold there.",
+    die_partei: "Die PARTEI — satirical party founded by comedians and journalists.",
+    buendnis_90: "Alliance 90 — East German civil-rights movement that merged with the Greens in 1993.",
+    oedp: "Ecological Democratic Party — conservative environmentalist, small.",
+    tierschutzpartei: "Animal-welfare-focused single-issue party.",
+    tierschutzallianz: "Animal-welfare-focused single-issue party.",
+    mieterpartei: "Tenants'-rights-focused single-issue party (Berlin).",
+    die_urbane: "Left-wing party focused on urban and migrant communities (Berlin).",
+    dkp: "German Communist Party — small orthodox communist party.",
+    kpd: "Communist Party of Germany — small orthodox communist party (post-war revival).",
+    sgp: "Socialist Equality Party — small Trotskyist party.",
+    mera25: "MERA25 — German branch of DiEM25, Yanis Varoufakis's pan-European left-wing movement.",
+    pdf: "Party der Humanisten — small secular-humanist liberal party.",
+    pdh: "Party der Humanisten — small secular-humanist liberal party.",
+    bundnis_c: "Bündnis C — small Christian-conservative party.",
+    diebasis: "dieBasis — founded in opposition to COVID-19 restrictions; direct-democracy focused.",
+    gartenpartei: "Small allotment-garden-interest party.",
+    einzelbewerber: "An independent candidate running without a party.",
+    other: "Smaller parties and independents too numerous to list individually.",
+  };
+  function partyDescription(party) {
+    return PARTY_DESCRIPTIONS[party] || "A smaller regional or single-issue party.";
+  }
+
+  const state = {
+    manifest: null,
+    muniBoundary: null,
+    countyBoundary: null,
+    stateBoundary: null,
+    type: "federal",
+    stateSlug: null,
+    metricMode: "party",
+    party: null,
+    miniRes: "state",
+    selected: [],
+    preview: null,
+    dataCache: {},     // "type:stateSlug:year" -> {ags: {w,s,b,t}}
+    nextColorIdx: 0,
+    miniMap: null,
+    miniLayer: null,
+    renderToken: 0,
+  };
+
+  function fetchJson(url) {
+    return fetch(url, { cache: "no-cache" }).then((r) => {
+      if (!r.ok) throw new Error(`${url}: ${r.status}`);
+      return r.json();
+    });
+  }
+  function setLoading(on) { document.getElementById("loading").classList.toggle("active", on); }
+
+  function isStateScoped() { return state.type === "landtag" || state.type === "kommunal"; }
+  function partyInfo(key) { return state.manifest.party_info[key] || { label: key, color: "#999999" }; }
+
+  function currentYears() {
+    if (isStateScoped()) {
+      const s = state.manifest[state.type].states[state.stateSlug];
+      return s ? s.years : [];
+    }
+    return state.manifest[state.type].years;
+  }
+
+  function cacheKey(year) { return `${state.type}:${state.stateSlug || ""}:${year}`; }
+  function dataUrlForYear(year) {
+    return isStateScoped()
+      ? `${DATA_DIR}/${state.type}/${state.stateSlug}/${year}.json`
+      : `${DATA_DIR}/${state.type}/${year}.json`;
+  }
+  function ensureYearsLoaded(years) {
+    const missing = years.filter((y) => !state.dataCache[cacheKey(y)]);
+    return Promise.all(missing.map((y) =>
+      fetchJson(dataUrlForYear(y)).then((d) => { state.dataCache[cacheKey(y)] = d; })
+    ));
+  }
+
+  function nextColor() {
+    const used = new Set(state.selected.map((s) => s.color));
+    for (let i = 0; i < PALETTE.length; i++) {
+      const c = PALETTE[(state.nextColorIdx + i) % PALETTE.length];
+      if (!used.has(c)) { state.nextColorIdx += i + 1; return c; }
+    }
+    const c = PALETTE[state.nextColorIdx % PALETTE.length];
+    state.nextColorIdx++;
+    return c;
+  }
+
+  // ---------- value lookup ----------
+  // "Not in an area's top 5" is left as null (no data), not 0 - unlike map-trends'
+  // swing math, this is a plain absolute level, and treating "outside top 5" as "got
+  // 0%" would misrepresent a party that's simply not locally prominent.
+  function municipalityValue(ags, year, metricKey) {
+    const rec = (state.dataCache[cacheKey(year)] || {})[ags];
+    if (!rec) return null;
+    if (metricKey === "__turnout__") return rec.t == null ? null : rec.t;
+    const entry = (rec.b || []).find((kv) => kv[0] === metricKey);
+    return entry ? entry[1] : null;
+  }
+
+  function groupValue(prefix, year, metricKey) {
+    const yearData = state.dataCache[cacheKey(year)] || {};
+    let sum = 0, count = 0;
+    for (const ags in yearData) {
+      if (!ags.startsWith(prefix)) continue;
+      const v = municipalityValue(ags, year, metricKey);
+      if (v != null) { sum += v; count++; }
+    }
+    return count ? sum / count : null;
+  }
+
+  function valueFor(item, year, metricKey) {
+    if (item.type === "municipality") return municipalityValue(item.key, year, metricKey);
+    if (item.type === "county") return groupValue(item.key, year, metricKey);
+    if (item.type === "state") return groupValue(STATE_SLUG_TO_CODE[item.key], year, metricKey);
+    return null;
+  }
+
+  function metricKeyNow() { return state.metricMode === "turnout" ? "__turnout__" : state.party; }
+  function metricUnitLabel() { return state.metricMode === "turnout" ? "Turnout" : (state.party ? partyInfo(state.party).label + " vote share" : "Vote share"); }
+
+  // ---------- party list ----------
+  function deriveTopParties(year) {
+    const yearData = state.dataCache[cacheKey(year)] || {};
+    const counts = {};
+    for (const ags in yearData) {
+      const w = yearData[ags].w;
+      if (w) counts[w] = (counts[w] || 0) + 1;
+    }
+    return Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+  }
+
+  function populatePartySelect() {
+    const years = currentYears();
+    const latest = years[years.length - 1];
+    return ensureYearsLoaded([latest]).then(() => {
+      const parties = deriveTopParties(latest);
+      const sel = document.getElementById("partySelect");
+      sel.innerHTML = "";
+      for (const key of parties) {
+        const opt = document.createElement("option");
+        opt.value = key;
+        opt.textContent = partyInfo(key).label;
+        sel.appendChild(opt);
+      }
+      if (!state.party || !parties.includes(state.party)) state.party = parties[0];
+      sel.value = state.party;
+      updatePartyDescription();
+    });
+  }
+
+  function updatePartyDescription() {
+    document.getElementById("partyDescription").textContent =
+      state.metricMode === "party" && state.party ? partyDescription(state.party) : "";
+  }
+
+  // ---------- selection management ----------
+  function findSelectedIndex(type, key) { return state.selected.findIndex((s) => s.type === type && s.key === key); }
+
+  function toggleSelection(type, key, label) {
+    const idx = findSelectedIndex(type, key);
+    if (idx >= 0) state.selected.splice(idx, 1);
+    else state.selected.push({ type, key, label, color: nextColor() });
+    renderSelectedList();
+    restyleMiniMap();
+    renderChart();
+  }
+  function removeSelection(type, key) {
+    const idx = findSelectedIndex(type, key);
+    if (idx >= 0) state.selected.splice(idx, 1);
+    renderSelectedList();
+    restyleMiniMap();
+    renderChart();
+  }
+  function renderSelectedList() {
+    const container = document.getElementById("selectedList");
+    container.innerHTML = "";
+    if (!state.selected.length) { container.innerHTML = `<div id="selectedEmpty">Nothing selected yet</div>`; return; }
+    for (const item of state.selected) {
+      const div = document.createElement("div");
+      div.className = "chip";
+      div.innerHTML = `<span class="swatch" style="background:${item.color}"></span><span class="name">${item.label}</span><span class="remove">×</span>`;
+      div.querySelector(".remove").addEventListener("click", () => removeSelection(item.type, item.key));
+      container.appendChild(div);
+    }
+  }
+
+  // ---------- mini map ----------
+  function initMiniMap() {
+    state.miniMap = L.map("miniMap", {
+      zoomControl: false, attributionControl: false, dragging: false,
+      scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, touchZoom: false, keyboard: false,
+    });
+    state.miniMap.setView([51.15, 10.45], 5);
+    loadMiniLayer();
+  }
+
+  function effectiveMiniRes() {
+    return isStateScoped() ? "county" : state.miniRes;
+  }
+
+  function miniBoundaryFeatures() {
+    if (effectiveMiniRes() === "state") return state.stateBoundary.features;
+    const all = state.countyBoundary.features;
+    if (!isStateScoped() || !state.stateSlug) return all;
+    const code = STATE_SLUG_TO_CODE[state.stateSlug];
+    return all.filter((f) => f.properties.county.startsWith(code));
+  }
+
+  function styleForMiniFeature(f) {
+    const type = effectiveMiniRes();
+    const key = type === "state" ? CODE_TO_STATE_SLUG[f.properties.code] : f.properties.county;
+    const idx = findSelectedIndex(type, key);
+    if (idx >= 0) return { color: "#ffffff", weight: 1.2, fillColor: state.selected[idx].color, fillOpacity: 0.85 };
+    return { color: "#3a3f4b", weight: 0.5, fillColor: "#2a2e38", fillOpacity: 0.5 };
+  }
+
+  function loadMiniLayer() {
+    if (state.miniLayer) { state.miniMap.removeLayer(state.miniLayer); state.miniLayer = null; }
+    const type = effectiveMiniRes();
+    const features = miniBoundaryFeatures();
+    state.miniLayer = L.geoJSON({ type: "FeatureCollection", features }, {
+      style: styleForMiniFeature,
+      onEachFeature: (f, layer) => {
+        const key = type === "state" ? CODE_TO_STATE_SLUG[f.properties.code] : f.properties.county;
+        const label = type === "state" ? stateLabel(f.properties.code) : f.properties.name;
+        layer.on("click", () => toggleSelection(type, key, label));
+        layer.on("mouseover", () => {
+          layer.setStyle({ weight: 1.4, color: "#ffffff" });
+          if (findSelectedIndex(type, key) < 0) { state.preview = { type, key, label, color: "#ffffff" }; renderChart(); }
+        });
+        layer.on("mouseout", () => { state.miniLayer.resetStyle(layer); state.preview = null; renderChart(); });
+      },
+    }).addTo(state.miniMap);
+  }
+  function stateLabel(code) {
+    const slug = CODE_TO_STATE_SLUG[code];
+    return slug ? (state.manifest.landtag.states[slug]?.label || slug) : code;
+  }
+
+  function restyleMiniMap() { if (state.miniLayer) state.miniLayer.setStyle(styleForMiniFeature); }
+
+  function onResChange(res) {
+    state.miniRes = res;
+    document.querySelectorAll("#resToggle button").forEach((b) => b.classList.toggle("active", b.dataset.res === res));
+    loadMiniLayer();
+  }
+
+  // ---------- search (municipalities only) ----------
+  function runSearch(q) {
+    const container = document.getElementById("searchResults");
+    container.innerHTML = "";
+    const query = q.trim().toLowerCase();
+    if (query.length < 2 || !state.muniBoundary) return;
+    const code = isStateScoped() ? STATE_SLUG_TO_CODE[state.stateSlug] : null;
+    const results = [];
+    for (const f of state.muniBoundary.features) {
+      if (results.length >= 10) break;
+      if (code && !f.properties.ags.startsWith(code)) continue;
+      if (f.properties.name.toLowerCase().includes(query)) {
+        results.push({ key: f.properties.ags, label: f.properties.name, sub: f.properties.kind || "Municipality" });
+      }
+    }
+    for (const r of results) {
+      const div = document.createElement("div");
+      div.className = "search-result";
+      div.innerHTML = `${r.label}<span class="sr-type">${r.sub}</span>`;
+      div.addEventListener("click", () => {
+        toggleSelection("municipality", r.key, r.label);
+        document.getElementById("searchInput").value = "";
+        container.innerHTML = "";
+      });
+      container.appendChild(div);
+    }
+  }
+
+  // ---------- chart (same design as map-timeseries) ----------
+  const CHART_PAD = { left: 70, right: 185, top: 30, bottom: 40 };
+  const VB_W = 1000, VB_H = 600;
+
+  function fmtValue(v) {
+    if (v == null) return "—";
+    return `${(v * 100).toFixed(1)}%`;
+  }
+  function svgEl(tag, attrs) {
+    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  function renderChart() {
+    const svg = document.getElementById("chartSvg");
+    svg.innerHTML = "";
+    document.getElementById("chartTitle").textContent = metricUnitLabel();
+
+    const metricKey = metricKeyNow();
+    const items = state.preview ? [...state.selected, state.preview] : state.selected;
+    const empty = document.getElementById("emptyState");
+    if (!metricKey || !items.length) { empty.style.display = "flex"; return; }
+    empty.style.display = "none";
+
+    const years = currentYears();
+    const token = ++state.renderToken;
+    ensureYearsLoaded(years).then(() => {
+      if (token !== state.renderToken) return;
+      drawChart(years, items, metricKey);
+    });
+  }
+
+  function drawChart(years, items, metricKey) {
+    const svg = document.getElementById("chartSvg");
+    svg.innerHTML = "";
+    const plotW = VB_W - CHART_PAD.left - CHART_PAD.right;
+    const plotH = VB_H - CHART_PAD.top - CHART_PAD.bottom;
+    const yearNums = years.map((y) => parseInt(y, 10));
+    const yMin = yearNums[0], yMax = yearNums[yearNums.length - 1];
+    const xFor = (year) => CHART_PAD.left + (yearNums[years.indexOf(year)] - yMin) / Math.max(1, (yMax - yMin)) * plotW;
+
+    const allSeries = items.map((item) => ({
+      item, points: years.map((y) => ({ year: y, value: valueFor(item, y, metricKey) })),
+    }));
+    const allVals = allSeries.flatMap((s) => s.points.map((p) => p.value)).filter((v) => v != null);
+    if (!allVals.length) {
+      document.getElementById("emptyState").style.display = "flex";
+      document.getElementById("emptyState").textContent = "No data for the selected area(s) with this metric.";
+      return;
+    }
+    let vMin = Math.min(...allVals, 0), vMax = Math.max(...allVals);
+    const pad = Math.max(0.01, (vMax - vMin) * 0.12);
+    vMin = Math.max(0, vMin - pad); vMax += pad;
+    const yFor = (v) => CHART_PAD.top + plotH - (v - vMin) / (vMax - vMin) * plotH;
+
+    const ticks = 5;
+    for (let i = 0; i <= ticks; i++) {
+      const v = vMin + (vMax - vMin) * (i / ticks);
+      const y = yFor(v);
+      svg.appendChild(svgEl("line", { class: "grid-line", x1: CHART_PAD.left, x2: VB_W - CHART_PAD.right, y1: y, y2: y }));
+      const label = svgEl("text", { class: "axis-label", x: CHART_PAD.left - 8, y: y + 4, "text-anchor": "end" });
+      label.textContent = fmtValue(v);
+      svg.appendChild(label);
+    }
+    const maxLabels = 10;
+    const step = Math.max(1, Math.ceil(years.length / maxLabels));
+    years.forEach((y, i) => {
+      if (i % step !== 0 && i !== years.length - 1) return;
+      const x = xFor(y);
+      const label = svgEl("text", { class: "axis-label", x, y: VB_H - CHART_PAD.bottom + 18, "text-anchor": "middle" });
+      label.textContent = y;
+      svg.appendChild(label);
+    });
+    svg.appendChild(svgEl("line", { class: "axis-line", x1: CHART_PAD.left, x2: VB_W - CHART_PAD.right, y1: VB_H - CHART_PAD.bottom, y2: VB_H - CHART_PAD.bottom }));
+    svg.appendChild(svgEl("line", { class: "axis-line", x1: CHART_PAD.left, x2: CHART_PAD.left, y1: CHART_PAD.top, y2: VB_H - CHART_PAD.bottom }));
+
+    for (const { item, points } of allSeries) {
+      const isPreview = item === state.preview;
+      let run = [], runs = [];
+      for (const p of points) {
+        if (p.value == null) { if (run.length) runs.push(run); run = []; continue; }
+        run.push(p);
+      }
+      if (run.length) runs.push(run);
+      for (const r of runs) {
+        const d = r.map((p, i) => `${i === 0 ? "M" : "L"} ${xFor(p.year).toFixed(1)} ${yFor(p.value).toFixed(1)}`).join(" ");
+        svg.appendChild(svgEl("path", { class: `series-path${isPreview ? " preview" : ""}`, d, stroke: item.color }));
+        if (!isPreview) {
+          for (const p of r) svg.appendChild(svgEl("circle", { class: "series-dot", cx: xFor(p.year), cy: yFor(p.value), r: 2.6, fill: item.color }));
+        }
+      }
+      const lastRun = runs[runs.length - 1];
+      if (lastRun) {
+        const last = lastRun[lastRun.length - 1];
+        const label = svgEl("text", { class: "series-end-label", x: xFor(last.year) + 6, y: yFor(last.value) + 4, fill: item.color });
+        label.textContent = item.label;
+        svg.appendChild(label);
+      }
+    }
+    attachHover(svg, years, xFor, yFor, allSeries);
+  }
+
+  function attachHover(svg, years, xFor, yFor, allSeries) {
+    const overlay = svgEl("rect", {
+      x: CHART_PAD.left, y: CHART_PAD.top, width: VB_W - CHART_PAD.left - CHART_PAD.right,
+      height: VB_H - CHART_PAD.top - CHART_PAD.bottom, fill: "transparent",
+    });
+    svg.appendChild(overlay);
+    const tooltip = document.getElementById("chartTooltip");
+    const wrap = document.getElementById("chartWrap");
+
+    overlay.addEventListener("mousemove", (e) => {
+      const rect = svg.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width * VB_W;
+      let nearestIdx = 0, best = Infinity;
+      years.forEach((y, i) => { const dx = Math.abs(xFor(y) - px); if (dx < best) { best = dx; nearestIdx = i; } });
+      const year = years[nearestIdx];
+
+      let guide = svg.querySelector(".hover-guide");
+      if (!guide) { guide = svgEl("line", { class: "hover-guide", y1: CHART_PAD.top, y2: VB_H - CHART_PAD.bottom }); svg.appendChild(guide); }
+      guide.setAttribute("x1", xFor(year)); guide.setAttribute("x2", xFor(year));
+
+      let html = `<div class="tt-year">${year}</div>`;
+      for (const { item, points } of allSeries) {
+        const p = points[nearestIdx];
+        html += `<div class="tt-row"><span class="tt-swatch" style="background:${item.color}"></span><span class="tt-name">${item.label}</span><span class="tt-val">${fmtValue(p ? p.value : null)}</span></div>`;
+      }
+      tooltip.innerHTML = html;
+      tooltip.style.display = "block";
+      const wrapRect = wrap.getBoundingClientRect();
+      let left = e.clientX - wrapRect.left + 14, top = e.clientY - wrapRect.top + 14;
+      if (left + 200 > wrapRect.width) left = e.clientX - wrapRect.left - 214;
+      tooltip.style.left = `${left}px`; tooltip.style.top = `${top}px`;
+    });
+    overlay.addEventListener("mouseleave", () => {
+      tooltip.style.display = "none";
+      const guide = svg.querySelector(".hover-guide");
+      if (guide) guide.remove();
+    });
+  }
+
+  // ---------- wiring ----------
+  function populateStateSelect() {
+    const sel = document.getElementById("stateSelect");
+    sel.innerHTML = "";
+    const states = state.manifest[state.type].states;
+    const slugs = Object.keys(states);
+    for (const slug of slugs) {
+      const opt = document.createElement("option");
+      opt.value = slug;
+      opt.textContent = states[slug].label;
+      sel.appendChild(opt);
+    }
+    if (!state.stateSlug || !slugs.includes(state.stateSlug)) state.stateSlug = slugs.includes("berlin") ? "berlin" : slugs[0];
+    sel.value = state.stateSlug;
+  }
+
+  function onContextChange() {
+    // Type/state changed: the data source changed entirely, so old selections may no
+    // longer resolve (a Cologne pick doesn't exist under a Bavaria-scoped Landtag
+    // fetch) - clearest behavior is to drop them rather than silently show gaps.
+    state.selected = [];
+    state.preview = null;
+    renderSelectedList();
+    document.getElementById("stateRow").style.display = isStateScoped() ? "block" : "none";
+    if (isStateScoped()) populateStateSelect();
+    document.getElementById("resToggle").querySelector('[data-res="state"]').disabled = isStateScoped();
+    if (isStateScoped() && state.miniRes === "state") state.miniRes = "county";
+    document.querySelectorAll("#resToggle button").forEach((b) => b.classList.toggle("active", b.dataset.res === state.miniRes));
+    loadMiniLayer();
+    populatePartySelect().then(renderChart);
+  }
+
+  document.getElementById("typeToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    state.type = btn.dataset.type;
+    document.querySelectorAll("#typeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.type === state.type));
+    onContextChange();
+  });
+  document.getElementById("stateSelect").addEventListener("change", (e) => {
+    state.stateSlug = e.target.value;
+    onContextChange();
+  });
+  document.getElementById("metricModeToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    state.metricMode = btn.dataset.mode;
+    document.querySelectorAll("#metricModeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.mode === state.metricMode));
+    document.getElementById("partyRow").style.display = state.metricMode === "party" ? "block" : "none";
+    updatePartyDescription();
+    renderChart();
+  });
+  document.getElementById("partySelect").addEventListener("change", (e) => {
+    state.party = e.target.value;
+    updatePartyDescription();
+    renderChart();
+  });
+  document.getElementById("resToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (btn && !btn.disabled) onResChange(btn.dataset.res);
+  });
+  document.getElementById("searchInput").addEventListener("input", (e) => runSearch(e.target.value));
+
+  function init() {
+    setLoading(true);
+    Promise.all([
+      fetchJson(`${DATA_DIR}/manifest.json`),
+      fetchJson(`${DATA_DIR}/gemeinden.geojson`),
+      fetchJson(`${DATA_DIR}/counties.geojson`),
+      fetchJson(`${DATA_DIR}/state_outlines.geojson`),
+    ]).then(([manifest, muniBoundary, countyBoundary, stateBoundary]) => {
+      state.manifest = manifest;
+      state.muniBoundary = muniBoundary;
+      state.countyBoundary = countyBoundary;
+      state.stateBoundary = stateBoundary;
+      initMiniMap();
+      document.getElementById("noteLine").textContent =
+        "A party's value is only shown for years/areas where it placed in that area's local top 5 - left blank (not zero) otherwise, since \"outside the top 5\" could mean anything from 4% to 0%. State/county lines are a simple (unweighted) average of their municipalities, not population-weighted. Switching election type or state clears the current comparison, since the underlying data source changes entirely.";
+      populatePartySelect().then(renderChart);
+    }).catch((err) => {
+      document.getElementById("noteLine").textContent = `Failed to load: ${err.message}`;
+    }).finally(() => setLoading(false));
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

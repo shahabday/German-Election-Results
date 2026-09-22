@@ -78,6 +78,20 @@ municipality-shaped file. Cross-checked against the citywide total wahlen-berlin
 published: 25.65% Die Linke / 1,824,514 valid votes computed here vs. the site's own
 25.7% / 1,824,514 — matches to within rounding.
 
+## Special case: 2026 Berlin BVV elections (the Kommunalwahl equivalent)
+
+Select **Kommunalwahl → Berlin → 2026** for the same treatment applied to the district
+council (Bezirksverordnetenversammlungen) elections, held the same day as AGH. Berlin's
+"Kommunalwahl" was a single citywide blob for every year before this, for the same
+structural reason as Landtag: GERDA's municipal file has one AGS for all of Berlin. Now
+2026 shows the real 12 Bezirke instead, each a genuine administrative unit (unlike AGH's
+78 Wahlkreise, BVV is proportional-only — no direct mandate — so there's no finer layer
+to build here; 12 Bezirke *is* the real resolution). Source: same site, `.../Afspraes/bvv/`
+instead of `.../AGH/`; see `build_berlin_bvv_2026.py`. Same citywide-rollup trick as AGH
+(`data/prepared/kommunal/berlin/2026.json`) so it shows up in the national aggregate too —
+cross-checked against wahlen-berlin.de's own citywide figure: 24.1% Die Linke / 1,890,291
+valid votes computed here, exact match to the site's own numbers.
+
 ## Also outside GERDA: Mecklenburg-Vorpommern and Saxony-Anhalt, 2026
 
 Both states held their regular Landtag elections in September 2026 (MV on the 20th, the

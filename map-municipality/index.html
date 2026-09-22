@@ -59,7 +59,7 @@
     box-shadow: 0 8px 24px rgba(0,0,0,0.4);
   }
   #legend .legend-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
-  .legend-item { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; cursor: help; }
   .legend-swatch { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); }
   .legend-pct { color: var(--text-dim); margin-left: auto; font-variant-numeric: tabular-nums; }
 
@@ -257,6 +257,53 @@
   const stateRow = document.getElementById("stateRow");
   const stateSelect = document.getElementById("stateSelect");
 
+  // Short, neutral one-liners for the legend's title="" tooltip - not exhaustive (very
+  // minor/historical parties fall back to a generic line), just enough to orient anyone
+  // unfamiliar with German party politics.
+  const PARTY_DESCRIPTIONS = {
+    cdu_csu: "Christian Democrats — center-right (CSU is its Bavaria-only sister party).",
+    cdu: "Christian Democrats — center-right; runs everywhere except Bavaria, where CSU stands instead.",
+    csu: "Christian Social Union — CDU's center-right sister party, contesting Bavaria only.",
+    spd: "Social Democrats — center-left, Germany's oldest major party, rooted in the labor movement.",
+    gruene: "Greens — environmentalist and socially liberal, left-of-center.",
+    fdp: "Free Democrats — pro-business economic liberals, fiscally conservative.",
+    linke_pds: "The Left — democratic socialist, descended from East Germany's former ruling SED party.",
+    die_linke: "The Left — democratic socialist, descended from East Germany's former ruling SED party.",
+    afd: "Alternative for Germany — right-wing populist and anti-immigration; strongest in the former East.",
+    bsw: "Sahra Wagenknecht Alliance — economically left, socially conservative, anti-immigration; split from Die Linke in 2023.",
+    npd: "National Democratic Party — far-right, ethno-nationalist; marginal, later rebranded as HEIMAT.",
+    heimat: "HEIMAT (formerly NPD) — far-right, ethno-nationalist; marginal.",
+    die_rechte: "Die Rechte — far-right, ethno-nationalist; marginal.",
+    rep: "The Republicans — national-conservative; prominent regionally in the 1990s, now marginal.",
+    freie_wahler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    freie_waehler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    fr_waehler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    piraten: "Pirate Party — digital rights and government-transparency focused; prominent around 2009-2013.",
+    volt: "Volt — pro-European, pan-European progressive party.",
+    ssw: "South Schleswig Voters' Association — represents the Danish/Frisian minority in Schleswig-Holstein; exempt from the 5% threshold there.",
+    die_partei: "Die PARTEI — satirical party founded by comedians and journalists.",
+    buendnis_90: "Alliance 90 — East German civil-rights movement that merged with the Greens in 1993.",
+    oedp: "Ecological Democratic Party — conservative environmentalist, small.",
+    tierschutzpartei: "Animal-welfare-focused single-issue party.",
+    tierschutzallianz: "Animal-welfare-focused single-issue party.",
+    mieterpartei: "Tenants'-rights-focused single-issue party (Berlin).",
+    die_urbane: "Left-wing party focused on urban and migrant communities (Berlin).",
+    dkp: "German Communist Party — small orthodox communist party.",
+    kpd: "Communist Party of Germany — small orthodox communist party (post-war revival).",
+    sgp: "Socialist Equality Party — small Trotskyist party.",
+    mera25: "MERA25 — German branch of DiEM25, Yanis Varoufakis's pan-European left-wing movement.",
+    pdf: "Party der Humanisten — small secular-humanist liberal party.",
+    pdh: "Party der Humanisten — small secular-humanist liberal party.",
+    bundnis_c: "Bündnis C — small Christian-conservative party.",
+    diebasis: "dieBasis — founded in opposition to COVID-19 restrictions; direct-democracy focused.",
+    gartenpartei: "Small allotment-garden-interest party.",
+    einzelbewerber: "An independent candidate running without a party.",
+    other: "Smaller parties and independents too numerous to list individually.",
+  };
+  function partyDescription(party) {
+    return PARTY_DESCRIPTIONS[party] || "A smaller regional or single-issue party.";
+  }
+
   function partyStyle(party) {
     if (!state.manifest || !party) return { color: "#3a3d45", label: "No data" };
     return state.manifest.party_info[party] || { color: state.manifest.default_fallback.color, label: party };
@@ -368,6 +415,7 @@
       const style = partyStyle(party);
       const div = document.createElement("div");
       div.className = "legend-item";
+      div.title = partyDescription(party);
       div.innerHTML = `<span class="legend-swatch" style="background:${style.color}"></span>
         <span>${style.label}</span>
         <span class="legend-pct">${n}</span>`;

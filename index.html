@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German Election Data — Interactive Tools</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e8eaed;
+    --text-dim: #9aa0ab;
+    --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  body { padding: 48px 24px 80px; }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  header { margin-bottom: 44px; }
+  header h1 { font-size: 28px; margin: 0 0 10px; font-weight: 700; }
+  header p { font-size: 14.5px; color: var(--text-dim); max-width: 720px; line-height: 1.6; margin: 0 0 6px; }
+  header .credit { font-size: 12px; color: var(--text-dim); margin-top: 14px; }
+
+  section.group { margin-bottom: 40px; }
+  section.group h2 {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim);
+    font-weight: 600; margin: 0 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--panel-border);
+  }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+
+  .card {
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 12px;
+    padding: 20px 22px; display: flex; flex-direction: column;
+    text-decoration: none; color: inherit; transition: border-color 0.15s, transform 0.15s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card h3 { font-size: 16px; margin: 0 0 8px; font-weight: 600; color: var(--text); }
+  .card p.desc { font-size: 12.5px; color: var(--text-dim); line-height: 1.55; margin: 0 0 12px; flex: 1; }
+  .card ul.highlights { list-style: none; margin: 0 0 16px; padding: 0; font-size: 11.5px; color: var(--text-dim); }
+  .card ul.highlights li { padding-left: 14px; position: relative; margin-bottom: 4px; line-height: 1.4; }
+  .card ul.highlights li::before { content: "–"; position: absolute; left: 0; color: var(--accent); }
+  .card .open {
+    font-size: 12.5px; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 4px;
+  }
+  .card .open .arrow { transition: transform 0.15s; }
+  .card:hover .open .arrow { transform: translateX(3px); }
+
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--panel-border); font-size: 11.5px; color: var(--text-dim); line-height: 1.7; }
+  footer code { background: #1e222b; padding: 1px 5px; border-radius: 4px; font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>German Election Data — Interactive Tools</h1>
+    <p>Seven independent, self-contained visualizations built on real German election results (GERDA) and socioeconomic covariates (Zensus 2022, VGRdL, INKAR) — federal, European, state, and municipal elections from 1990 to 2026, at resolutions from Bundesland down to individual municipalities and constituencies.</p>
+    <p>Each tool below is a standalone page with its own data — nothing shared at runtime, nothing that breaks if you only deploy some of them.</p>
+    <div class="credit">Data: GERDA (Heddesheimer, Hilbig, Sichart &amp; Wiedemann, 2025, <em>Nature Scientific Data</em>) · Zensus 2022 · VGRdL · INKAR · Boundaries: BKG VG250, m-ad/geofeatures-ags-germany</div>
+  </header>
+
+  <section class="group">
+    <h2>Election Results</h2>
+    <div class="grid">
+
+      <a class="card" href="map/">
+        <h3>Bundestag Wahlkreis Map</h3>
+        <p class="desc">Federal election results by constituency (Wahlkreis) — the real direct-mandate map, 2002–2025.</p>
+        <ul class="highlights">
+          <li>Real single-winner constituency seats, not an area-level approximation</li>
+          <li>Erststimme (direct mandate) and Zweitstimme (party vote) toggle</li>
+          <li>7 elections, each on its own real constituency boundaries</li>
+        </ul>
+        <span class="open">Open tool <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="map-municipality/">
+        <h3>Municipality Election Map</h3>
+        <p class="desc">All four election types — Bundestag, Europawahl, Landtag, Kommunalwahl — at municipality resolution, nationwide.</p>
+        <ul class="highlights">
+          <li>~10,900 municipalities, 1990–2026</li>
+          <li>Nationwide "current standing" view for state-scheduled elections</li>
+          <li>Includes 2026 results not yet in most public datasets (Berlin, MV, Saxony-Anhalt, Rhineland-Palatinate)</li>
+        </ul>
+        <span class="open">Open tool <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="map-trends/">
+        <h3>Election Trends — Swing Map</h3>
+        <p class="desc">Swing between consecutive elections: who's gaining, who's flipping, and which areas are close to flipping next.</p>
+        <ul class="highlights">
+          <li>Party growth (pp swing), flipped areas, at-risk-of-flipping, turnout change</li>
+          <li>"At risk of losing to [party]" — pick any party and see its trajectory</li>
+          <li>CDU/CSU merged as one party for swing purposes</li>
+        </ul>
+        <span class="open">Open tool <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="map-election-timeseries/">
+        <h3>Election Results — Time Series</h3>
+        <p class="desc">Pick any states, counties, or municipalities and compare a party's vote share (or turnout) across every election of one type, as line charts.</p>
+        <ul class="highlights">
+          <li>Click the map or search by name to build a comparison</li>
+          <li>Hover for a quick preview line before committing</li>
+          <li>State-scoped for Landtag/Kommunalwahl, nationwide for Bundestag/Europawahl</li>
+        </ul>
+        <span class="open">Open tool <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="map-election-profile/">
+        <h3>Voting Profile — All Elections Blended</h3>
+        <p class="desc">Blends all four election types into one "who does this place actually vote for" picture, over a year window you control.</p>
+        <ul class="highlights">
+          <li>Adjustable time window — full history vs. last 5/10 years tell very different stories</li>
+          <li>"Consistency" view: do national, state, and local elections even agree?</li>
+          <li>Surfaces real east/west and national/local voting divergence</li>
+        </ul>
+        <span class="open">Open tool <span class="arrow">→</span></span>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Demographics &amp; Economy</h2>
+    <div class="grid">
+
+      <a class="card" href="map-demographics/">
+        <h3>Demographics &amp; Economy Map</h3>
+        <p class="desc">Zensus 2022 census data at municipality resolution, plus county-level income and INKAR indicators as a multi-year time series.</p>
+        <ul class="highlights">
+          <li>28 metrics: age structure, migration, housing, income, unemployment, rent</li>
+          <li>Fixed vs. dynamic color scale, and a year-over-year growth view</li>
+          <li>Every metric has a one-sentence explanation built in</li>
+        </ul>
+        <span class="open">Open tool <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="map-timeseries/">
+        <h3>Demographics — Time Series</h3>
+        <p class="desc">Compare states or counties' economic and demographic indicators over time — same click/search comparison tool as the election time series.</p>
+        <ul class="highlights">
+          <li>Same 14 county-level metrics as the demographics map</li>
+          <li>Click, hover-preview, or search to build a multi-line comparison</li>
+          <li>Useful alongside the election trends map for "why" questions</li>
+        </ul>
+        <span class="open">Open tool <span class="arrow">→</span></span>
+      </a>
+
+    </div>
+  </section>
+
+  <footer>
+    Each tool is a static site: plain HTML/CSS/JS + pre-built JSON data, no server or build step required to run it. To deploy, publish each <code>map*/</code> folder as-is; every tool links to its data with paths relative to its own folder, so it works from any subpath.
+  </footer>
+</div>
+</body>
+</html>

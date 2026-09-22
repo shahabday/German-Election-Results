@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German Election Trends — Swing Map</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e8eaed;
+    --text-dim: #9aa0ab;
+    --accent: #4a90e2;
+    --risk: #e0622f;
+    --decline: #c0392b;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  #app { position: relative; height: 100vh; width: 100vw; }
+  #map { position: absolute; inset: 0; background: #0b0d11; }
+
+  #panel {
+    position: absolute; top: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 14px 16px; width: 320px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    max-height: calc(100vh - 32px); overflow-y: auto;
+  }
+  #panel h1 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+  #panel .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
+
+  .row { margin-bottom: 12px; }
+  .row:last-child { margin-bottom: 0; }
+  .row-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+
+  .toggle-group { display: flex; border: 1px solid var(--panel-border); border-radius: 6px; overflow: hidden; flex-wrap: wrap; }
+  .toggle-group button {
+    flex: 1 1 auto; min-width: 25%; background: transparent; color: var(--text-dim); border: none; padding: 7px 4px;
+    font-size: 11.5px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .toggle-group button.active { background: var(--accent); color: #fff; }
+  .toggle-group button:not(.active):hover { background: #20242e; color: var(--text); }
+
+  select {
+    width: 100%; background: #1e222b; color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 6px; padding: 7px 8px; font-size: 12.5px;
+  }
+
+  #pairSlider { width: 100%; accent-color: var(--accent); }
+  #pairLabel { font-size: 17px; font-weight: 700; text-align: center; margin: 2px 0 6px; }
+  #pairLabel .arrow { color: var(--text-dim); font-weight: 400; margin: 0 4px; }
+
+  #statsBar { display: flex; gap: 6px; margin-top: 4px; }
+  .stat { flex: 1; background: #1e222b; border: 1px solid var(--panel-border); border-radius: 6px; padding: 6px 4px; text-align: center; }
+  .stat .n { font-size: 15px; font-weight: 700; }
+  .stat .l { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.03em; }
+
+  #statusLine { font-size: 11px; color: var(--text-dim); margin-top: 10px; min-height: 14px; }
+  #noteLine { font-size: 10.5px; color: var(--text-dim); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--panel-border); }
+  #partyDescription { font-size: 11px; color: var(--text-dim); margin-top: 6px; line-height: 1.4; }
+
+  #legend {
+    position: absolute; bottom: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 10px 14px; font-size: 11px; max-width: 240px; max-height: 280px; overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  #legend .legend-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; cursor: help; }
+  .legend-swatch { width: 13px; height: 11px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); }
+  .legend-pct { color: var(--text-dim); margin-left: auto; font-variant-numeric: tabular-nums; }
+  .legend-gradient { height: 10px; border-radius: 3px; margin-bottom: 4px; }
+  .legend-scale-labels { display: flex; justify-content: space-between; font-size: 9.5px; color: var(--text-dim); margin-bottom: 8px; }
+
+  .leaflet-tooltip.trend-tooltip {
+    background: rgba(15, 17, 21, 0.97); color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.5); max-width: 260px;
+  }
+  .trend-tooltip .tt-title { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+  .trend-tooltip .tt-flip { font-size: 11.5px; margin-bottom: 6px; }
+  .trend-tooltip .tt-flip .to { font-weight: 700; }
+  .trend-tooltip .tt-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+  .trend-tooltip .tt-swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+  .trend-tooltip .tt-party { flex: 1; }
+  .trend-tooltip .tt-delta { font-variant-numeric: tabular-nums; color: var(--text-dim); }
+  .trend-tooltip .tt-meta { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--panel-border); color: var(--text-dim); font-size: 10.5px; }
+  .trend-tooltip .tt-risk { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--panel-border); color: var(--risk); font-size: 11px; }
+
+  #loading {
+    position: absolute; top: 16px; right: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    padding: 6px 12px; font-size: 11px; color: var(--text-dim); display: none;
+  }
+  #loading.active { display: block; }
+
+  #credit {
+    position: absolute; bottom: 8px; right: 8px; z-index: 999;
+    font-size: 10px; color: var(--text-dim); background: rgba(15,17,21,0.7);
+    padding: 3px 8px; border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="map"></div>
+
+  <div id="panel">
+    <h1>German Election Trends</h1>
+    <div class="subtitle">Swing between consecutive elections — ~10,900 Gemeinden</div>
+
+    <div class="row">
+      <div class="row-label">Election</div>
+      <div class="toggle-group" id="typeToggle">
+        <button data-type="federal" class="active">Bundestag</button>
+        <button data-type="european">Europawahl</button>
+        <button data-type="landtag">Landtag</button>
+        <button data-type="kommunal">Kommunalwahl</button>
+      </div>
+    </div>
+
+    <div class="row" id="stateRow" style="display:none;">
+      <div class="row-label">State</div>
+      <select id="stateSelect"></select>
+    </div>
+
+    <div class="row">
+      <div class="row-label">Election pair</div>
+      <div id="pairLabel">—</div>
+      <input type="range" id="pairSlider" min="0" max="0" step="1" value="0">
+    </div>
+
+    <div class="row">
+      <div class="row-label">Metric</div>
+      <div class="toggle-group" id="modeToggle">
+        <button data-mode="swing" class="active">Party growth</button>
+        <button data-mode="flip">Flipped areas</button>
+        <button data-mode="risk">At risk</button>
+        <button data-mode="turnout">Turnout Δ</button>
+      </div>
+    </div>
+
+    <div class="row" id="partyRow">
+      <div class="row-label">Party</div>
+      <select id="partySelect"></select>
+      <div id="partyDescription"></div>
+    </div>
+
+    <div class="row" id="statsBar">
+      <div class="stat"><div class="n" id="statFlipped">—</div><div class="l">Flipped</div></div>
+      <div class="stat"><div class="n" id="statRisk">—</div><div class="l">At risk</div></div>
+      <div class="stat"><div class="n" id="statAreas">—</div><div class="l">Areas</div></div>
+    </div>
+
+    <div id="statusLine"></div>
+    <div id="noteLine"></div>
+  </div>
+
+  <div id="legend">
+    <div class="legend-title" id="legendTitle">Legend</div>
+    <div id="legendItems"></div>
+  </div>
+
+  <div id="loading">Loading…</div>
+  <div id="credit">Data: GERDA · Boundaries: BKG VG250 via gjrichter</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const DATA_DIR = "data/prepared";
+
+  const map = L.map("map", { zoomControl: false, attributionControl: false })
+    .setView([51.15, 10.45], 6);
+  L.control.zoom({ position: "topright" }).addTo(map);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nomatter/{z}/{x}/{y}{r}.png", {
+    maxZoom: 19,
+    subdomains: "abcd",
+  }).addTo(map);
+
+  const state = {
+    type: "federal",
+    mode: "swing",
+    manifest: null,
+    boundary: null,
+    stateOutlines: null,
+    geoLayer: null,
+    outlineLayer: null,
+    freshOutlineLayer: null,
+    nationalFreshStates: null,
+    stateSlug: null,
+    pairIndex: 0,
+    pairs: [],
+    pairData: {},
+    party: null,
+    partyList: [],
+    riskParty: "__any__",
+    challengerPartyList: [],
+    renderToken: 0,
+  };
+
+  const STATE_SLUG_TO_CODE = {
+    schleswig_holstein: "01", hamburg: "02", niedersachsen: "03", bremen: "04",
+    north_rhine_westphalia: "05", hesse: "06", rhineland_palatinate: "07",
+    baden_wuerttemberg: "08", bavaria: "09", saarland: "10", berlin: "11",
+    brandenburg: "12", mecklenburg_vorpommern: "13", saxony: "14",
+    saxony_anhalt: "15", thuringia: "16",
+  };
+
+  // "All of Germany" for Landtag/Kommunalwahl: since every state votes on its own
+  // schedule, there's no single simultaneous nationwide swing the way Bundestag/
+  // Europawahl have. Instead this is a "latest swing as of year Y" merge - for each
+  // state, whichever consecutive pair most recently landed on or before Y - same
+  // "current standing" idea map-municipality uses for its national snapshot, just
+  // applied to swing pairs instead of single-year results.
+  const NATIONAL_SLUG = "__national__";
+
+  function isStateScoped() {
+    return state.manifest[state.type].scope === "state";
+  }
+
+  function isNationalAggregate() {
+    return isStateScoped() && state.stateSlug === NATIONAL_SLUG;
+  }
+
+  function fetchJson(url) {
+    return fetch(url, { cache: "no-cache" }).then((r) => {
+      if (!r.ok) throw new Error(`${url}: ${r.status}`);
+      return r.json();
+    });
+  }
+
+  function setLoading(on) {
+    document.getElementById("loading").classList.toggle("active", on);
+  }
+
+  // ---------- color helpers ----------
+  function hexToRgb(hex) {
+    const h = hex.replace("#", "");
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+  }
+  function rgbToHex([r, g, b]) {
+    return "#" + [r, g, b].map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join("");
+  }
+  function blend(hexA, hexB, t) {
+    const a = hexToRgb(hexA), b = hexToRgb(hexB);
+    return rgbToHex(a.map((v, i) => v + (b[i] - v) * t));
+  }
+
+  const WHITE = "#e8e8ec";
+  const DIM = "#20242e";
+  // One fixed diverging scale used everywhere a "more vs. less" quantity is shown, so
+  // party identity (e.g. SPD's own red) never has to double as a gain/loss signal.
+  const GAIN_COLOR = "#2f80c7";  // blue = gaining / more
+  const LOSS_COLOR = "#c0392b";  // red = losing / less
+  const RISK_HOT = "#c0392b";   // red = high risk (small projected gap)
+  const RISK_COOL = WHITE;      // white = low/no risk - also covers "flat" and "no data", not just "large gap"
+  const RISK_DONE_COLOR = "#f0b429";  // amber - "just flipped to the party in question", a materialized/settled event, distinct from the ongoing red/white risk gradient
+  const RISK_CAP = 0.15; // pp - projected-gap scale runs 0 (hot) .. this (safe)
+
+  function partyInfo(key) {
+    return state.manifest.party_info[key] || { label: key, color: "#999999" };
+  }
+
+  // Short, neutral one-liners for legend title="" tooltips - not exhaustive (very
+  // minor/historical parties fall back to a generic line), just enough to orient anyone
+  // unfamiliar with German party politics.
+  const PARTY_DESCRIPTIONS = {
+    cdu_csu: "Christian Democrats — center-right (CSU is its Bavaria-only sister party).",
+    cdu: "Christian Democrats — center-right; runs everywhere except Bavaria, where CSU stands instead.",
+    csu: "Christian Social Union — CDU's center-right sister party, contesting Bavaria only.",
+    spd: "Social Democrats — center-left, Germany's oldest major party, rooted in the labor movement.",
+    gruene: "Greens — environmentalist and socially liberal, left-of-center.",
+    fdp: "Free Democrats — pro-business economic liberals, fiscally conservative.",
+    linke_pds: "The Left — democratic socialist, descended from East Germany's former ruling SED party.",
+    die_linke: "The Left — democratic socialist, descended from East Germany's former ruling SED party.",
+    afd: "Alternative for Germany — right-wing populist and anti-immigration; strongest in the former East.",
+    bsw: "Sahra Wagenknecht Alliance — economically left, socially conservative, anti-immigration; split from Die Linke in 2023.",
+    npd: "National Democratic Party — far-right, ethno-nationalist; marginal, later rebranded as HEIMAT.",
+    heimat: "HEIMAT (formerly NPD) — far-right, ethno-nationalist; marginal.",
+    die_rechte: "Die Rechte — far-right, ethno-nationalist; marginal.",
+    rep: "The Republicans — national-conservative; prominent regionally in the 1990s, now marginal.",
+    freie_wahler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    freie_waehler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    fr_waehler: "Free Voters — centrist and locally-focused; strongest in Bavaria.",
+    piraten: "Pirate Party — digital rights and government-transparency focused; prominent around 2009-2013.",
+    volt: "Volt — pro-European, pan-European progressive party.",
+    ssw: "South Schleswig Voters' Association — represents the Danish/Frisian minority in Schleswig-Holstein; exempt from the 5% threshold there.",
+    die_partei: "Die PARTEI — satirical party founded by comedians and journalists.",
+    buendnis_90: "Alliance 90 — East German civil-rights movement that merged with the Greens in 1993.",
+    oedp: "Ecological Democratic Party — conservative environmentalist, small.",
+    tierschutzpartei: "Animal-welfare-focused single-issue party.",
+    tierschutzallianz: "Animal-welfare-focused single-issue party.",
+    mieterpartei: "Tenants'-rights-focused single-issue party (Berlin).",
+    die_urbane: "Left-wing party focused on urban and migrant communities (Berlin).",
+    dkp: "German Communist Party — small orthodox communist party.",
+    kpd: "Communist Party of Germany — small orthodox communist party (post-war revival).",
+    sgp: "Socialist Equality Party — small Trotskyist party.",
+    mera25: "MERA25 — German branch of DiEM25, Yanis Varoufakis's pan-European left-wing movement.",
+    pdf: "Party der Humanisten — small secular-humanist liberal party.",
+    pdh: "Party der Humanisten — small secular-humanist liberal party.",
+    bundnis_c: "Bündnis C — small Christian-conservative party.",
+    diebasis: "dieBasis — founded in opposition to COVID-19 restrictions; direct-democracy focused.",
+    gartenpartei: "Small allotment-garden-interest party.",
+    einzelbewerber: "An independent candidate running without a party.",
+    other: "Smaller parties and independents too numerous to list individually.",
+  };
+  function partyDescription(party) {
+    return PARTY_DESCRIPTIONS[party] || "A smaller regional or single-issue party.";
+  }
+
+  function colorForSwing(delta, cap) {
+    if (delta == null) return DIM;
+    const t = Math.min(Math.abs(delta) / cap, 1);
+    return delta >= 0 ? blend(WHITE, GAIN_COLOR, t) : blend(WHITE, LOSS_COLOR, t);
+  }
+
+  function colorForTurnout(dt, cap) {
+    if (dt == null) return DIM;
+    const t = Math.min(Math.abs(dt) / cap, 1);
+    return dt >= 0 ? blend(WHITE, GAIN_COLOR, t) : blend(WHITE, LOSS_COLOR, t);
+  }
+
+  // t=1 at proj<=0 (already essentially tied/passed - hottest red), t=0 at proj>=RISK_CAP
+  // (comfortably safe, or no rising signal at all - full white). Opacity rides the same
+  // t so "safe" areas fade toward the basemap instead of painting the whole map white.
+  function riskVisual(proj) {
+    const t = 1 - Math.max(0, Math.min(proj / RISK_CAP, 1));
+    return {
+      color: "#0b0d11",
+      weight: t > 0.66 ? 0.7 : 0.3,
+      fillColor: blend(RISK_COOL, RISK_HOT, t),
+      fillOpacity: 0.18 + 0.77 * t,
+    };
+  }
+
+  // ---------- state / type / party population ----------
+  function populateStateSelect() {
+    const sel = document.getElementById("stateSelect");
+    sel.innerHTML = "";
+    const natOpt = document.createElement("option");
+    natOpt.value = NATIONAL_SLUG;
+    natOpt.textContent = "★ All of Germany (latest swing per state)";
+    sel.appendChild(natOpt);
+    const states = state.manifest[state.type].states;
+    const slugs = Object.keys(states);
+    for (const slug of slugs) {
+      const opt = document.createElement("option");
+      opt.value = slug;
+      opt.textContent = states[slug].label;
+      sel.appendChild(opt);
+    }
+    if (!state.stateSlug || (state.stateSlug !== NATIONAL_SLUG && !slugs.includes(state.stateSlug))) {
+      state.stateSlug = slugs.includes("berlin") ? "berlin" : slugs[0];
+    }
+    sel.value = state.stateSlug;
+  }
+
+  // All "to" years across every state's pairs, for the national-aggregate slider.
+  function nationalYearsUnion() {
+    const states = state.manifest[state.type].states;
+    const years = new Set();
+    for (const slug in states) {
+      for (const p of states[slug].year_pairs) years.add(p.to);
+    }
+    return Array.from(years).sort();
+  }
+
+  // The most recent pair for `slug` whose "to" year is <= targetYear, or null if that
+  // state's data doesn't start until after targetYear.
+  function stateLatestPairFor(slug, targetYear) {
+    const pairs = state.manifest[state.type].states[slug].year_pairs;
+    let chosen = null;
+    for (const p of pairs) {
+      if (parseInt(p.to, 10) <= parseInt(targetYear, 10)) chosen = p;
+    }
+    return chosen;
+  }
+
+  function currentPairs() {
+    if (isNationalAggregate()) return nationalYearsUnion().map((y) => ({ from: null, to: y }));
+    if (isStateScoped()) return state.manifest[state.type].states[state.stateSlug].year_pairs;
+    return state.manifest[state.type].year_pairs;
+  }
+
+  function populatePairSlider() {
+    state.pairs = currentPairs();
+    const slider = document.getElementById("pairSlider");
+    slider.max = String(Math.max(0, state.pairs.length - 1));
+    if (state.pairIndex >= state.pairs.length) state.pairIndex = state.pairs.length - 1;
+    if (state.pairIndex < 0) state.pairIndex = 0;
+    slider.value = String(state.pairIndex);
+    updatePairLabel();
+  }
+
+  function updatePairLabel() {
+    const p = state.pairs[state.pairIndex];
+    const label = document.getElementById("pairLabel");
+    if (!p) { label.innerHTML = "—"; return; }
+    label.innerHTML = p.from
+      ? `${p.from}<span class="arrow">→</span>${p.to}`
+      : `<span class="arrow">as of</span> ${p.to}`;
+  }
+
+  function boundaryUrl() {
+    return `${DATA_DIR}/gemeinden.geojson`;
+  }
+
+  function dataUrl() {
+    const p = state.pairs[state.pairIndex];
+    if (!p) return null;
+    return isStateScoped()
+      ? `${DATA_DIR}/${state.type}/${state.stateSlug}/${p.to}.json`
+      : `${DATA_DIR}/${state.type}/${p.to}.json`;
+  }
+
+  // Fetch every state's latest pair as of targetYear and merge into one AGS-keyed dict,
+  // mirroring map-municipality's loadNationalAggregate - a per-state try/catch so one
+  // state's missing/not-yet-happened data doesn't break the whole merge.
+  function loadNationalAggregateData(targetYear) {
+    const states = state.manifest[state.type].states;
+    const slugs = Object.keys(states);
+    const merged = {};
+    const freshSlugs = new Set();
+    const tasks = slugs.map((slug) => {
+      const pair = stateLatestPairFor(slug, targetYear);
+      if (!pair) return Promise.resolve();
+      const url = `${DATA_DIR}/${state.type}/${slug}/${pair.to}.json`;
+      return fetchJson(url)
+        .then((data) => {
+          Object.assign(merged, data);
+          if (pair.to === targetYear) freshSlugs.add(slug);
+        })
+        .catch((err) => console.warn(`national aggregate: skipping ${slug} (${err.message})`));
+    });
+    return Promise.all(tasks).then(() => ({ merged, freshSlugs }));
+  }
+
+  // Derive the party dropdown from parties actually present in the loaded pair (as a
+  // current-year winner or top-5 member somewhere), ranked by how often each is the
+  // area's current winner - keeps the list relevant instead of showing all ~35 minor
+  // parties ever recorded anywhere in Germany.
+  function derivePartyList(data) {
+    const counts = {};
+    for (const ags in data) {
+      const w1 = data[ags].w1;
+      counts[w1] = (counts[w1] || 0) + 1;
+    }
+    return Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+  }
+
+  // For "at risk of losing to <party>" - ranks by how often each party is *somewhere*
+  // the fastest-rising non-winner, so the dropdown leads with the parties actually
+  // driving close races in this dataset (e.g. AfD in a lot of recent Landtag pairs).
+  function deriveChallengerPartyList(data) {
+    const counts = {};
+    for (const ags in data) {
+      const rec = data[ags];
+      if (rec.sw) {
+        for (const party in rec.sw) {
+          if (party !== rec.w1 && rec.sw[party][0] > 0) counts[party] = (counts[party] || 0) + 1;
+        }
+      }
+    }
+    return Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+  }
+
+  function populatePartySelect() {
+    const sel = document.getElementById("partySelect");
+    sel.innerHTML = "";
+    const label = document.querySelector("#partyRow .row-label");
+    if (state.mode === "risk") {
+      label.textContent = "At risk of losing to";
+      const anyOpt = document.createElement("option");
+      anyOpt.value = "__any__";
+      anyOpt.textContent = "Any (fastest riser)";
+      sel.appendChild(anyOpt);
+      for (const key of state.challengerPartyList) {
+        const opt = document.createElement("option");
+        opt.value = key;
+        opt.textContent = partyInfo(key).label;
+        sel.appendChild(opt);
+      }
+      if (state.riskParty !== "__any__" && !state.challengerPartyList.includes(state.riskParty)) {
+        state.riskParty = "__any__";
+      }
+      sel.value = state.riskParty;
+    } else {
+      label.textContent = "Party";
+      for (const key of state.partyList) {
+        const opt = document.createElement("option");
+        opt.value = key;
+        opt.textContent = partyInfo(key).label;
+        sel.appendChild(opt);
+      }
+      if (!state.party || !state.partyList.includes(state.party)) {
+        state.party = state.partyList[0];
+      }
+      sel.value = state.party;
+    }
+    updatePartyDescription();
+  }
+
+  function updatePartyDescription() {
+    const key = state.mode === "risk" ? state.riskParty : state.party;
+    const el = document.getElementById("partyDescription");
+    el.textContent = (key && key !== "__any__") ? partyDescription(key) : "";
+  }
+
+  // ---------- loading + render ----------
+  function loadAndRender() {
+    const token = ++state.renderToken;
+    setLoading(true);
+
+    const loaded = isNationalAggregate()
+      ? loadNationalAggregateData(state.pairs[state.pairIndex]?.to).then(({ merged, freshSlugs }) => {
+          state.pairData = merged;
+          state.nationalFreshStates = freshSlugs;
+        })
+      : (() => {
+          const url = dataUrl();
+          if (!url) return Promise.reject(new Error("no data url"));
+          return fetchJson(url).then((data) => {
+            state.pairData = data;
+            state.nationalFreshStates = null;
+          });
+        })();
+
+    loaded
+      .then(() => {
+        if (token !== state.renderToken) return;
+        state.partyList = derivePartyList(state.pairData);
+        state.challengerPartyList = deriveChallengerPartyList(state.pairData);
+        populatePartySelect();
+        render();
+      })
+      .catch((err) => {
+        if (token !== state.renderToken) return;
+        document.getElementById("statusLine").textContent = `Failed to load: ${err.message}`;
+      })
+      .finally(() => {
+        if (token === state.renderToken) setLoading(false);
+      });
+  }
+
+  function filteredBoundary() {
+    if (!isStateScoped() || isNationalAggregate()) return state.boundary;
+    const code = STATE_SLUG_TO_CODE[state.stateSlug];
+    return {
+      type: "FeatureCollection",
+      features: state.boundary.features.filter((f) => f.properties.ags.startsWith(code)),
+    };
+  }
+
+  // Outline whichever states' currently-shown pair lands exactly on the selected year -
+  // i.e. states whose swing is "new" at this point on the slider, not carried over from
+  // an earlier election. Uses the real Bundesland polygons, not an estimated hull.
+  function updateFreshOutlines() {
+    if (state.freshOutlineLayer) {
+      map.removeLayer(state.freshOutlineLayer);
+      state.freshOutlineLayer = null;
+    }
+    if (!isNationalAggregate() || !state.nationalFreshStates || !state.nationalFreshStates.size || !state.stateOutlines) return;
+    const codes = new Set(Array.from(state.nationalFreshStates, (slug) => STATE_SLUG_TO_CODE[slug]));
+    const features = state.stateOutlines.features.filter((f) => codes.has(f.properties.code));
+    if (!features.length) return;
+    state.freshOutlineLayer = L.geoJSON({ type: "FeatureCollection", features }, {
+      interactive: false,
+      style: { color: "#ffffff", weight: 2, fill: false },
+    }).addTo(map);
+  }
+
+  const SAFE_STYLE = { color: "#3a3f4b", weight: 0.3, fillColor: DIM, fillOpacity: 0.25 };
+  // "Held" areas recede almost to nothing (basemap shows through) precisely so that a
+  // flip *to a grey party* (CDU/CSU/ÖDP are all some shade of grey) still stands out -
+  // it gets a bright white border and near-full opacity, whereas "held" is barely there.
+  const HELD_STYLE = { color: "#454a56", weight: 0.25, fillColor: "#0f1115", fillOpacity: 0.15 };
+
+  function styleFor(rec) {
+    if (!rec) return { color: "#3a3f4b", weight: 0.3, fillColor: "#15171d", fillOpacity: 0.5 };
+    if (state.mode === "swing") {
+      const sw = rec.sw && rec.sw[state.party];
+      const delta = sw ? sw[0] : (rec.w1 === state.party || rec.w0 === state.party ? 0 : null);
+      const color = colorForSwing(delta, 0.15);
+      return { color: "#3a3f4b", weight: 0.3, fillColor: color, fillOpacity: 0.85 };
+    }
+    if (state.mode === "flip") {
+      if (!rec.f) return HELD_STYLE;
+      return { color: "#ffffff", weight: 0.8, fillColor: partyInfo(rec.w1).color, fillOpacity: 0.95 };
+    }
+    if (state.mode === "risk") {
+      if (state.riskParty && state.riskParty !== "__any__") {
+        const party = state.riskParty;
+        const wonNow = rec.w1 === party;
+        const wonBefore = rec.w0 === party;
+        if (wonNow && !wonBefore) {
+          // P just became the winner this round - risk to P materialized, done.
+          return { color: "#ffffff", weight: 0.7, fillColor: RISK_DONE_COLOR, fillOpacity: 0.95 };
+        }
+        if (wonNow) return SAFE_STYLE; // P already the long-standing winner - not "at risk of flipping to P", it already has
+        // P is not the current winner - whether this area held its old winner or
+        // flipped to a *different* third party doesn't matter here; either way, is P
+        // closing in? No signal (flat, or never in top-5) reads as the safe/white end
+        // of the same gradient, not a separate grey bucket.
+        const entry = rec.sw && rec.sw[party];
+        const proj = (entry && entry[0] > 0) ? (rec.s1 - entry[1] - entry[0]) : RISK_CAP;
+        return riskVisual(proj);
+      }
+      // "Any" mode: flipped this round is its own "done" state, colored by the actual
+      // new winner (tells you *which* party, unlike a generic done-marker) - everything
+      // else is the red/white gradient driven by the fastest-rising non-winner.
+      if (rec.f) return { color: "#ffffff", weight: 0.8, fillColor: partyInfo(rec.w1).color, fillOpacity: 0.95 };
+      const proj = (rec.ch && rec.ch[1] > 0) ? (rec.proj != null ? rec.proj : (rec.m1 - rec.ch[1])) : RISK_CAP;
+      return riskVisual(proj);
+    }
+    if (state.mode === "turnout") {
+      const color = colorForTurnout(rec.dt, 0.15);
+      return { color: "#3a3f4b", weight: 0.3, fillColor: color, fillOpacity: 0.85 };
+    }
+    return { color: "#3a3f4b", weight: 0.3, fillColor: "#15171d", fillOpacity: 0.5 };
+  }
+
+  function fmtPct(v) {
+    return v == null ? "—" : `${(v * 100).toFixed(1)}%`;
+  }
+  function fmtPp(v) {
+    if (v == null) return "—";
+    const s = v >= 0 ? "+" : "";
+    return `${s}${(v * 100).toFixed(1)} pp`;
+  }
+
+  function tooltipHtml(name, kind, rec) {
+    if (!rec) return `<div class="tt-title">${name}</div><div class="tt-meta">No data for this pair</div>`;
+    let html = `<div class="tt-title">${name}</div>`;
+    if (rec.f) {
+      html += `<div class="tt-flip">${partyInfo(rec.w0).label} → <span class="to">${partyInfo(rec.w1).label}</span> (flipped)</div>`;
+    } else {
+      html += `<div class="tt-flip">${partyInfo(rec.w1).label} held (${fmtPct(rec.s1)})</div>`;
+    }
+    const entries = rec.sw ? Object.entries(rec.sw).sort((a, b) => Math.abs(b[1][0]) - Math.abs(a[1][0])).slice(0, 5) : [];
+    for (const [party, [delta, curr]] of entries) {
+      const prev = Math.round((curr - delta) * 10000) / 10000;
+      const info = partyInfo(party);
+      let rel;
+      if (prev < 0.01) {
+        rel = delta > 0 ? " (new)" : "";
+      } else {
+        rel = ` (${delta >= 0 ? "+" : ""}${Math.round((curr / prev - 1) * 100)}% rel.)`;
+      }
+      html += `<div class="tt-row"><span class="tt-swatch" style="background:${info.color}"></span>` +
+        `<span class="tt-party">${info.label}</span><span class="tt-delta">${fmtPp(delta)}${rel}</span></div>`;
+    }
+    let meta = `${fmtPct(rec.s1)} winner share`;
+    if (rec.m1 != null) meta += ` · margin ${fmtPp(rec.m1)}`;
+    if (rec.dt != null) meta += ` · turnout ${fmtPp(rec.dt)}`;
+    html += `<div class="tt-meta">${meta}</div>`;
+    if (rec.risk) {
+      html += `<div class="tt-risk">At risk: ${partyInfo(rec.ch[0]).label} gained ${fmtPp(rec.ch[1])} — projected gap ${fmtPp(rec.proj)} if repeated</div>`;
+    }
+    return html;
+  }
+
+  function updateStats() {
+    const recs = Object.values(state.pairData);
+    const total = recs.length;
+    const flipped = recs.filter((r) => r.f).length;
+    const risky = recs.filter((r) => r.risk).length;
+    document.getElementById("statAreas").textContent = total;
+    document.getElementById("statFlipped").textContent = total ? `${Math.round((flipped / total) * 100)}%` : "—";
+    document.getElementById("statRisk").textContent = total ? `${Math.round((risky / total) * 100)}%` : "—";
+  }
+
+  function updateLegend() {
+    const title = document.getElementById("legendTitle");
+    const items = document.getElementById("legendItems");
+    items.innerHTML = "";
+    if (state.mode === "swing") {
+      const info = partyInfo(state.party);
+      title.textContent = `${info.label} — pp swing`;
+      const grad = document.createElement("div");
+      grad.className = "legend-gradient";
+      grad.style.background = `linear-gradient(to right, ${LOSS_COLOR}, ${WHITE}, ${GAIN_COLOR})`;
+      const labels = document.createElement("div");
+      labels.className = "legend-scale-labels";
+      labels.innerHTML = `<span>-15pp (losing)</span><span>0</span><span>+15pp (gaining)</span>`;
+      items.appendChild(grad);
+      items.appendChild(labels);
+    } else if (state.mode === "flip") {
+      title.textContent = "Winner change";
+      const flippedTo = {};
+      for (const r of Object.values(state.pairData)) {
+        if (r.f) flippedTo[r.w1] = (flippedTo[r.w1] || 0) + 1;
+      }
+      const ranked = Object.entries(flippedTo).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      const total = Object.values(state.pairData).length;
+      for (const [party, count] of ranked) {
+        items.appendChild(legendRow(partyInfo(party).color, `Flipped to ${partyInfo(party).label}`, `${count}`, partyDescription(party)));
+      }
+      items.appendChild(legendRow("#0f1115", "Held (no change, faint)", `${total - ranked.reduce((s, [, c]) => s + c, 0)}`));
+    } else if (state.mode === "risk") {
+      const partySelected = state.riskParty && state.riskParty !== "__any__";
+      title.textContent = partySelected
+        ? `Risk of flipping to ${partyInfo(state.riskParty).label}`
+        : "Flip risk — fastest-rising challenger";
+      const grad = document.createElement("div");
+      grad.className = "legend-gradient";
+      grad.style.background = `linear-gradient(to right, ${RISK_HOT}, ${RISK_COOL})`;
+      const labels = document.createElement("div");
+      labels.className = "legend-scale-labels";
+      labels.innerHTML = `<span>high risk (~0pp gap)</span><span>low/no risk, flat, or no data</span>`;
+      items.appendChild(grad);
+      items.appendChild(labels);
+      if (partySelected) {
+        const desc = partyDescription(state.riskParty);
+        items.appendChild(legendRow(RISK_DONE_COLOR, `Just flipped to ${partyInfo(state.riskParty).label} - done`, "", desc));
+        items.appendChild(legendRow(DIM, `${partyInfo(state.riskParty).label} already the long-standing winner`, "", desc));
+      } else {
+        const flippedTo = {};
+        for (const r of Object.values(state.pairData)) {
+          if (r.f) flippedTo[r.w1] = (flippedTo[r.w1] || 0) + 1;
+        }
+        const ranked = Object.entries(flippedTo).sort((a, b) => b[1] - a[1]).slice(0, 6);
+        for (const [party, count] of ranked) {
+          items.appendChild(legendRow(partyInfo(party).color, `Flipped to ${partyInfo(party).label} - done`, `${count}`, partyDescription(party)));
+        }
+      }
+    } else if (state.mode === "turnout") {
+      title.textContent = "Turnout change";
+      const grad = document.createElement("div");
+      grad.className = "legend-gradient";
+      grad.style.background = `linear-gradient(to right, ${LOSS_COLOR}, ${WHITE}, ${GAIN_COLOR})`;
+      const labels = document.createElement("div");
+      labels.className = "legend-scale-labels";
+      labels.innerHTML = `<span>-15pp</span><span>0</span><span>+15pp</span>`;
+      items.appendChild(grad);
+      items.appendChild(labels);
+    }
+  }
+  function legendRow(color, label, pct, title) {
+    const div = document.createElement("div");
+    div.className = "legend-item";
+    if (title) div.title = title;
+    div.innerHTML = `<span class="legend-swatch" style="background:${color}"></span><span>${label}</span><span class="legend-pct">${pct}</span>`;
+    return div;
+  }
+
+  function render() {
+    if (state.geoLayer) { map.removeLayer(state.geoLayer); state.geoLayer = null; }
+    const boundary = filteredBoundary();
+    state.geoLayer = L.geoJSON(boundary, {
+      style: (f) => styleFor(state.pairData[f.properties.ags]),
+      onEachFeature: (f, layer) => {
+        const rec = state.pairData[f.properties.ags];
+        layer.bindTooltip(tooltipHtml(f.properties.name, f.properties.kind, rec), {
+          className: "trend-tooltip", sticky: true, direction: "top",
+        });
+        layer.on("mouseover", () => layer.setStyle({ weight: 1.6, color: "#ffffff" }));
+        layer.on("mouseout", () => state.geoLayer.resetStyle(layer));
+      },
+    }).addTo(map);
+
+    updateStats();
+    updateLegend();
+    updateFreshOutlines();
+    const p = state.pairs[state.pairIndex];
+    const scope = isNationalAggregate()
+      ? "Germany (latest per state)"
+      : isStateScoped() ? state.manifest[state.type].states[state.stateSlug].label : "Germany";
+    document.getElementById("statusLine").textContent = p.from
+      ? `${scope} · ${p.from} → ${p.to}`
+      : `${scope} · as of ${p.to}`;
+    document.getElementById("noteLine").textContent = isNationalAggregate()
+      ? "Each state shown at its own most recent election-to-election swing on or before this year - Landtag/Kommunalwahl states don't vote simultaneously, so this is a \"current standing\" merge, not one nationwide swing. A white outline marks states whose swing is newly current at this exact year. Swing itself is still pp (current − previous), same as everywhere else in this app."
+      : "Swing = current share minus previous share (pp), so a brand-new party shows a finite gain, not ∞; relative % growth is only shown once a party clears a 1% baseline. Each area only keeps its top-5 parties per year, so a party outside the top 5 in either year is treated as 0% that year.";
+  }
+
+  function fitToScope() {
+    if (isStateScoped() && !isNationalAggregate()) {
+      const bounds = state.manifest.state_bounds[state.stateSlug];
+      if (bounds) map.fitBounds(bounds, { padding: [20, 20] });
+    } else {
+      map.setView([51.15, 10.45], 6);
+    }
+  }
+
+  // ---------- wiring ----------
+  function onTypeChange(type) {
+    state.type = type;
+    document.querySelectorAll("#typeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.type === type));
+    document.getElementById("stateRow").style.display = isStateScoped() ? "block" : "none";
+    if (isStateScoped()) populateStateSelect();
+    populatePairSlider();
+    fitToScope();
+    loadAndRender();
+  }
+
+  function onModeChange(mode) {
+    state.mode = mode;
+    document.querySelectorAll("#modeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.mode === mode));
+    document.getElementById("partyRow").style.display = (mode === "swing" || mode === "risk") ? "block" : "none";
+    if (mode === "swing" || mode === "risk") populatePartySelect();
+    render();
+  }
+
+  document.getElementById("typeToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (btn) onTypeChange(btn.dataset.type);
+  });
+  document.getElementById("modeToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (btn) onModeChange(btn.dataset.mode);
+  });
+  document.getElementById("stateSelect").addEventListener("change", (e) => {
+    state.stateSlug = e.target.value;
+    state.pairIndex = 0;
+    populatePairSlider();
+    fitToScope();
+    loadAndRender();
+  });
+  document.getElementById("pairSlider").addEventListener("input", (e) => {
+    state.pairIndex = parseInt(e.target.value, 10);
+    updatePairLabel();
+    loadAndRender();
+  });
+  document.getElementById("partySelect").addEventListener("change", (e) => {
+    if (state.mode === "risk") state.riskParty = e.target.value;
+    else state.party = e.target.value;
+    updatePartyDescription();
+    render();
+  });
+
+  function init() {
+    setLoading(true);
+    Promise.all([
+      fetchJson(`${DATA_DIR}/trends_manifest.json`),
+      fetchJson(boundaryUrl()),
+      fetchJson(`${DATA_DIR}/state_outlines.geojson`),
+    ]).then(([manifest, boundary, stateOutlines]) => {
+      state.manifest = manifest;
+      state.boundary = boundary;
+      state.stateOutlines = stateOutlines;
+      document.getElementById("stateRow").style.display = isStateScoped() ? "block" : "none";
+      if (isStateScoped()) populateStateSelect();
+      populatePairSlider();
+      loadAndRender();
+    }).catch((err) => {
+      document.getElementById("statusLine").textContent = `Failed to load: ${err.message}`;
+    }).finally(() => setLoading(false));
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
