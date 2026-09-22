@@ -1,1 +1,18 @@
+# Anything here is skipped when Wrangler uploads static assets for the Worker.
+# It's separate from .gitignore: these files stay versioned in the repo, they're
+# just never needed at runtime, so there's no reason to ship or count them as assets.
+
 .git
+
+# Raw/intermediate data and build scripts — only used offline to produce each
+# map*/data/prepared/*.json the apps actually fetch at runtime.
+processed/
+scripts/
+docs/
+**/*.py
+**/data/boundaries/
+
+# Project docs and tooling, not part of the served site.
+README.md
+**/README.md
+.claude/

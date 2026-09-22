@@ -13,6 +13,15 @@ export default {
       return new Response("Not found", { status: 404 });
     }
 
+    // Bare "/germany" (no trailing slash) must redirect to "/germany/" first:
+    // otherwise the browser treats "germany" as a file, and every relative
+    // link on the page (e.g. href="map/") resolves against "/" instead of
+    // "/germany/", sending visitors to the wrong URL.
+    if (url.pathname === PREFIX) {
+      url.pathname = PREFIX + "/";
+      return Response.redirect(url.toString(), 301);
+    }
+
     url.pathname = url.pathname.slice(PREFIX.length) || "/";
     const assetResponse = await env.ASSETS.fetch(new Request(url.toString(), request));
 
