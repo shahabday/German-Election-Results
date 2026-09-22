@@ -43,6 +43,14 @@
   #rangeLabel { font-size: 17px; font-weight: 700; text-align: center; margin: 2px 0 8px; }
   #rangeLabel .arrow { color: var(--text-dim); font-weight: 400; margin: 0 4px; }
   .range-slider { width: 100%; accent-color: var(--accent); display: block; margin-bottom: 4px; }
+
+  .play-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
+    padding: 7px 10px; font-size: 12px; font-weight: 600; background: #1e222b;
+    border: 1px solid var(--panel-border); border-radius: 6px; color: var(--text); cursor: pointer; margin-top: 4px;
+  }
+  .play-btn:hover { background: #262b36; border-color: var(--accent); }
+  .play-btn.playing { background: var(--accent); border-color: var(--accent); color: #fff; }
   .range-slider-label { font-size: 10px; color: var(--text-dim); display: flex; justify-content: space-between; }
   .presets { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
   .presets button {
@@ -229,6 +237,7 @@
         <button data-preset="5">Last 5y</button>
         <button data-preset="latest">Latest only</button>
       </div>
+      <button id="playBtn" class="play-btn" type="button">▶ Play (grow window)</button>
     </div>
 
     <div class="row">
@@ -657,6 +666,39 @@ document.querySelectorAll(".topnav").forEach((nav) => {
 // Leaflet (and some chart canvases) can compute their initial size before the
 // nav bar above them has settled into layout - nudge them to remeasure once.
 requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+</script>
+
+<script>
+(function () {
+  const fromSlider = document.getElementById("fromSlider");
+  const toSlider = document.getElementById("toSlider");
+  const btn = document.getElementById("playBtn");
+  if (!fromSlider || !toSlider || !btn) return;
+  let timer = null;
+  function stop() {
+    clearInterval(timer);
+    timer = null;
+    btn.classList.remove("playing");
+    btn.textContent = "▶ Play (grow window)";
+  }
+  function step() {
+    const max = Number(toSlider.max);
+    const v = Number(toSlider.value);
+    if (v >= max) { stop(); return; }
+    toSlider.value = v + 1;
+    toSlider.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  btn.addEventListener("click", () => {
+    if (timer) { stop(); return; }
+    if (Number(toSlider.value) >= Number(toSlider.max)) {
+      toSlider.value = fromSlider.value;
+      toSlider.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    timer = setInterval(step, 900);
+    btn.classList.add("playing");
+    btn.textContent = "⏸ Pause";
+  });
+})();
 </script>
 </body>
 </html>

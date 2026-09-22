@@ -49,6 +49,14 @@
 
   #pairSlider { width: 100%; accent-color: var(--accent); }
   #pairLabel { font-size: 17px; font-weight: 700; text-align: center; margin: 2px 0 6px; }
+
+  .play-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
+    padding: 7px 10px; font-size: 12px; font-weight: 600; background: #1e222b;
+    border: 1px solid var(--panel-border); border-radius: 6px; color: var(--text); cursor: pointer; margin-top: 8px;
+  }
+  .play-btn:hover { background: #262b36; border-color: var(--accent); }
+  .play-btn.playing { background: var(--accent); border-color: var(--accent); color: #fff; }
   #pairLabel .arrow { color: var(--text-dim); font-weight: 400; margin: 0 4px; }
 
   #statsBar { display: flex; gap: 6px; margin-top: 4px; }
@@ -240,6 +248,7 @@
       <div class="row-label">Election pair</div>
       <div id="pairLabel">—</div>
       <input type="range" id="pairSlider" min="0" max="0" step="1" value="0">
+      <button id="playBtn" class="play-btn" type="button">▶ Play</button>
     </div>
 
     <div class="row">
@@ -1037,6 +1046,38 @@ document.querySelectorAll(".topnav").forEach((nav) => {
 // Leaflet (and some chart canvases) can compute their initial size before the
 // nav bar above them has settled into layout - nudge them to remeasure once.
 requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+</script>
+
+<script>
+(function () {
+  const slider = document.getElementById("pairSlider");
+  const btn = document.getElementById("playBtn");
+  if (!slider || !btn) return;
+  let timer = null;
+  function stop() {
+    clearInterval(timer);
+    timer = null;
+    btn.classList.remove("playing");
+    btn.textContent = "▶ Play";
+  }
+  function step() {
+    const max = Number(slider.max);
+    const v = Number(slider.value);
+    if (v >= max) { stop(); return; }
+    slider.value = v + 1;
+    slider.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  btn.addEventListener("click", () => {
+    if (timer) { stop(); return; }
+    if (Number(slider.value) >= Number(slider.max)) {
+      slider.value = slider.min;
+      slider.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    timer = setInterval(step, 900);
+    btn.classList.add("playing");
+    btn.textContent = "⏸ Pause";
+  });
+})();
 </script>
 </body>
 </html>
