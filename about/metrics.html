@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metrics Glossary — Germany in Maps</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel-border: #2a2e38;
+    --text: #e8eaed; --text-dim: #9aa0ab; --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  body { padding-bottom: 80px; }
+  a { color: inherit; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  .topnav {
+    position: sticky; top: 0; z-index: 100; background: rgba(15, 17, 21, 0.96);
+    backdrop-filter: blur(6px); border-bottom: 1px solid var(--panel-border);
+  }
+  .topnav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 54px;
+    display: flex; align-items: center; gap: 22px;
+  }
+  .topnav .brand { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+  .topnav .nav-links { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .topnav .nav-link { white-space: nowrap; font-size: 13px; color: var(--text-dim); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
+  .topnav .nav-link:hover { color: var(--text); background: #1e222b; }
+  .dropdown { position: relative; }
+  .dropdown-toggle {
+    font: inherit; font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer;
+    padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .dropdown-toggle:hover, .dropdown:focus-within .dropdown-toggle { color: var(--text); background: #1e222b; }
+  .dropdown-caret { font-size: 9px; transition: transform 0.15s; }
+  .dropdown:hover .dropdown-caret, .dropdown:focus-within .dropdown-caret { transform: rotate(180deg); }
+  .dropdown-menu {
+    position: fixed; top: 0; left: 0; min-width: 170px;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5); padding: 6px; display: flex; flex-direction: column; gap: 2px;
+    z-index: 500; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.12s;
+  }
+  .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+  .dropdown-menu a { font-size: 12.5px; color: var(--text-dim); text-decoration: none; padding: 7px 9px; border-radius: 6px; }
+  .dropdown-menu a:hover { color: var(--text); background: #20242e; }
+
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 4px;
+    width: 30px; height: 30px; background: none; border: none; cursor: pointer; padding: 0; margin-left: auto; flex-shrink: 0;
+  }
+  .nav-toggle span { display: block; width: 100%; height: 2px; background: var(--text-dim); border-radius: 2px; transition: transform 0.15s, opacity 0.15s; }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 90;
+    flex-direction: column; padding: 6px 16px 16px; background: var(--bg); border-bottom: 1px solid var(--panel-border);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.5); max-height: calc(100vh - 54px); overflow-y: auto;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 14px; color: var(--text-dim); text-decoration: none; padding: 10px 6px; border-radius: 6px; }
+  .mobile-menu a:hover { color: var(--text); background: #1e222b; }
+  .mobile-menu .mobile-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); opacity: 0.65; margin: 10px 6px 0; }
+
+  @media (max-width: 760px) {
+    .topnav .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+  }
+
+  footer.site-footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--panel-border); font-size: 11.5px; color: var(--text-dim); line-height: 1.7; }
+  footer.site-footer a { color: var(--text-dim); }
+  footer.site-footer a:hover { color: var(--text); }
+
+  .breadcrumb { font-size: 12px; color: var(--text-dim); margin: 28px 0 18px; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  h1 { font-size: 25px; margin: 0 0 14px; font-weight: 700; }
+  p.lead { font-size: 14.5px; color: var(--text-dim); line-height: 1.65; margin: 0 0 20px; max-width: 680px; }
+
+  .toc { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px; padding: 16px 20px; margin-bottom: 36px; }
+  .toc-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 8px; }
+  .toc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .toc a { font-size: 14px; text-decoration: none; color: var(--accent); }
+  .toc a:hover { text-decoration: underline; }
+  .toc-count { font-size: 12px; color: var(--text-dim); }
+
+  .tool-block { padding: 30px 0; border-top: 1px solid var(--panel-border); scroll-margin-top: 66px; }
+  .tool-block:first-of-type { border-top: none; }
+  .tool-block-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  .tool-block h2 { font-size: 20px; margin: 0; font-weight: 700; }
+  .open-btn {
+    display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600;
+    color: #fff; background: var(--accent); text-decoration: none; padding: 7px 13px; border-radius: 6px; flex-shrink: 0;
+  }
+  .open-btn:hover { filter: brightness(1.1); }
+
+  .resolution-block { margin-top: 18px; }
+  .resolution-title { font-size: 14px; font-weight: 700; color: var(--text-dim); margin: 22px 0 4px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .category-title { font-size: 15px; font-weight: 700; margin: 20px 0 10px; color: var(--text); }
+
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  .metric-card {
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 14px 16px; scroll-margin-top: 66px; position: relative;
+  }
+  .metric-card:target { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .m-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .m-head h3 { font-size: 14.5px; margin: 0; font-weight: 700; }
+  .m-unit { font-size: 10.5px; color: var(--text-dim); white-space: nowrap; flex-shrink: 0; }
+  .m-meta { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; line-height: 1.5; }
+  .m-meta b { color: var(--text); font-weight: 600; }
+  .m-full { font-size: 12.5px; color: var(--text-dim); line-height: 1.6; margin: 8px 0 0; }
+  .m-anchor-link { position: absolute; top: 14px; right: 16px; font-size: 10px; color: var(--text-dim); text-decoration: none; opacity: 0; transition: opacity 0.1s; }
+  .metric-card:hover .m-anchor-link { opacity: 0.5; }
+  .m-anchor-link:hover { opacity: 1 !important; text-decoration: underline; }
+
+  .back-home { display: inline-block; margin-top: 30px; font-size: 12.5px; color: var(--text-dim); text-decoration: none; }
+  .back-home:hover { color: var(--text); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html">Germany in Maps</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Home</a>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#political-map">Map visualizations</a>
+          <a href="../index.html#political-trend">Trend visualizations</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#demo-map">Map visualization</a>
+          <a href="../index.html#demo-trend">Trend visualization</a>
+        </div>
+      </div>
+      <a class="nav-link" href="../index.html#stories">Stories</a>
+      <a class="nav-link" href="project.html">About</a>
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <div class="mobile-group-title">Political</div>
+    <a href="../index.html#political-map">Map visualizations</a>
+    <a href="../index.html#political-trend">Trend visualizations</a>
+    <div class="mobile-group-title">Demographics &amp; Economy</div>
+    <a href="../index.html#demo-map">Map visualization</a>
+    <a href="../index.html#demo-trend">Trend visualization</a>
+    <a href="../index.html#stories">Stories</a>
+    <a href="project.html">About</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="breadcrumb"><a href="../index.html">Home</a> / Metrics Glossary</div>
+  <h1>Metrics Glossary</h1>
+  <p class="lead">Every metric across the Demographics &amp; Economy and Society &amp; Culture maps, with its exact source, what years it covers, and a fuller explanation than fits in the tool's own panel. Each tool links here directly from its metric description - click "Learn more" next to any metric to land on its card below.</p>
+
+  <div class="toc">
+    <div class="toc-title">Jump to</div>
+    <ul><li><a href="#demographics">Demographics &amp; Economy Map</a> <span class="toc-count">(48 metrics)</span></li><li><a href="#society">Society &amp; Culture Map</a> <span class="toc-count">(13 metrics)</span></li></ul>
+  </div>
+
+  
+  <section class="tool-block" id="demographics">
+    <div class="tool-block-head">
+      <h2>Demographics &amp; Economy Map</h2>
+      <a class="open-btn" href="../map-demographics/">Open tool →</a>
+    </div>
+    
+    <div class="resolution-block">
+      <h3 class="resolution-title">Municipality (Zensus 2022, one snapshot)</h3>
+      
+      <h4 class="category-title">Demographics</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-population_census22">
+        <div class="m-head">
+          <h3>Population</h3>
+          <span class="m-unit">residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Demographics</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Total resident population at the 2022 census. The baseline denominator behind every share metric in this dataset, and useful on its own for spotting which places are growing vs. shrinking. Source: Zensus 2022 (German federal census), municipality resolution.</p>
+        <a class="m-anchor-link" href="#m-demographics-population_census22">#m-demographics-population_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-share_under18_census22">
+        <div class="m-head">
+          <h3>Under 18</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Demographics</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Share of residents younger than 18. A rough proxy for local demand on schools and childcare, and for how much of a place&#x27;s future population growth will come from residents already living there. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_under18_census22">#m-demographics-share_under18_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-share_18to29_census22">
+        <div class="m-head">
+          <h3>Age 18-29</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Demographics</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Share of residents aged 18 to 29. Tends to run high in university towns and career-starter hubs, and low in retirement-heavy or rural areas young adults leave for education or work. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_18to29_census22">#m-demographics-share_18to29_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-share_30to49_census22">
+        <div class="m-head">
+          <h3>Age 30-49</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Demographics</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Share of residents aged 30 to 49 - roughly the family-formation and peak-earning years, so this tracks how many prime-working-age households a place has, not just its population size. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_30to49_census22">#m-demographics-share_30to49_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-share_50to59_census22">
+        <div class="m-head">
+          <h3>Age 50-59</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Demographics</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Share of residents aged 50 to 59, the pre-retirement cohort. A rising share here is a leading indicator of where the 60+ share (below) is headed next. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_50to59_census22">#m-demographics-share_50to59_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-share_60plus_census22">
+        <div class="m-head">
+          <h3>Age 60+</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Demographics</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Share of residents aged 60 and older. High values signal aging/retirement pressure on local services, and tend to correlate with lower population turnover than younger, more mobile areas. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_60plus_census22">#m-demographics-share_60plus_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-share_foreign_census22">
+        <div class="m-head">
+          <h3>Foreign nationals</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Demographics</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Share of residents who are not German citizens. This is citizenship-based only - a person born in Germany to immigrant parents, or a naturalized citizen, is NOT counted here even though they would be under migration background (below). Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_foreign_census22">#m-demographics-share_foreign_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-share_migration_bg_census22">
+        <div class="m-head">
+          <h3>Migration background</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Demographics</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Share of residents with a migration background - includes naturalized citizens and their children, so it&#x27;s broader than (and always ≥) foreign-national share. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_migration_bg_census22">#m-demographics-share_migration_bg_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-avg_household_size_census22">
+        <div class="m-head">
+          <h3>Avg. household size</h3>
+          <span class="m-unit">persons</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Demographics</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Average number of people living in the same household. Smaller households mean more housing units are needed per resident, and a falling average over time is often an early sign of an aging or increasingly single-person population. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-avg_household_size_census22">#m-demographics-avg_household_size_census22</a>
+      </div>
+      </div>
+      <h4 class="category-title">Housing</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-share_single_family_census22">
+        <div class="m-head">
+          <h3>Single/two-family homes</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Housing</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Share of residential buildings that are single- or two-family houses, rather than larger apartment blocks - a rough density/urbanization proxy. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_single_family_census22">#m-demographics-share_single_family_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-total_dwellings_census22">
+        <div class="m-head">
+          <h3>Total dwellings</h3>
+          <span class="m-unit">count</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Housing</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Total number of housing units (not people). A raw stock size, not a rate - compare across similarly-sized places rather than reading it directly against a much larger or smaller municipality. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-total_dwellings_census22">#m-demographics-total_dwellings_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-vacancy_rate_census22">
+        <div class="m-head">
+          <h3>Vacancy rate</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Housing</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Share of dwellings standing empty. High vacancy can mean a shrinking or unattractive local housing market, but can also just reflect a lot of second homes or units mid-renovation - read it alongside the population trend before assuming decline. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-vacancy_rate_census22">#m-demographics-vacancy_rate_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-share_owner_occupied_census22">
+        <div class="m-head">
+          <h3>Owner-occupied</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Housing</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Share of dwellings lived in by their owner, as opposed to rented out. Renter-heavy places tend to see more population turnover and are more directly exposed to swings in asking rents than owner-heavy ones. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_owner_occupied_census22">#m-demographics-share_owner_occupied_census22</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-avg_rent_per_m2_census22">
+        <div class="m-head">
+          <h3>Avg. rent</h3>
+          <span class="m-unit">€/m²</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Housing</div>
+        
+        <div class="m-meta"><b>Source:</b> Zensus 2022 (German federal census)</div>
+        <p class="m-full">Average asking rent per square meter, cold (excluding utilities/heating). This is a snapshot of what&#x27;s currently being advertised, not what sitting tenants pay on older leases - in fast-growing cities it can run well above the typical rent actually being paid across all existing tenancies. Source: Zensus 2022.</p>
+        <a class="m-anchor-link" href="#m-demographics-avg_rent_per_m2_census22">#m-demographics-avg_rent_per_m2_census22</a>
+      </div>
+      </div>
+    </div>
+    <div class="resolution-block">
+      <h3 class="resolution-title">County (multi-year, 1995–2022 depending on metric)</h3>
+      
+      <h4 class="category-title">Business</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-share_micro_enterprises">
+        <div class="m-head">
+          <h3>Micro enterprises</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Business</div>
+        <div class="m-meta"><b>Years covered:</b> 2006–2022 (17 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;share_micro_enterprises&quot;</div>
+        <p class="m-full">Share of local enterprises with fewer than 10 employees. A high share isn&#x27;t inherently a bad sign - it&#x27;s the norm in tourism-, retail-, and craft-heavy local economies, quite different from a share driven by economic distress.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_micro_enterprises">#m-demographics-share_micro_enterprises</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-share_large_enterprises">
+        <div class="m-head">
+          <h3>Large enterprises</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Business</div>
+        <div class="m-meta"><b>Years covered:</b> 2006–2022 (17 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;share_large_enterprises&quot;</div>
+        <p class="m-full">Share of local enterprises with 250 or more employees. A county can score low here and still be prosperous if its economy runs on many strong small/medium firms rather than a few big employers - classic Mittelstand-heavy regions often look this way.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_large_enterprises">#m-demographics-share_large_enterprises</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-business_insolvencies">
+        <div class="m-head">
+          <h3>Business insolvencies (INKAR)</h3>
+          <span class="m-unit">per 10,000 enterprises (unconfirmed unit, see README)</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Business</div>
+        <div class="m-meta"><b>Years covered:</b> 2007–2020 (14 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Unternehmensinsolvenzen_inkar&quot;</div>
+        <p class="m-full">Corporate insolvencies - INKAR convention is typically per 10,000 enterprises, but this hasn&#x27;t been confirmed against a codebook (same caveat as median_income), so treat the exact unit with caution. Best read as a multi-year trend (rising vs. falling) rather than compared as a precise single-year level.</p>
+        <a class="m-anchor-link" href="#m-demographics-business_insolvencies">#m-demographics-business_insolvencies</a>
+      </div>
+      </div>
+      <h4 class="category-title">Childcare</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-childcare_under3">
+        <div class="m-head">
+          <h3>Childcare rate (under 3)</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Childcare</div>
+        <div class="m-meta"><b>Years covered:</b> 2006–2020 (15 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;childcare_under3&quot;</div>
+        <p class="m-full">Share of children under 3 enrolled in daycare (Kita/Tagespflege). A strong predictor of maternal labor-force participation locally - where availability is low, one parent (usually the mother) tends to stay out of paid work longer.</p>
+        <a class="m-anchor-link" href="#m-demographics-childcare_under3">#m-demographics-childcare_under3</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-childcare_3to6">
+        <div class="m-head">
+          <h3>Childcare rate (3-6)</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Childcare</div>
+        <div class="m-meta"><b>Years covered:</b> 2006–2020 (15 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;childcare_3to6&quot;</div>
+        <p class="m-full">Share of children aged 3-6 enrolled in daycare. Coverage here runs much higher nationwide than under-3 care, since most German states guarantee a Kita place from age 3 onward - so the gaps BETWEEN counties are more informative than the level of any one county.</p>
+        <a class="m-anchor-link" href="#m-demographics-childcare_3to6">#m-demographics-childcare_3to6</a>
+      </div>
+      </div>
+      <h4 class="category-title">Cost of living</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-rent_price">
+        <div class="m-head">
+          <h3>Rent price</h3>
+          <span class="m-unit">€/m²</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Cost of living</div>
+        <div class="m-meta"><b>Years covered:</b> 2010–2021 (12 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Mietpreise_inkar&quot;</div>
+        <p class="m-full">Average rent per square meter (INKAR source - compare with the municipality-level Zensus rent figure, which may differ slightly in methodology).</p>
+        <a class="m-anchor-link" href="#m-demographics-rent_price">#m-demographics-rent_price</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-debtor_quota">
+        <div class="m-head">
+          <h3>Over-indebtedness rate (Schuldnerquote)</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Cost of living</div>
+        <div class="m-meta"><b>Years covered:</b> 2004–2019 (16 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Schuldnerquote_inkar&quot;</div>
+        <p class="m-full">Share of adults with unmanageable debt (more liabilities than they can realistically repay) - a financial-distress indicator distinct from income level: a county can have modest but stable income and low debt distress, or higher income with more households overextended.</p>
+        <a class="m-anchor-link" href="#m-demographics-debtor_quota">#m-demographics-debtor_quota</a>
+      </div>
+      </div>
+      <h4 class="category-title">Healthcare</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-physician_density">
+        <div class="m-head">
+          <h3>Physicians</h3>
+          <span class="m-unit">per 10,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Healthcare</div>
+        <div class="m-meta"><b>Years covered:</b> 2015–2022 (8 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;physician_density&quot;</div>
+        <p class="m-full">All physicians (all specialties) per 10,000 residents, regardless of whether they practice at a hospital, private clinic, or elsewhere. A county with a large specialist hospital can score high here even if everyday primary care is thin - see general practitioners below for that specifically.</p>
+        <a class="m-anchor-link" href="#m-demographics-physician_density">#m-demographics-physician_density</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-gp_density">
+        <div class="m-head">
+          <h3>General practitioners</h3>
+          <span class="m-unit">per 10,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Healthcare</div>
+        <div class="m-meta"><b>Years covered:</b> 2015–2022 (8 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;gp_density&quot;</div>
+        <p class="m-full">General practitioners (Hausaerzte) specifically, per 10,000 residents - a primary-care access measure distinct from physician density overall, and generally the better indicator of how easy it is for an ordinary resident to see a doctor nearby.</p>
+        <a class="m-anchor-link" href="#m-demographics-gp_density">#m-demographics-gp_density</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-hospital_beds_per_capita">
+        <div class="m-head">
+          <h3>Hospital beds</h3>
+          <span class="m-unit">per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Healthcare</div>
+        <div class="m-meta"><b>Years covered:</b> 2004–2021 (18 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;hospital_beds_per_capita&quot;</div>
+        <p class="m-full">Inpatient hospital beds per 1,000 residents. Reflects local inpatient capacity, not quality of care or travel distance - a rural county can show zero beds and still be well served by a hospital just across the county line.</p>
+        <a class="m-anchor-link" href="#m-demographics-hospital_beds_per_capita">#m-demographics-hospital_beds_per_capita</a>
+      </div>
+      </div>
+      <h4 class="category-title">Housing</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-building_permits_per_capita">
+        <div class="m-head">
+          <h3>Building permits</h3>
+          <span class="m-unit">per 10,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Housing</div>
+        <div class="m-meta"><b>Years covered:</b> 1995–2022 (28 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;building_permits_per_capita&quot;</div>
+        <p class="m-full">New residential building permits issued per 10,000 residents that year - a leading indicator of housing construction, not completions.</p>
+        <a class="m-anchor-link" href="#m-demographics-building_permits_per_capita">#m-demographics-building_permits_per_capita</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-living_space_per_capita">
+        <div class="m-head">
+          <h3>Living space per capita</h3>
+          <span class="m-unit">m²</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Housing</div>
+        <div class="m-meta"><b>Years covered:</b> 2011–2022 (12 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;living_space_per_capita&quot;</div>
+        <p class="m-full">Average residential floor space per resident. This rises mechanically as household size falls, even with zero new construction - read it alongside average household size (municipality view) before treating a high value as pure housing abundance.</p>
+        <a class="m-anchor-link" href="#m-demographics-living_space_per_capita">#m-demographics-living_space_per_capita</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-municipal_debt_per_capita">
+        <div class="m-head">
+          <h3>Municipal debt per capita</h3>
+          <span class="m-unit">€</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Housing</div>
+        <div class="m-meta"><b>Years covered:</b> 2010–2019 (10 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;municipal_debt_per_capita&quot;</div>
+        <p class="m-full">Local government debt per resident - a fiscal-strain measure at the municipal level, distinct from tax capacity.</p>
+        <a class="m-anchor-link" href="#m-demographics-municipal_debt_per_capita">#m-demographics-municipal_debt_per_capita</a>
+      </div>
+      </div>
+      <h4 class="category-title">Income &amp; Economy</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-gross_wage">
+        <div class="m-head">
+          <h3>Avg. gross wage</h3>
+          <span class="m-unit">€/year</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Income &amp; Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2001–2021 (21 years with data)</div>
+        <div class="m-meta"><b>Source:</b> Regional accounts (VGRdL), via processed/covariates/county_gross_income.csv, column &quot;gross_avg_wage_vgrdl&quot;</div>
+        <p class="m-full">Average gross wage per employee, from official regional accounts (VGRdL) - before tax, and averaged across full- and part-time work. This is a workplace-based figure (where people work, not where they live), so in commuter-heavy counties it can diverge noticeably from what residents actually take home - compare against household income below.</p>
+        <a class="m-anchor-link" href="#m-demographics-gross_wage">#m-demographics-gross_wage</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-hh_income">
+        <div class="m-head">
+          <h3>Avg. household income</h3>
+          <span class="m-unit">€/year</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Income &amp; Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2001–2021 (21 years with data)</div>
+        <div class="m-meta"><b>Source:</b> Regional accounts (VGRdL), via processed/covariates/county_household_income.csv, column &quot;hh_income_vgrdl&quot;</div>
+        <p class="m-full">Average disposable household income (after taxes and transfers), from official regional accounts (VGRdL). Unlike gross wage or GDP, this is what actually funds local consumption - it isn&#x27;t inflated by commuters&#x27; workplace earnings or by capital-intensive industry that employs relatively few local residents.</p>
+        <a class="m-anchor-link" href="#m-demographics-hh_income">#m-demographics-hh_income</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-median_income">
+        <div class="m-head">
+          <h3>Median income (INKAR)</h3>
+          <span class="m-unit">€ (period as reported by INKAR)</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Income &amp; Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2014–2020 (7 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Medianeinkommen_inkar&quot;</div>
+        <p class="m-full">The middle income value (half earn more, half less) - less skewed by very high earners than an average, so it&#x27;s generally a better read on a &quot;typical&quot; resident&#x27;s income than the average figures above. Exact income concept/period not confirmed against a codebook, see README.</p>
+        <a class="m-anchor-link" href="#m-demographics-median_income">#m-demographics-median_income</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-gdp_percap">
+        <div class="m-head">
+          <h3>GDP per capita</h3>
+          <span class="m-unit">€ thousand</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Income &amp; Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2000–2020 (21 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Bruttoinlandsprodukt_je_Einwohner_inkar&quot;</div>
+        <p class="m-full">Total economic output produced in the county, divided by its population - a measure of local economic activity, not resident income (commuters can inflate it).</p>
+        <a class="m-anchor-link" href="#m-demographics-gdp_percap">#m-demographics-gdp_percap</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-tax_capacity">
+        <div class="m-head">
+          <h3>Tax capacity (Steuerkraft)</h3>
+          <span class="m-unit">€ per capita</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Income &amp; Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 1995–2019 (25 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Steuerkraft_inkar&quot;</div>
+        <p class="m-full">A municipality&#x27;s own-source tax revenue capacity per resident - used in Germany&#x27;s fiscal equalization system between richer and poorer areas.</p>
+        <a class="m-anchor-link" href="#m-demographics-tax_capacity">#m-demographics-tax_capacity</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-purchasing_power">
+        <div class="m-head">
+          <h3>Purchasing power (Kaufkraft)</h3>
+          <span class="m-unit">€ per capita</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Income &amp; Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2013–2021 (9 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;purchasing_power&quot;</div>
+        <p class="m-full">GfK-style purchasing power per resident - a broader spending-capacity measure than disposable income alone, since it&#x27;s built to capture what households actually have available to spend, not just wages before taxes and transfers.</p>
+        <a class="m-anchor-link" href="#m-demographics-purchasing_power">#m-demographics-purchasing_power</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-share_low_income_hh">
+        <div class="m-head">
+          <h3>Low-income households</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Income &amp; Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2013–2021 (9 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;share_low_income_hh&quot;</div>
+        <p class="m-full">Share of households with income below 60% of the median - the standard EU at-risk-of-poverty threshold. Because it&#x27;s relative to that year&#x27;s OWN median, it stays meaningful even as overall income levels rise over time, unlike a fixed euro poverty line would.</p>
+        <a class="m-anchor-link" href="#m-demographics-share_low_income_hh">#m-demographics-share_low_income_hh</a>
+      </div>
+      </div>
+      <h4 class="category-title">Knowledge Economy</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-expert_jobs_share">
+        <div class="m-head">
+          <h3>Expert-level jobs (INKAR)</h3>
+          <span class="m-unit">% (unconfirmed unit, see README)</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Knowledge Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2013–2020 (8 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Beschäftigte_mit_Anforderungsniveau_Experte_inkar&quot;</div>
+        <p class="m-full">Share of employees whose job is classified at the highest INKAR skill-requirement tier (Experte) - a proxy for high-skill local labor demand.</p>
+        <a class="m-anchor-link" href="#m-demographics-expert_jobs_share">#m-demographics-expert_jobs_share</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-knowledge_industry_share">
+        <div class="m-head">
+          <h3>Knowledge-intensive industry jobs (INKAR)</h3>
+          <span class="m-unit">% (unconfirmed unit, see README)</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Knowledge Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2009–2020 (12 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Beschäftigte_in_wissensintensiven_Industrien_inkar&quot;</div>
+        <p class="m-full">Share of employment in INKAR-classified knowledge-intensive industries. Tends to cluster around universities and major metro areas - a useful counterpoint to industry_share (Labor market) when distinguishing &quot;old&quot; from &quot;new&quot; economy counties.</p>
+        <a class="m-anchor-link" href="#m-demographics-knowledge_industry_share">#m-demographics-knowledge_industry_share</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-creative_industry_share">
+        <div class="m-head">
+          <h3>Creative industries jobs (INKAR)</h3>
+          <span class="m-unit">% (unconfirmed unit, see README)</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Knowledge Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2008–2020 (13 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Beschäftigte_in_Kreativbranchen_inkar&quot;</div>
+        <p class="m-full">Share of employment in INKAR-classified creative industries (Kreativbranchen). Usually concentrated in large cities - values much above roughly 5% are rare outside of them.</p>
+        <a class="m-anchor-link" href="#m-demographics-creative_industry_share">#m-demographics-creative_industry_share</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-craft_trades_share">
+        <div class="m-head">
+          <h3>Craft trades jobs (Handwerk, INKAR)</h3>
+          <span class="m-unit">% (unconfirmed unit, see README)</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Knowledge Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2010–2018 (9 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Beschäftigte_im_Handwerk_inkar&quot;</div>
+        <p class="m-full">Share of employment in craft trades (Handwerk) - a traditional-economy counterpoint to the knowledge-economy metrics above, and often strongest in exactly the mid-sized towns and rural counties where the others are weakest.</p>
+        <a class="m-anchor-link" href="#m-demographics-craft_trades_share">#m-demographics-craft_trades_share</a>
+      </div>
+      </div>
+      <h4 class="category-title">Labor market</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-unemployment_rate">
+        <div class="m-head">
+          <h3>Unemployment rate</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Labor market</div>
+        <div class="m-meta"><b>Years covered:</b> 1998–2020 (23 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_additional.csv, column &quot;Arbeitslosenquote_inkar&quot;</div>
+        <p class="m-full">Share of the civilian labor force registered as unemployed. The standard headline labor-market number, but it doesn&#x27;t distinguish short-term frictional unemployment from entrenched long-term joblessness - the Society &amp; Culture map&#x27;s welfare-receipt metric captures a related but distinct dimension of that.</p>
+        <a class="m-anchor-link" href="#m-demographics-unemployment_rate">#m-demographics-unemployment_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-industry_share">
+        <div class="m-head">
+          <h3>Industry employment share</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Labor market</div>
+        <div class="m-meta"><b>Years covered:</b> 2008–2020 (13 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Industriequote_inkar&quot;</div>
+        <p class="m-full">Share of employment in manufacturing/industry, as opposed to services or agriculture - a deindustrialization proxy when tracked over time.</p>
+        <a class="m-anchor-link" href="#m-demographics-industry_share">#m-demographics-industry_share</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-commuter_balance">
+        <div class="m-head">
+          <h3>Commuter balance</h3>
+          <span class="m-unit">per 1,000 residents (+ = net inflow)</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Labor market</div>
+        <div class="m-meta"><b>Years covered:</b> 1997–2020 (24 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Pendlersaldo_inkar&quot;</div>
+        <p class="m-full">Net commuters per 1,000 residents. Positive means more people commute IN for work than commute out (a job center); negative means the reverse (a bedroom community).</p>
+        <a class="m-anchor-link" href="#m-demographics-commuter_balance">#m-demographics-commuter_balance</a>
+      </div>
+      </div>
+      <h4 class="category-title">Migration &amp; Diversity</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-foreign_share">
+        <div class="m-head">
+          <h3>Foreign national share</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Migration &amp; Diversity</div>
+        <div class="m-meta"><b>Years covered:</b> 1995–2020 (26 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Ausländeranteil_inkar&quot;</div>
+        <p class="m-full">Share of residents who are not German citizens (county-level, INKAR source - compare with the municipality-level Zensus figure, which may differ slightly in methodology).</p>
+        <a class="m-anchor-link" href="#m-demographics-foreign_share">#m-demographics-foreign_share</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-migration_in_rate">
+        <div class="m-head">
+          <h3>In-migration rate</h3>
+          <span class="m-unit">per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Migration &amp; Diversity</div>
+        <div class="m-meta"><b>Years covered:</b> 1995–2020 (26 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_additional.csv, column &quot;Zuzugsrate_inkar&quot;</div>
+        <p class="m-full">People moving INTO the county per 1,000 residents, per year (from elsewhere in Germany or abroad). This is gross inflow only - a county can score high here and still be shrinking overall if out-migration (below) is even higher.</p>
+        <a class="m-anchor-link" href="#m-demographics-migration_in_rate">#m-demographics-migration_in_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-migration_out_rate">
+        <div class="m-head">
+          <h3>Out-migration rate</h3>
+          <span class="m-unit">per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Migration &amp; Diversity</div>
+        <div class="m-meta"><b>Years covered:</b> 1995–2020 (26 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_additional.csv, column &quot;Fortzugsrate_inkar&quot;</div>
+        <p class="m-full">People moving OUT of the county per 1,000 residents, per year. High out-migration paired with low in-migration is the classic signature of a declining rural county losing working-age residents.</p>
+        <a class="m-anchor-link" href="#m-demographics-migration_out_rate">#m-demographics-migration_out_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-asylum_seeker_share">
+        <div class="m-head">
+          <h3>Asylum seekers</h3>
+          <span class="m-unit">per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Migration &amp; Diversity</div>
+        <div class="m-meta"><b>Years covered:</b> 2010–2020 (11 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_additional.csv, column &quot;Asylbewerber_inkar&quot;</div>
+        <p class="m-full">Asylum seekers registered in the county, per 1,000 residents. Reflects where asylum seekers are officially allocated/housed under Germany&#x27;s state-quota distribution system (Koenigsteiner Schluessel) as much as it reflects where people ultimately choose to settle long-term.</p>
+        <a class="m-anchor-link" href="#m-demographics-asylum_seeker_share">#m-demographics-asylum_seeker_share</a>
+      </div>
+      </div>
+      <h4 class="category-title">Public Finances</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-trade_tax_revenue">
+        <div class="m-head">
+          <h3>Trade tax revenue (Gewerbesteuer, INKAR)</h3>
+          <span class="m-unit">€ per capita (unconfirmed unit, see README)</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Public Finances</div>
+        <div class="m-meta"><b>Years covered:</b> 1995–2020 (26 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Gewerbesteuer_inkar&quot;</div>
+        <p class="m-full">Local trade tax revenue - likely € per capita given the value range, but not confirmed against a codebook. Negative values in some county-years reflect real refunds/corrections, not a data error. Because each municipality sets its own Gewerbesteuer multiplier (Hebesatz), part of what this measures is local tax POLICY, not purely how much business activity exists.</p>
+        <a class="m-anchor-link" href="#m-demographics-trade_tax_revenue">#m-demographics-trade_tax_revenue</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-municipal_staff">
+        <div class="m-head">
+          <h3>Municipal staff (Personal der Kommunen, INKAR)</h3>
+          <span class="m-unit">per 10,000 residents (unconfirmed unit, see README)</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Public Finances</div>
+        <div class="m-meta"><b>Years covered:</b> 2006–2019 (14 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_indicators.csv, column &quot;Personal_der_Kommunen_inkar&quot;</div>
+        <p class="m-full">Local government employment - likely per 10,000 residents given the value range, but not confirmed against a codebook. More staff isn&#x27;t automatically &quot;better government&quot; - it can also reflect a more fragmented municipal structure (many small Gemeinden each running their own administration) rather than service quality.</p>
+        <a class="m-anchor-link" href="#m-demographics-municipal_staff">#m-demographics-municipal_staff</a>
+      </div>
+      </div>
+      <h4 class="category-title">Transport</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-demographics-cars_per_capita">
+        <div class="m-head">
+          <h3>Cars</h3>
+          <span class="m-unit">per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Transport</div>
+        <div class="m-meta"><b>Years covered:</b> 1995–2022 (28 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;cars_per_capita&quot;</div>
+        <p class="m-full">Registered passenger cars per 1,000 residents. High values often reflect poor public-transit access as much as affluence - rural counties commonly outrank wealthier but transit-rich cities on this metric.</p>
+        <a class="m-anchor-link" href="#m-demographics-cars_per_capita">#m-demographics-cars_per_capita</a>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tool-block" id="society">
+    <div class="tool-block-head">
+      <h2>Society &amp; Culture Map</h2>
+      <a class="open-btn" href="../map-society/">Open tool →</a>
+    </div>
+    
+    <div class="resolution-block">
+      <h3 class="resolution-title">County / state (see each metric - some are broadcast from state-level sources)</h3>
+      
+      <h4 class="category-title">Crime &amp; Safety</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-society-crime_rate">
+        <div class="m-head">
+          <h3>Crime rate</h3>
+          <span class="m-unit">cases per 100,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Crime &amp; Safety</div>
+        <div class="m-meta"><b>Years covered:</b> 2020–2024 (5 years with data)</div>
+        <div class="m-meta"><b>Source:</b> BKA Polizeiliche Kriminalstatistik, T01 Grundtabelle &quot;Kreise&quot; (bka.de)</div>
+        <p class="m-full">All recorded criminal offenses per 100,000 residents that year (Haeufigkeitszahl, BKA Polizeiliche Kriminalstatistik) - reported crime, not necessarily actual crime, and shaped by local policing/reporting practices as well as by the underlying offense rate. Also pulled up mechanically by non-resident activity: a county with a major train station, shopping district, or airport can show a high rate driven by people who don&#x27;t live there and therefore aren&#x27;t in the population denominator.</p>
+        <a class="m-anchor-link" href="#m-society-crime_rate">#m-society-crime_rate</a>
+      </div>
+      </div>
+      <h4 class="category-title">Economic Structure</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-society-share_primary_sector">
+        <div class="m-head">
+          <h3>Agriculture employment share</h3>
+          <span class="m-unit">% of gross value added</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Economic Structure</div>
+        <div class="m-meta"><b>Years covered:</b> 2000–2021 (22 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_covariates_bonus.csv, column &quot;share_primary_sector&quot;</div>
+        <p class="m-full">Share of the county&#x27;s economic output (gross value added) from the primary sector - agriculture, forestry, fishing (INKAR indicator, reused from this project&#x27;s map-demographics data pull). Nationwide this share is now small almost everywhere, so even a county that looks &quot;high&quot; here is usually just less far along the same long-run shift out of agriculture as the rest of the country.</p>
+        <a class="m-anchor-link" href="#m-society-share_primary_sector">#m-society-share_primary_sector</a>
+      </div>
+
+      <div class="metric-card" id="m-society-share_secondary_sector">
+        <div class="m-head">
+          <h3>Industry employment share</h3>
+          <span class="m-unit">% of gross value added</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Economic Structure</div>
+        <div class="m-meta"><b>Years covered:</b> 2000–2021 (22 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_covariates_bonus.csv, column &quot;share_secondary_sector&quot;</div>
+        <p class="m-full">Share of the county&#x27;s economic output (gross value added) from the secondary sector - manufacturing and construction (INKAR indicator, reused from this project&#x27;s map-demographics data pull). Tracking this over time is the most direct way to see (de)industrialization happening in a county, rather than inferring it indirectly from the unemployment rate.</p>
+        <a class="m-anchor-link" href="#m-society-share_secondary_sector">#m-society-share_secondary_sector</a>
+      </div>
+
+      <div class="metric-card" id="m-society-share_tertiary_sector">
+        <div class="m-head">
+          <h3>Services employment share</h3>
+          <span class="m-unit">% of gross value added</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Economic Structure</div>
+        <div class="m-meta"><b>Years covered:</b> 2000–2021 (22 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_covariates_bonus.csv, column &quot;share_tertiary_sector&quot;</div>
+        <p class="m-full">Share of the county&#x27;s economic output (gross value added) from the tertiary sector - services (INKAR indicator, reused from this project&#x27;s map-demographics data pull). Services is now the largest sector almost everywhere in Germany, so the more informative read is usually which OTHER sector is unusually large in a given county, not how large tertiary itself is.</p>
+        <a class="m-anchor-link" href="#m-society-share_tertiary_sector">#m-society-share_tertiary_sector</a>
+      </div>
+      </div>
+      <h4 class="category-title">Education</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-society-edu_abitur">
+        <div class="m-head">
+          <h3>School leavers with Abitur</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Education</div>
+        <div class="m-meta"><b>Years covered:</b> 2006–2024 (19 years with data)</div>
+        <div class="m-meta"><b>Source:</b> Regionalatlas Deutschland (regionalstatistik.de), table AI003-2</div>
+        <p class="m-full">Share of that year&#x27;s school leavers (all school types) who left with a general or subject-specific higher education entrance qualification (allgem./fachgeb. Hochschulreife) - the top academic track. Strongly shaped by whether a county has its own Gymnasium (academic-track school) or older students commute elsewhere, so this partly reflects local school infrastructure, not just household background.</p>
+        <a class="m-anchor-link" href="#m-society-edu_abitur">#m-society-edu_abitur</a>
+      </div>
+
+      <div class="metric-card" id="m-society-edu_no_hauptschulabschluss">
+        <div class="m-head">
+          <h3>School leavers without a degree</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Education</div>
+        <div class="m-meta"><b>Years covered:</b> 2006–2024 (19 years with data)</div>
+        <div class="m-meta"><b>Source:</b> Regionalatlas Deutschland (regionalstatistik.de), table AI003-2</div>
+        <p class="m-full">Share of that year&#x27;s school leavers who left general education school without even the basic Hauptschulabschluss - the standard proxy for being at risk of not finding an apprenticeship or job. Widely used as an early-warning indicator: counties with a persistently high share here tend to show elevated youth unemployment and welfare receipt a few years later.</p>
+        <a class="m-anchor-link" href="#m-society-edu_no_hauptschulabschluss">#m-society-edu_no_hauptschulabschluss</a>
+      </div>
+      </div>
+      <h4 class="category-title">Family &amp; Marriage</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-society-marriage_rate">
+        <div class="m-head">
+          <h3>Marriage rate</h3>
+          <span class="m-unit">per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Family &amp; Marriage</div>
+        <div class="m-meta"><b>Years covered:</b> 2018–2025 (8 years with data)</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 12611-01-02-4</div>
+        <p class="m-full">New marriages per 1,000 residents in the county that year (Statistik der Eheschliessungen, marriages counted where at least one spouse lives in the county, divided by county population). Marriage rates have been declining nationwide for decades as cohabitation and later marriage become more common, so a county&#x27;s level relative to OTHERS in the same year is more informative than its level in isolation.</p>
+        <a class="m-anchor-link" href="#m-society-marriage_rate">#m-society-marriage_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-society-divorce_rate">
+        <div class="m-head">
+          <h3>Divorce rate</h3>
+          <span class="m-unit">per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Family &amp; Marriage</div>
+        <div class="m-meta"><b>Years covered:</b> 2018–2024 (7 years with data)</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 12631-01-02-4</div>
+        <p class="m-full">Divorces finalized per 1,000 residents that year (Statistik rechtskraeftiger Urteile in Ehesachen). A single year&#x27;s jump doesn&#x27;t always mean more marriages are breaking down - court processing backlogs can shift when a divorce is finalized relative to when it was filed, so the multi-year trend is more reliable than any one year.</p>
+        <a class="m-anchor-link" href="#m-society-divorce_rate">#m-society-divorce_rate</a>
+      </div>
+      </div>
+      <h4 class="category-title">Labor &amp; Welfare</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-society-welfare_rate">
+        <div class="m-head">
+          <h3>Welfare receipt (Buergergeld)</h3>
+          <span class="m-unit">% of population</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Labor &amp; Welfare</div>
+        <div class="m-meta"><b>Years covered:</b> 2018–2024 (4 years with data)</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 22811-02-02-4</div>
+        <p class="m-full">Share of the county&#x27;s population receiving basic income support under SGB II (Buergergeld/Hartz IV - Personen in Bedarfsgemeinschaften), computed here from regionalstatistik.de person counts divided by county population. This is a structural indicator, not a cyclical one - in counties where it&#x27;s persistently high, it reflects the underlying local job market over years, not a recent news-cycle event.</p>
+        <a class="m-anchor-link" href="#m-society-welfare_rate">#m-society-welfare_rate</a>
+      </div>
+      </div>
+      <h4 class="category-title">Religion &amp; Community</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-society-religion_pct">
+        <div class="m-head">
+          <h3>Church membership</h3>
+          <span class="m-unit">% of population</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Religion &amp; Community</div>
+        <div class="m-meta"><b>Years covered:</b> 2001–2022 (22 years with data)</div>
+        <div class="m-meta"><b>Source:</b> fowid.de, &quot;Bundeslaender: Kirchenmitglieder, 2001-2022&quot; (EKD + Deutsche Bischofskonferenz statistics)</div>
+        <p class="m-full">Combined Protestant (EKD) + Catholic church membership as a share of the state&#x27;s population (source: fowid.de, based on official EKD/Catholic diocese statistics). STATE-LEVEL ONLY - every county in a state shows the same value, since no county-level source exists for this. Membership has fallen nationwide for decades (formal church-leaving, Kirchenaustritt, is common and easy), so even a state near the top of this ranking is almost certainly still trending downward - use the year slider to see direction, not just level.</p>
+        <a class="m-anchor-link" href="#m-society-religion_pct">#m-society-religion_pct</a>
+      </div>
+
+      <div class="metric-card" id="m-society-sports_rate">
+        <div class="m-head">
+          <h3>Sports club membership</h3>
+          <span class="m-unit">% of population</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Religion &amp; Community</div>
+        <div class="m-meta"><b>Years covered:</b> 2018–2025 (8 years with data)</div>
+        <div class="m-meta"><b>Source:</b> DOSB Bestandserhebung 2025 (dosb.de), p.17; state population from regionalstatistik.de</div>
+        <p class="m-full">Registered members of an organized sports club (Landessportbund-affiliated), as a share of the state&#x27;s population (source: DOSB Bestandserhebung 2025; state population computed here from regionalstatistik.de county figures). Counts memberships, not unique people, so someone in two clubs is counted twice. STATE-LEVEL ONLY - every county in a state shows the same value. The sharp West/East gap traces back to West Germany&#x27;s much older tradition of the Sportverein as a default local institution, a civic structure the GDR never built in the same form - so this is as much a marker of associational history as of current wealth.</p>
+        <a class="m-anchor-link" href="#m-society-sports_rate">#m-society-sports_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-society-happiness">
+        <div class="m-head">
+          <h3>Life satisfaction</h3>
+          <span class="m-unit">0-10 scale</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Religion &amp; Community</div>
+        <div class="m-meta"><b>Years covered:</b> 2019–2025 (4 years with data)</div>
+        <div class="m-meta"><b>Source:</b> SKL Gluecksatlas 2025 (skl-gluecksatlas.de), Tabelle 1; underlying survey by IfD Allensbach / SOEP</div>
+        <p class="m-full">Self-reported general life satisfaction, 0 (not at all satisfied) to 10 (completely satisfied) - survey-based (SKL Gluecksatlas / IfD Allensbach). STATE-LEVEL ONLY, and only 4 sparse survey years (2019, 2021, 2024, 2025) exist - every county in a state shows that state&#x27;s one value for each of those years. The exact score matters less than the ranking and the gap between states: a move from 7.0 to 6.9 between waves isn&#x27;t necessarily a real change, but a state that sits near the bottom across all four available years likely reflects something durable.</p>
+        <a class="m-anchor-link" href="#m-society-happiness">#m-society-happiness</a>
+      </div>
+
+      <div class="metric-card" id="m-society-volunteering">
+        <div class="m-head">
+          <h3>Volunteering rate</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Religion &amp; Community</div>
+        <div class="m-meta"><b>Years covered:</b> 2019 only</div>
+        <div class="m-meta"><b>Source:</b> 5. Deutscher Freiwilligensurvey 2019, Laenderbericht (stmas.bayern.de), p.137/148</div>
+        <p class="m-full">Share of the population aged 14+ who do some form of formal volunteer work (Engagementquote, 5. Deutscher Freiwilligensurvey). STATE-LEVEL ONLY, and only ONE year exists (2019) - the survey runs just once every 5 years and the next wave isn&#x27;t in this dataset. The regional pattern tracks the same West/East and rural/urban associational-culture divide seen in sports club membership above - worth comparing the two side by side.</p>
+        <a class="m-anchor-link" href="#m-society-volunteering">#m-society-volunteering</a>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <a class="back-home" href="../index.html">← Back to all tools</a>
+<footer class="site-footer">
+  Made with ❤️ by @shahabday<br>
+  Email: <a href="mailto:shahabdaiani@gmail.com">shahabdaiani@gmail.com</a> · Instagram: <a href="https://instagram.com/shahabday" target="_blank" rel="noopener">@shahabday</a> · Website: <a href="https://shahabwrites.com" target="_blank" rel="noopener">shahabwrites.com</a>
+</footer>
+</div>
+
+<script>
+(function () {
+  document.querySelectorAll(".dropdown").forEach((dd) => {
+    const toggle = dd.querySelector(".dropdown-toggle");
+    const menu = dd.querySelector(".dropdown-menu");
+    if (!toggle || !menu) return;
+    const position = () => {
+      const r = toggle.getBoundingClientRect();
+      menu.style.left = Math.round(r.left) + "px";
+      menu.style.top = Math.round(r.bottom + 4) + "px";
+    };
+    dd.addEventListener("mouseenter", position);
+    toggle.addEventListener("focus", position);
+    window.addEventListener("resize", position);
+    window.addEventListener("scroll", position, true);
+  });
+
+  document.querySelectorAll(".topnav").forEach((nav) => {
+    const toggle = nav.querySelector(".nav-toggle");
+    const menu = nav.querySelector(".mobile-menu");
+    if (!toggle || !menu) return;
+    toggle.addEventListener("click", () => {
+      const open = menu.classList.toggle("open");
+      toggle.classList.toggle("open", open);
+    });
+    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+      menu.classList.remove("open");
+      toggle.classList.remove("open");
+    }));
+  });
+})();
+</script>
+</body>
+</html>

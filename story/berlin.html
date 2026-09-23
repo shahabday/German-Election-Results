@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Berlin: Four Parties, Real Competition — Germany in Maps</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel-border: #2a2e38;
+    --text: #e8eaed; --text-dim: #9aa0ab; --accent: #4a90e2; --risk: #e0622f;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  a { color: inherit; }
+
+  .topnav {
+    position: relative; z-index: 2000; height: 54px; flex-shrink: 0;
+    background: rgba(15, 17, 21, 0.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--panel-border);
+  }
+  .topnav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 54px;
+    display: flex; align-items: center; gap: 22px;
+  }
+  .topnav .brand { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+  .topnav .nav-links { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .topnav .nav-link { white-space: nowrap; font-size: 13px; color: var(--text-dim); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
+  .topnav .nav-link:hover { color: var(--text); background: #1e222b; }
+  .dropdown { position: relative; }
+  .dropdown-toggle {
+    font: inherit; font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer;
+    padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .dropdown-toggle:hover, .dropdown:focus-within .dropdown-toggle { color: var(--text); background: #1e222b; }
+  .dropdown-caret { font-size: 9px; transition: transform 0.15s; }
+  .dropdown:hover .dropdown-caret, .dropdown:focus-within .dropdown-caret { transform: rotate(180deg); }
+  .dropdown-menu {
+    position: fixed; top: 0; left: 0; min-width: 170px;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5); padding: 6px; display: flex; flex-direction: column; gap: 2px;
+    z-index: 2500; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.12s;
+  }
+  .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+  .dropdown-menu a { font-size: 12.5px; color: var(--text-dim); text-decoration: none; padding: 7px 9px; border-radius: 6px; }
+  .dropdown-menu a:hover { color: var(--text); background: #20242e; }
+
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 4px;
+    width: 30px; height: 30px; background: none; border: none; cursor: pointer; padding: 0; margin-left: auto; flex-shrink: 0;
+  }
+  .nav-toggle span { display: block; width: 100%; height: 2px; background: var(--text-dim); border-radius: 2px; transition: transform 0.15s, opacity 0.15s; }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 2100;
+    flex-direction: column; padding: 6px 16px 16px; background: var(--bg); border-bottom: 1px solid var(--panel-border);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.5); max-height: calc(100vh - 54px); overflow-y: auto;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 14px; color: var(--text-dim); text-decoration: none; padding: 10px 6px; border-radius: 6px; }
+  .mobile-menu a:hover { color: var(--text); background: #1e222b; }
+  .mobile-menu .mobile-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); opacity: 0.65; margin: 10px 6px 0; }
+
+  @media (max-width: 760px) {
+    .topnav .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+  }
+
+  #storyRoot { position: relative; }
+
+  #stage {
+    position: sticky; top: 54px; height: calc(100vh - 54px); width: 100%;
+    overflow: hidden; background: #0b0d11; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #chartWrap { width: 100%; height: 100%; padding: 60px 6vw 80px; }
+  #chart { width: 100%; height: 100%; display: block; overflow: visible; }
+  #chart .axis-line { stroke: var(--panel-border); stroke-width: 1; }
+  #chart .axis-label { fill: var(--text-dim); font-size: 11px; }
+  #chart .axis-label.x { text-anchor: middle; }
+  #chart .axis-label.y { text-anchor: end; }
+  #chart .chart-title { fill: var(--text); font-size: 15px; font-weight: 700; }
+  #chart .chart-subtitle { fill: var(--text-dim); font-size: 11px; }
+  #chart .party-group { transition: opacity 0.8s ease; }
+  #chart .party-line { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; transition: stroke-width 0.5s ease; }
+  #chart .party-dot { transition: r 0.3s ease; }
+  #chart .chart-marker line { stroke-dasharray: 4 4; stroke-width: 1.2; }
+  #chart .chart-marker text { paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; font-size: 10.5px; }
+  #chart .chart-marker rect { opacity: 0.10; }
+  #econGroup { transition: opacity 0.8s ease; opacity: 0; }
+  #econGroup.show { opacity: 1; }
+  #econGroup .econ-line { fill: none; stroke: #e0b84a; stroke-width: 2.6; stroke-dasharray: 7 4; stroke-linecap: round; }
+  #econGroup .econ-dot { fill: #e0b84a; }
+  #econGroup .axis-label { fill: #e0b84a; }
+  #econGroup .axis-label.y2 { text-anchor: start; }
+  #econGroup .econ-ref-line { stroke: #e0b84a; stroke-width: 1; stroke-dasharray: 2 3; opacity: 0.5; }
+
+  #stageVeil {
+    position: absolute; inset: 0; pointer-events: none; z-index: 400;
+    background: linear-gradient(90deg, rgba(11,13,17,0.88) 0%, rgba(11,13,17,0.55) 32%, rgba(11,13,17,0.0) 62%);
+  }
+  @media (max-width: 760px) { #stageVeil { background: rgba(11,13,17,0.72); } }
+
+  #eyebrowFloat {
+    position: absolute; top: 28px; left: 32px; z-index: 401; pointer-events: none;
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim);
+    opacity: 0; transition: opacity 0.5s ease;
+  }
+  #eyebrowFloat.show { opacity: 1; }
+
+  #legendFloat {
+    position: absolute; right: 22px; bottom: 22px; z-index: 401; pointer-events: none;
+    font-size: 11px; color: var(--text-dim); background: rgba(15,17,21,0.75); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 8px 12px; opacity: 0; transition: opacity 0.5s ease; max-width: 220px;
+  }
+  #legendFloat.show { opacity: 1; }
+  #legendFloat .row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; transition: opacity 0.5s ease; }
+  #legendFloat .row:last-child { margin-bottom: 0; }
+  #legendFloat .sw { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  @media (max-width: 760px) { #legendFloat { display: none; } }
+
+  #progressDots {
+    position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 500;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  #progressDots button {
+    width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--text-dim); background: transparent;
+    padding: 0; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  #progressDots button.active { background: var(--accent); border-color: var(--accent); transform: scale(1.3); }
+  @media (max-width: 760px) { #progressDots { display: none; } }
+
+  #steps { position: relative; z-index: 2; margin-top: calc(-100vh + 54px); pointer-events: none; }
+  #steps .hero, #steps .step { pointer-events: none; }
+  #steps a, #steps button { pointer-events: auto; }
+
+  .hero {
+    min-height: calc(100vh - 54px); display: flex; flex-direction: column; align-items: flex-start;
+    justify-content: center; padding: 40px 8vw; max-width: 900px;
+  }
+  .hero .kicker { font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(30px, 4.6vw, 52px); font-weight: 800; line-height: 1.1; margin: 0 0 20px; }
+  .hero p { font-size: 15.5px; color: var(--text-dim); line-height: 1.7; max-width: 560px; margin: 0 0 28px; }
+  .hero .scroll-hint { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
+  .hero .scroll-hint .arrow { animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  .step { min-height: 100vh; display: flex; align-items: center; padding: 60px 8vw; }
+  .step-card {
+    max-width: 500px; opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .step.in-view .step-card { opacity: 1; transform: translateY(0); }
+  .step-eyebrow { font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+  .step-headline { font-size: clamp(24px, 3.2vw, 34px); font-weight: 800; line-height: 1.15; margin: 0 0 16px; }
+  .step-body { font-size: 14.5px; color: var(--text-dim); line-height: 1.75; margin: 0; }
+  .step-body strong { color: var(--text); }
+  .step-body em { color: var(--text-dim); font-style: italic; }
+
+  .closing-cta { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .closing-cta a {
+    font-size: 12.5px; font-weight: 600; text-decoration: none; padding: 9px 15px; border-radius: 6px;
+    border: 1px solid var(--panel-border); color: var(--text);
+  }
+  .closing-cta a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .closing-cta a:hover { filter: brightness(1.1); }
+
+  .methodology-note {
+    position: relative; z-index: 3; background: var(--bg); padding: 10px 8vw 46px; max-width: 780px;
+  }
+  .methodology-note h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); margin: 0 0 12px; }
+  .methodology-note p { font-size: 13px; color: var(--text-dim); line-height: 1.8; margin: 0 0 10px; }
+  .methodology-note table { border-collapse: collapse; font-size: 12.5px; margin: 12px 0; }
+  .methodology-note th, .methodology-note td { padding: 5px 14px 5px 0; text-align: left; color: var(--text-dim); }
+  .methodology-note th { color: var(--text); font-weight: 600; border-bottom: 1px solid var(--panel-border); }
+  .methodology-note td.num { text-align: right; padding-right: 20px; }
+
+  footer.site-footer {
+    position: relative; z-index: 3; margin-top: 0; padding: 26px 8vw 40px; border-top: 1px solid var(--panel-border);
+    font-size: 11.5px; color: var(--text-dim); line-height: 1.7; background: var(--bg);
+  }
+  footer.site-footer a { color: var(--text-dim); }
+  footer.site-footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html">Germany in Maps</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Home</a>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#political-map">Map visualizations</a>
+          <a href="../index.html#political-trend">Trend visualizations</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#demo-map">Map visualization</a>
+          <a href="../index.html#demo-trend">Trend visualization</a>
+        </div>
+      </div>
+      <a class="nav-link current" href="../index.html#stories">Stories</a>
+      <a class="nav-link" href="../about/project.html">About</a>
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <div class="mobile-group-title">Political</div>
+    <a href="../index.html#political-map">Map visualizations</a>
+    <a href="../index.html#political-trend">Trend visualizations</a>
+    <div class="mobile-group-title">Demographics &amp; Economy</div>
+    <a href="../index.html#demo-map">Map visualization</a>
+    <a href="../index.html#demo-trend">Trend visualization</a>
+    <a href="../index.html#stories">Stories</a>
+    <a href="../about/project.html">About</a>
+  </div>
+</nav>
+
+<div id="progressDots"></div>
+
+<div id="storyRoot">
+  <div id="stage">
+    <div id="chartWrap">
+      <svg id="chart" viewBox="0 0 900 460" preserveAspectRatio="xMidYMid meet">
+        <g id="markerGroup"></g>
+        <g id="axisGroup"></g>
+        <text class="chart-title" id="chartTitle" x="60" y="18">Berlin</text>
+        <text class="chart-subtitle" id="chartSubtitle" x="60" y="440">Current standing composite (federal + state + European); Berlin is tracked as a single citywide result, not an average · 1990–2026</text>
+        <g id="datasetGroup" class="chart-dataset"></g>
+        <g id="econGroup"></g>
+      </svg>
+    </div>
+    <div id="stageVeil"></div>
+    <div id="eyebrowFloat"></div>
+    <div id="legendFloat"></div>
+  </div>
+
+  <div id="steps">
+    <section class="hero">
+      <div class="kicker">A Germany in Maps story</div>
+      <h1>Berlin: Four Parties, Real Competition</h1>
+      <p>Unlike every other state in this series, Berlin doesn't reduce to a two-party or opposition-flip story. Four parties have taken real turns as the city's leading force — and the AfD, unusually, isn't one of them.</p>
+      <div class="scroll-hint"><span class="arrow">↓</span> Scroll to begin</div>
+    </section>
+
+    <section class="step" data-step="0">
+      <div class="step-card">
+        <div class="step-eyebrow">Berlin since 1990</div>
+        <h2 class="step-headline">The one place SPD never really lost</h2>
+        <p class="step-body">SPD has led or come close in almost every federal election since reunification, from <strong>30.6%</strong> in 1990 to a 2021 result of <strong>23.4%</strong> that still put it first, narrowly, over the Greens.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="1">
+      <div class="step-card">
+        <div class="step-eyebrow">The traditional rival</div>
+        <h2 class="step-headline">CDU, strong once, fading since</h2>
+        <p class="step-body">CDU actually led Berlin in 1990 (<strong>39.4%</strong>), reunification's immediate aftermath. It never got that high again, falling to <strong>15.9%</strong> by 2021 — a collapse steeper than almost any other state in this series.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="2">
+      <div class="step-card">
+        <div class="step-eyebrow">The enduring third force</div>
+        <h2 class="step-headline">Die Linke never really left</h2>
+        <p class="step-body">Add Die Linke and its consistency stands out: double digits in every single election since 1990, and part of Berlin's governing coalition for most of 2001–2011 and again 2016–2023 — longer than in any other state measured here.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="3">
+      <div class="step-card">
+        <div class="step-eyebrow">The rising fourth force</div>
+        <h2 class="step-headline">Then Greens nearly overtook everyone</h2>
+        <p class="step-body">In the 2019 European election, Berlin's Greens hit <strong>27.6%</strong> — ahead of every other party in the city that year. By the 2021 federal election they stood at <strong>22.4%</strong>, effectively tied with SPD for first place.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="4">
+      <div class="step-card">
+        <div class="step-eyebrow">Where the AfD stands</div>
+        <h2 class="step-headline">The weakest AfD result in this series</h2>
+        <p class="step-body">AfD reached just <strong>15.2%</strong> in Berlin's 2025 federal result — its lowest peak of any state or region examined in this series so far, well under half its Sachsen or Sachsen-Anhalt share.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="5">
+      <div class="step-card">
+        <div class="step-eyebrow">The economic picture</div>
+        <h2 class="step-headline">Income slipped, GDP boomed — AfD stayed the weakest</h2>
+        <p class="step-body">Berlin is the one exception in this series: its income share actually <em>fell</em> relative to the national average, from <strong>94.5%</strong> in 2001 to <strong>91.9%</strong> in 2019, even as GDP per capita nearly doubled (€25,500 to €42,900) and debt per capita fell sharply (€14,000 to €12,300, after Berlin's post-reunification debt consolidation). If economic anxiety alone drove the AfD, Berlin's numbers point the wrong way — and its AfD result stayed the weakest of any state examined in this series.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="6">
+      <div class="step-card">
+        <div class="step-eyebrow">One city, four real contenders</div>
+        <h2 class="step-headline">No opposition-flip story here</h2>
+        <p class="step-body">SPD, CDU, Die Linke and the Greens have all taken real turns leading or nearly leading Berlin. Because Berlin is tracked here as a single citywide result rather than an average of many municipalities, these numbers are Berlin's actual results, not a statistical approximation.</p>
+        <div class="closing-cta">
+          <a class="primary" href="../map-current-standing-trends/">Open the current standing tool →</a>
+          <a href="../map-trends/">Open the swing map →</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="methodology-note">
+    <h3>How these numbers are computed</h3>
+    <p>This chart uses the same <strong>current standing</strong> composite as the Current Standing tool. Unlike every other story in this series, Berlin is recorded as a <strong>single citywide unit</strong> in the underlying dataset rather than hundreds of separate municipalities, so there is no municipality-averaging bias here — these are Berlin's actual results. That single-record structure does have one side effect: a party that narrowly misses the top five citywide is recorded as zero rather than averaged down. AfD's 2021 federal result (10.3%, sixth place behind the FDP) fell into that gap in the raw data; this chart uses the correct official figure instead.</p>
+  </section>
+</div>
+
+<footer class="site-footer">
+  Made with ❤️ by @shahabday<br>
+  Email: <a href="mailto:shahabdaiani@gmail.com">shahabdaiani@gmail.com</a> · Instagram: <a href="https://instagram.com/shahabday" target="_blank" rel="noopener">@shahabday</a> · Website: <a href="https://shahabwrites.com" target="_blank" rel="noopener">shahabwrites.com</a>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  const PARTY_COLORS = {"spd": "#E3000F", "cdu": "#8a8f99", "linke_pds": "#BE3075", "gruene": "#46962B", "afd": "#009EE0"};
+  const PARTY_LABELS = {"spd": "SPD", "cdu": "CDU", "linke_pds": "Die Linke", "gruene": "Gr\u00fcne", "afd": "AfD"};
+  const PARTY_ORDER = ["spd", "cdu", "linke_pds", "gruene", "afd"];
+
+  const YEARS = [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+  const ELECTION_YEARS = [1990, 1994, 1998, 2002, 2005, 2009, 2013, 2017, 2021, 2025];
+  const DATA = {"spd": [30.62, 30.62, 30.62, 30.62, 34.0, 23.56, 23.56, 23.56, 37.84, 22.37, 22.37, 29.68, 36.6, 36.6, 36.6, 34.35, 30.79, 30.79, 30.79, 20.2, 20.2, 28.29, 28.29, 24.58, 23.66, 23.66, 21.55, 17.88, 17.88, 13.92, 13.92, 23.45, 23.45, 18.39, 13.17, 15.14, 12.11], "cdu": [39.38, 39.38, 39.38, 39.38, 31.39, 37.44, 37.44, 37.44, 23.67, 40.76, 40.76, 23.76, 25.85, 25.85, 25.85, 22.01, 21.35, 21.35, 21.35, 22.81, 22.81, 23.35, 23.35, 28.45, 19.72, 19.72, 17.61, 22.7, 22.7, 15.08, 15.08, 15.86, 15.86, 28.23, 17.49, 18.27, 18.77], "linke_pds": [9.72, 9.72, 9.72, 9.72, 14.85, 14.63, 14.63, 14.63, 13.45, 17.71, 17.71, 22.56, 11.36, 11.36, 11.36, 16.35, 13.44, 13.44, 13.44, 20.23, 20.23, 11.71, 11.71, 18.49, 15.99, 15.99, 15.64, 18.79, 18.79, 11.83, 11.83, 11.44, 11.44, 12.2, 0.0, 19.86, 25.65], "gruene": [7.23, 7.23, 7.23, 7.23, 10.22, 13.18, 13.18, 13.18, 11.33, 9.93, 9.93, 9.12, 14.64, 14.64, 14.64, 13.71, 13.13, 13.13, 13.13, 17.38, 17.38, 17.59, 17.59, 12.35, 18.76, 18.76, 15.19, 12.57, 12.57, 27.58, 27.58, 22.37, 22.37, 18.82, 19.46, 16.83, 14.29], "afd": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 4.93, 7.79, 7.79, 14.16, 12.05, 12.05, 9.81, 9.81, 10.3, 10.3, 9.09, 11.54, 15.23, 16.26]};
+  const ECON = {"years": [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019], "values": [94.5, 94.2, 91.7, 92.9, 92.0, 92.4, 92.1, 92.5, 94.3, 92.9, 92.0, 90.8, 90.7, 89.8, 90.8, 90.4, 91.9, 91.4, 91.9], "min": 87, "max": 97, "label": "Household income, % of national average"};
+
+  const CHART = { x0: 60, x1: 870, y0: 34, y1: 400, yMax: 45, xMin: 1990, xMax: 2026 };
+  function xPos(year) { return CHART.x0 + ((year - CHART.xMin) / (CHART.xMax - CHART.xMin)) * (CHART.x1 - CHART.x0); }
+  function yPos(pct) { return CHART.y1 - (pct / CHART.yMax) * (CHART.y1 - CHART.y0); }
+  function yPosEcon(val) { return CHART.y1 - ((val - ECON.min) / (ECON.max - ECON.min)) * (CHART.y1 - CHART.y0); }
+  const NS = "http://www.w3.org/2000/svg";
+  function svgEl(tag, attrs) {
+    const el = document.createElementNS(NS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  function buildAxis() {
+    const g = document.getElementById("axisGroup");
+    for (let pct = 0; pct <= CHART.yMax; pct += 10) {
+      const y = yPos(pct);
+      g.appendChild(svgEl("line", { class: "axis-line", x1: CHART.x0, x2: CHART.x1, y1: y, y2: y }));
+      const t = svgEl("text", { class: "axis-label y", x: CHART.x0 - 10, y: y + 4 });
+      t.textContent = pct + "%";
+      g.appendChild(t);
+    }
+    ELECTION_YEARS.forEach((yr) => {
+      const x = xPos(yr);
+      g.appendChild(svgEl("line", { class: "axis-line", x1: x, x2: x, y1: CHART.y1, y2: CHART.y1 + 6 }));
+      const t = svgEl("text", { class: "axis-label x", x: x, y: CHART.y1 + 22 });
+      t.textContent = yr;
+      g.appendChild(t);
+    });
+  }
+
+  function buildDataset() {
+    const group = document.getElementById("datasetGroup");
+    PARTY_ORDER.forEach((party) => {
+      const pg = svgEl("g", { class: "party-group", "data-party": party });
+      const values = DATA[party];
+      const d = values.map((v, i) => (i === 0 ? "M" : "L") + xPos(YEARS[i]).toFixed(1) + "," + yPos(v).toFixed(1)).join(" ");
+      pg.appendChild(svgEl("path", { class: "party-line", d: d, stroke: PARTY_COLORS[party] }));
+      YEARS.forEach((yr, i) => {
+        if (ELECTION_YEARS.indexOf(yr) === -1) return;
+        pg.appendChild(svgEl("circle", { class: "party-dot", cx: xPos(yr).toFixed(1), cy: yPos(values[i]).toFixed(1), r: 3.2, fill: PARTY_COLORS[party] }));
+      });
+      group.appendChild(pg);
+    });
+  }
+
+  function buildEcon() {
+    const g = document.getElementById("econGroup");
+    if (!ECON.years || !ECON.years.length) return;
+    g.appendChild(svgEl("line", { class: "econ-ref-line", x1: CHART.x0, x2: CHART.x1, y1: yPosEcon(100), y2: yPosEcon(100) }));
+    const refLabel = svgEl("text", { class: "axis-label y2", x: CHART.x1 + 8, y: yPosEcon(100) + 4 });
+    refLabel.textContent = "nat'l avg";
+    g.appendChild(refLabel);
+    [ECON.min, ECON.max].forEach((v) => {
+      const t = svgEl("text", { class: "axis-label y2", x: CHART.x1 + 8, y: yPosEcon(v) + 4 });
+      t.textContent = Math.round(v) + "%";
+      g.appendChild(t);
+    });
+    const d = ECON.years.map((yr, i) => (i === 0 ? "M" : "L") + xPos(yr).toFixed(1) + "," + yPosEcon(ECON.values[i]).toFixed(1)).join(" ");
+    g.appendChild(svgEl("path", { class: "econ-line", d: d }));
+    ECON.years.forEach((yr, i) => {
+      if (i % 3 !== 0 && i !== ECON.years.length - 1) return;
+      g.appendChild(svgEl("circle", { class: "econ-dot", cx: xPos(yr).toFixed(1), cy: yPosEcon(ECON.values[i]).toFixed(1), r: 2.6 }));
+    });
+  }
+
+  buildAxis();
+  buildDataset();
+  buildEcon();
+
+  function renderMarkers(markers) {
+    const g = document.getElementById("markerGroup");
+    g.innerHTML = "";
+    (markers || []).forEach((m) => {
+      if (m.type === "band") {
+        const x1 = xPos(m.from), x2 = xPos(m.to);
+        const mg = svgEl("g", { class: "chart-marker" });
+        mg.appendChild(svgEl("rect", { x: x1, y: CHART.y0, width: x2 - x1, height: CHART.y1 - CHART.y0, fill: "var(--accent)" }));
+        mg.appendChild(svgEl("line", { x1: x1, x2: x1, y1: CHART.y0, y2: CHART.y1, stroke: "var(--accent)" }));
+        mg.appendChild(svgEl("line", { x1: x2, x2: x2, y1: CHART.y0, y2: CHART.y1, stroke: "var(--accent)" }));
+        const t = svgEl("text", { x: (x1 + x2) / 2, y: CHART.y0 + 12, fill: "var(--accent)", "text-anchor": "middle" });
+        t.textContent = m.label;
+        mg.appendChild(t);
+        g.appendChild(mg);
+        return;
+      }
+      const x = xPos(m.year);
+      const mg = svgEl("g", { class: "chart-marker" });
+      mg.appendChild(svgEl("line", { x1: x, x2: x, y1: CHART.y0, y2: CHART.y1, stroke: "var(--accent)" }));
+      const t = svgEl("text", { x: x + 6, y: CHART.y0 + 12, fill: "var(--accent)" });
+      t.textContent = m.label;
+      mg.appendChild(t);
+      g.appendChild(mg);
+    });
+  }
+
+  function buildLegend(step) {
+    const el = document.getElementById("legendFloat");
+    let rows = PARTY_ORDER.map((p) => {
+      const level = step.lines[p] || 0;
+      const op = level === 0 ? 0.25 : 1;
+      return '<div class="row" style="opacity:' + op + '"><span class="sw" style="background:' + PARTY_COLORS[p] + '"></span>' + PARTY_LABELS[p] + "</div>";
+    });
+    if (step.econ) {
+      rows.push('<div class="row"><span class="sw" style="background:#e0b84a"></span>' + (ECON.label || "Income, % of nat'l avg") + "</div>");
+    }
+    el.innerHTML = rows.join("");
+    el.classList.add("show");
+  }
+
+  const STEPS = [{"lines": {"spd": 1, "cdu": 0, "linke_pds": 0, "gruene": 0, "afd": 0}}, {"lines": {"spd": 1, "cdu": 1, "linke_pds": 0, "gruene": 0, "afd": 0}}, {"lines": {"spd": 1, "cdu": 0.3, "linke_pds": 1, "gruene": 0, "afd": 0}}, {"lines": {"spd": 1, "cdu": 0.3, "linke_pds": 0.3, "gruene": 1, "afd": 0}, "markers": [{"year": 2019, "label": "Greens 27.6%, European election"}]}, {"lines": {"spd": 0.3, "cdu": 0.3, "linke_pds": 0.3, "gruene": 0.3, "afd": 1}}, {"lines": {"spd": 0.15, "cdu": 0.15, "linke_pds": 0.15, "gruene": 0.15, "afd": 0.15}, "econ": true}, {"lines": {"spd": 1, "cdu": 1, "linke_pds": 1, "gruene": 1, "afd": 0.5}}];
+
+  function applyStep(index) {
+    const step = STEPS[index];
+    const group = document.getElementById("datasetGroup");
+    group.querySelectorAll(".party-group").forEach((pg) => {
+      const party = pg.getAttribute("data-party");
+      const level = step.lines[party] != null ? step.lines[party] : 1;
+      pg.style.opacity = level;
+      pg.querySelector(".party-line").style.strokeWidth = level >= 1 ? 3.4 : 2.2;
+    });
+    document.getElementById("econGroup").classList.toggle("show", !!step.econ);
+    renderMarkers(step.markers);
+    buildLegend(step);
+  }
+
+  const eyebrowFloat = document.getElementById("eyebrowFloat");
+  const dotsWrap = document.getElementById("progressDots");
+  const stepEls = Array.from(document.querySelectorAll(".step"));
+  const eyebrows = stepEls.map((el) => el.querySelector(".step-eyebrow").textContent);
+
+  stepEls.forEach((_, i) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.setAttribute("aria-label", "Go to step " + (i + 1));
+    dot.addEventListener("click", () => stepEls[i].scrollIntoView({ behavior: "smooth", block: "center" }));
+    dotsWrap.appendChild(dot);
+  });
+  const dotEls = Array.from(dotsWrap.children);
+
+  let currentIndex = -1;
+  function setActive(index) {
+    if (index === currentIndex) return;
+    currentIndex = index;
+    applyStep(index);
+    eyebrowFloat.textContent = eyebrows[index];
+    eyebrowFloat.classList.add("show");
+    dotEls.forEach((d, i) => d.classList.toggle("active", i === index));
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      entry.target.classList.toggle("in-view", entry.isIntersecting);
+      if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+        setActive(Number(entry.target.dataset.step));
+      }
+    });
+  }, { threshold: [0, 0.5, 0.75] });
+  stepEls.forEach((el) => observer.observe(el));
+
+  applyStep(0);
+
+  document.querySelectorAll(".dropdown").forEach((dd) => {
+    const toggle = dd.querySelector(".dropdown-toggle");
+    const menu = dd.querySelector(".dropdown-menu");
+    if (!toggle || !menu) return;
+    const position = () => {
+      const r = toggle.getBoundingClientRect();
+      menu.style.left = Math.round(r.left) + "px";
+      menu.style.top = Math.round(r.bottom + 4) + "px";
+    };
+    dd.addEventListener("mouseenter", position);
+    toggle.addEventListener("focus", position);
+    window.addEventListener("resize", position);
+    window.addEventListener("scroll", position, true);
+  });
+
+  document.querySelectorAll(".topnav").forEach((nav) => {
+    const toggle = nav.querySelector(".nav-toggle");
+    const menu = nav.querySelector(".mobile-menu");
+    if (!toggle || !menu) return;
+    toggle.addEventListener("click", () => {
+      const open = menu.classList.toggle("open");
+      toggle.classList.toggle("open", open);
+    });
+    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+      menu.classList.remove("open");
+      toggle.classList.remove("open");
+    }));
+  });
+})();
+</script>
+</body>
+</html>

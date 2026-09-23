@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Read a Bundestag Map — Germany in Maps</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel-border: #2a2e38;
+    --text: #e8eaed; --text-dim: #9aa0ab; --accent: #4a90e2; --afd: #009EE0; --risk: #e0622f;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  a { color: inherit; }
+
+  /* ---- top nav ---- */
+  .topnav {
+    position: relative; z-index: 2000; height: 54px; flex-shrink: 0;
+    background: rgba(15, 17, 21, 0.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--panel-border);
+  }
+  .topnav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 54px;
+    display: flex; align-items: center; gap: 22px;
+  }
+  .topnav .brand { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+  .topnav .nav-links { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .topnav .nav-link { white-space: nowrap; font-size: 13px; color: var(--text-dim); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
+  .topnav .nav-link:hover { color: var(--text); background: #1e222b; }
+  .dropdown { position: relative; }
+  .dropdown-toggle {
+    font: inherit; font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer;
+    padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .dropdown-toggle:hover, .dropdown:focus-within .dropdown-toggle { color: var(--text); background: #1e222b; }
+  .dropdown-caret { font-size: 9px; transition: transform 0.15s; }
+  .dropdown:hover .dropdown-caret, .dropdown:focus-within .dropdown-caret { transform: rotate(180deg); }
+  .dropdown-menu {
+    position: fixed; top: 0; left: 0; min-width: 170px;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5); padding: 6px; display: flex; flex-direction: column; gap: 2px;
+    z-index: 2500; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.12s;
+  }
+  .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+  .dropdown-menu a { font-size: 12.5px; color: var(--text-dim); text-decoration: none; padding: 7px 9px; border-radius: 6px; }
+  .dropdown-menu a:hover { color: var(--text); background: #20242e; }
+
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 4px;
+    width: 30px; height: 30px; background: none; border: none; cursor: pointer; padding: 0; margin-left: auto; flex-shrink: 0;
+  }
+  .nav-toggle span { display: block; width: 100%; height: 2px; background: var(--text-dim); border-radius: 2px; transition: transform 0.15s, opacity 0.15s; }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 2100;
+    flex-direction: column; padding: 6px 16px 16px; background: var(--bg); border-bottom: 1px solid var(--panel-border);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.5); max-height: calc(100vh - 54px); overflow-y: auto;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 14px; color: var(--text-dim); text-decoration: none; padding: 10px 6px; border-radius: 6px; }
+  .mobile-menu a:hover { color: var(--text); background: #1e222b; }
+  .mobile-menu .mobile-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); opacity: 0.65; margin: 10px 6px 0; }
+
+  @media (max-width: 760px) {
+    .topnav .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+  }
+
+  /* ---- story ---- */
+  #storyRoot { position: relative; }
+
+  #stage {
+    position: sticky; top: 54px; height: calc(100vh - 54px); width: 100%;
+    overflow: hidden; background: #0b0d11; z-index: 1;
+  }
+  #map { position: absolute; inset: 0; background: #0b0d11; }
+  #map .leaflet-container { background: #0b0d11; }
+  #map .leaflet-interactive { transition: fill 0.9s ease, fill-opacity 0.9s ease, stroke 0.9s ease, stroke-width 0.5s ease; }
+
+  #stageVeil {
+    position: absolute; inset: 0; pointer-events: none; z-index: 400;
+    background: linear-gradient(90deg, rgba(11,13,17,0.88) 0%, rgba(11,13,17,0.55) 32%, rgba(11,13,17,0.0) 62%);
+  }
+  @media (max-width: 760px) { #stageVeil { background: rgba(11,13,17,0.72); } }
+
+  #eyebrowFloat {
+    position: absolute; top: 28px; left: 32px; z-index: 401; pointer-events: none;
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim);
+    opacity: 0; transition: opacity 0.5s ease;
+  }
+  #eyebrowFloat.show { opacity: 1; }
+
+  #legendFloat {
+    position: absolute; right: 22px; bottom: 22px; z-index: 401; pointer-events: none;
+    font-size: 11px; color: var(--text-dim); background: rgba(15,17,21,0.75); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 8px 12px; opacity: 0; transition: opacity 0.5s ease; max-width: 220px;
+  }
+  #legendFloat.show { opacity: 1; }
+  #legendFloat .row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  #legendFloat .row:last-child { margin-bottom: 0; }
+  #legendFloat .sw { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  @media (max-width: 760px) { #legendFloat { display: none; } }
+
+  #progressDots {
+    position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 500;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  #progressDots button {
+    width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--text-dim); background: transparent;
+    padding: 0; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  #progressDots button.active { background: var(--accent); border-color: var(--accent); transform: scale(1.3); }
+  @media (max-width: 760px) { #progressDots { display: none; } }
+
+  #steps { position: relative; z-index: 2; margin-top: calc(-100vh + 54px); pointer-events: none; }
+  #steps .hero, #steps .step { pointer-events: none; }
+  #steps a, #steps button { pointer-events: auto; }
+
+  .hero {
+    min-height: calc(100vh - 54px); display: flex; flex-direction: column; align-items: flex-start;
+    justify-content: center; padding: 40px 8vw; max-width: 900px;
+  }
+  .hero .kicker { font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(30px, 4.6vw, 52px); font-weight: 800; line-height: 1.1; margin: 0 0 20px; }
+  .hero p { font-size: 15.5px; color: var(--text-dim); line-height: 1.7; max-width: 560px; margin: 0 0 28px; }
+  .hero .scroll-hint { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
+  .hero .scroll-hint .arrow { animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  .step { min-height: 100vh; display: flex; align-items: center; padding: 60px 8vw; }
+  .step-card {
+    max-width: 500px; opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .step.in-view .step-card { opacity: 1; transform: translateY(0); }
+  .step-eyebrow { font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+  .step-headline { font-size: clamp(24px, 3.2vw, 34px); font-weight: 800; line-height: 1.15; margin: 0 0 16px; }
+  .step-body { font-size: 14.5px; color: var(--text-dim); line-height: 1.75; margin: 0; }
+  .step-body strong { color: var(--text); }
+
+  .closing-cta { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .closing-cta a {
+    font-size: 12.5px; font-weight: 600; text-decoration: none; padding: 9px 15px; border-radius: 6px;
+    border: 1px solid var(--panel-border); color: var(--text);
+  }
+  .closing-cta a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .closing-cta a:hover { filter: brightness(1.1); }
+
+  footer.site-footer {
+    position: relative; z-index: 3; margin-top: 0; padding: 26px 8vw 40px; border-top: 1px solid var(--panel-border);
+    font-size: 11.5px; color: var(--text-dim); line-height: 1.7; background: var(--bg);
+  }
+  footer.site-footer a { color: var(--text-dim); }
+  footer.site-footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html">Germany in Maps</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Home</a>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#political-map">Map visualizations</a>
+          <a href="../index.html#political-trend">Trend visualizations</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#demo-map">Map visualization</a>
+          <a href="../index.html#demo-trend">Trend visualization</a>
+        </div>
+      </div>
+      <a class="nav-link current" href="../index.html#stories">Stories</a>
+      <a class="nav-link" href="../about/project.html">About</a>
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <div class="mobile-group-title">Political</div>
+    <a href="../index.html#political-map">Map visualizations</a>
+    <a href="../index.html#political-trend">Trend visualizations</a>
+    <div class="mobile-group-title">Demographics &amp; Economy</div>
+    <a href="../index.html#demo-map">Map visualization</a>
+    <a href="../index.html#demo-trend">Trend visualization</a>
+    <a href="../index.html#stories">Stories</a>
+    <a href="../about/project.html">About</a>
+  </div>
+</nav>
+
+<div id="progressDots"></div>
+
+<div id="storyRoot">
+  <div id="stage">
+    <div id="map"></div>
+    <div id="stageVeil"></div>
+    <div id="eyebrowFloat"></div>
+    <div id="legendFloat"></div>
+  </div>
+
+  <div id="steps">
+    <section class="hero">
+      <div class="kicker">A Germany in Maps story</div>
+      <h1>How to Read a Bundestag Map</h1>
+      <p>Nine tools, one shared language. Before diving into any single story, here's what these maps actually show — using nothing but real Bundestag (federal) election results, compared between 2021 and 2025.</p>
+      <div class="scroll-hint"><span class="arrow">↓</span> Scroll to begin</div>
+    </section>
+
+    <section class="step" data-step="0">
+      <div class="step-card">
+        <div class="step-eyebrow">The basic map</div>
+        <h2 class="step-headline">One seat, one color</h2>
+        <p class="step-body">Germany elects 299 constituencies directly — the <strong>Erststimme</strong>, or first vote. Whoever gets the most votes in a constituency wins it outright, winner-take-all. Color here is simply that winner's party. This is the real 2025 result, by state.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="1">
+      <div class="step-card">
+        <div class="step-eyebrow">Party growth</div>
+        <h2 class="step-headline">What "growth" means on a map</h2>
+        <p class="step-body">A single map only shows one moment. Compare the <em>same</em> area across two elections and you get a <strong>swing</strong> — this year's share minus last time's, in percentage points (pp). Here's the AfD's growth from 2021 to 2025: <strong>+13.1pp</strong> nationally on average, peaking at <strong>+36.5pp</strong> in one small municipality alone.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="2">
+      <div class="step-card">
+        <div class="step-eyebrow">Flipped areas</div>
+        <h2 class="step-headline">When the winner changes</h2>
+        <p class="step-body">An area "flips" when a <em>different</em> party wins it than last time — regardless of how big the swing was. Between 2021 and 2025, <strong>4,477</strong> of Germany's ~10,400 municipalities — <strong>43%</strong> — flipped to a new winner. Most went to the CDU/CSU (2,875); the AfD picked up 1,594.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="3">
+      <div class="step-card">
+        <div class="step-eyebrow">At risk</div>
+        <h2 class="step-headline">Reading the next election, early</h2>
+        <p class="step-body">"At risk" isn't about who's ahead — it's about who's catching up. For every area, we track its fastest-rising challenger and ask: if that same rate of growth repeats next time, would it overtake the leader? <strong>2,487</strong> municipalities — <strong>24%</strong> — are flagged at risk right now. In 96% of them, the rising challenger is the AfD.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="4">
+      <div class="step-card">
+        <div class="step-eyebrow">Turnout</div>
+        <h2 class="step-headline">The map isn't just about who wins</h2>
+        <p class="step-body">Turnout change matters just as much as vote share. 2025 brought Germany's highest Bundestag turnout since reunification — <strong>82.5%</strong> nationally, up an average of <strong>+5.6pp</strong>, and rising in almost every part of the country.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="5">
+      <div class="step-card">
+        <div class="step-eyebrow">Now you know the language</div>
+        <h2 class="step-headline">Growth. Flips. Risk. Turnout.</h2>
+        <p class="step-body">Four ways of reading the exact same underlying results. Every map on this site uses some combination of them. Pick any two elections and any party yourself in the swing tool, or head back to the base results map.</p>
+        <div class="closing-cta">
+          <a class="primary" href="../map-trends/">Open the swing map →</a>
+          <a href="../map/">Open the election map →</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<footer class="site-footer">
+  Made with ❤️ by @shahabday<br>
+  Email: <a href="mailto:shahabdaiani@gmail.com">shahabdaiani@gmail.com</a> · Instagram: <a href="https://instagram.com/shahabday" target="_blank" rel="noopener">@shahabday</a> · Website: <a href="https://shahabwrites.com" target="_blank" rel="noopener">shahabwrites.com</a>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const PARTY_COLORS = {
+    cdu: "#4D4D52", csu: "#4D4D52", cdu_csu: "#4D4D52",
+    spd: "#E3000F", gruene: "#46962B", fdp: "#FFED00",
+    linke_pds: "#BE3075", die_linke: "#BE3075", afd: "#009EE0",
+    bsw: "#7D2E68", other: "#6f7580",
+  };
+  const PARTY_LABELS = {
+    cdu_csu: "CDU/CSU", spd: "SPD", gruene: "Grüne", fdp: "FDP",
+    linke_pds: "Die Linke", afd: "AfD", bsw: "BSW", other: "Other",
+  };
+  const ACCENT = "#4a90e2";
+  const RISK_COLOR = "#e0622f";
+  const DIM = "#3a3f4a";
+
+  const STATE_WINNERS_2025 = { "01":"cdu","02":"spd","03":"cdu","04":"spd","05":"cdu","06":"cdu","07":"cdu","08":"cdu","09":"csu","10":"cdu","11":"linke_pds","12":"afd","13":"afd","14":"afd","15":"afd","16":"afd" };
+  const AFD_SWING_BY_STATE = { "01":0.119,"02":0.109,"03":0.114,"04":0.132,"05":0.106,"06":0.107,"07":0.120,"08":0.115,"09":0.129,"10":0.117,"11":0.152,"12":0.165,"13":0.193,"14":0.147,"15":0.194,"16":0.159 };
+  const TURNOUT_DELTA_BY_STATE = { "01":0.048,"02":0.030,"03":0.078,"04":0.064,"05":0.054,"06":0.067,"07":0.051,"08":0.055,"09":0.040,"10":0.047,"11":0.051,"12":0.063,"13":0.088,"14":0.041,"15":0.103,"16":0.050 };
+  const MAX_SWING = 0.20;
+  const MAX_TURNOUT = 0.11;
+  const RISK_CAP = 0.15;
+
+  const STEPS = [
+    { kind: "winner", legend: [["cdu_csu","CDU/CSU"],["spd","SPD"],["afd","AfD"],["linke_pds","Die Linke"]] },
+    { kind: "swing", legend: [["afd","AfD growth, 2021→2025"]] },
+    { kind: "flip", legend: null },
+    { kind: "risk", legend: null },
+    { kind: "turnout", legend: [["turnout","Turnout change, 2021→2025"]] },
+    { kind: "winner", legend: [["cdu_csu","CDU/CSU"],["spd","SPD"],["afd","AfD"],["linke_pds","Die Linke"]] },
+  ];
+
+  const map = L.map("map", { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, touchZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false });
+  map.setView([51.1, 10.4], 6);
+
+  function opacityForShare(share, max, floor) {
+    const t = Math.max(0, Math.min(1, share / max));
+    return floor + t * (0.92 - floor);
+  }
+
+  function styleStateFeature(code, step) {
+    if (step.kind === "winner") {
+      const party = STATE_WINNERS_2025[code] || "other";
+      return { color: "#0b0d11", weight: 0.7, fillColor: PARTY_COLORS[party], fillOpacity: 0.85 };
+    }
+    if (step.kind === "swing") {
+      const v = AFD_SWING_BY_STATE[code] || 0;
+      return { color: "#0b0d11", weight: 0.6, fillColor: PARTY_COLORS.afd, fillOpacity: opacityForShare(v, MAX_SWING, 0.1) };
+    }
+    if (step.kind === "turnout") {
+      const v = TURNOUT_DELTA_BY_STATE[code] || 0;
+      return { color: "#0b0d11", weight: 0.6, fillColor: ACCENT, fillOpacity: opacityForShare(v, MAX_TURNOUT, 0.12) };
+    }
+    return { color: "#0b0d11", weight: 0.6, fillColor: DIM, fillOpacity: 0.1 };
+  }
+
+  function styleMuniFeature(rec, step) {
+    if (!rec) return { stroke: false, fillColor: DIM, fillOpacity: 0.05 };
+    if (step.kind === "flip") {
+      if (rec.f === 1) {
+        const party = rec.w1 || "other";
+        return { stroke: false, fillColor: PARTY_COLORS[party] || PARTY_COLORS.other, fillOpacity: 0.88 };
+      }
+      return { stroke: false, fillColor: DIM, fillOpacity: 0.07 };
+    }
+    if (step.kind === "risk") {
+      if (rec.risk) {
+        const proj = rec.proj != null ? rec.proj : RISK_CAP;
+        const t = 1 - Math.max(0, Math.min(proj / RISK_CAP, 1));
+        return { stroke: false, fillColor: RISK_COLOR, fillOpacity: 0.25 + t * 0.65 };
+      }
+      return { stroke: false, fillColor: DIM, fillOpacity: 0.06 };
+    }
+    return { stroke: false, fillColor: DIM, fillOpacity: 0.05 };
+  }
+
+  let stateLayer = null;
+  let stateBounds = null;
+  let muniLayer = null;
+  let swingRecords = null;
+
+  function buildLegend(step) {
+    const el = document.getElementById("legendFloat");
+    if (!step.legend) { el.classList.remove("show"); return; }
+    el.innerHTML = step.legend.map(([key, label]) => {
+      const color = key === "turnout" ? ACCENT : (PARTY_COLORS[key] || PARTY_COLORS.other);
+      return `<div class="row"><span class="sw" style="background:${color}"></span>${label}</div>`;
+    }).join("");
+    el.classList.add("show");
+  }
+
+  function applyStep(index) {
+    const step = STEPS[index];
+    const useMuni = step.kind === "flip" || step.kind === "risk";
+
+    if (useMuni) {
+      if (stateLayer && map.hasLayer(stateLayer)) map.removeLayer(stateLayer);
+      if (muniLayer) {
+        if (!map.hasLayer(muniLayer)) muniLayer.addTo(map);
+        muniLayer.eachLayer((lyr) => {
+          const rec = swingRecords[lyr.feature.properties.ags];
+          lyr.setStyle(styleMuniFeature(rec, step));
+        });
+      }
+    } else {
+      if (muniLayer && map.hasLayer(muniLayer)) map.removeLayer(muniLayer);
+      if (stateLayer) {
+        if (!map.hasLayer(stateLayer)) stateLayer.addTo(map);
+        stateLayer.eachLayer((lyr) => {
+          lyr.setStyle(styleStateFeature(lyr.feature.properties.code, step));
+        });
+      }
+    }
+
+    if (stateBounds) {
+      map.flyToBounds(stateBounds, { paddingTopLeft: [40, 40], paddingBottomRight: [40, 40], duration: 1.2 });
+    }
+    buildLegend(step);
+  }
+
+  Promise.all([
+    fetch("data/state_outlines.geojson").then((r) => r.json()),
+    fetch("data/gemeinden.geojson").then((r) => r.json()),
+    fetch("data/swing_2021_2025.json").then((r) => r.json()),
+  ]).then(([stateGeo, muniGeo, swingData]) => {
+    swingRecords = swingData;
+
+    stateLayer = L.geoJSON(stateGeo, { style: (f) => styleStateFeature(f.properties.code, STEPS[0]) });
+    stateBounds = stateLayer.getBounds();
+    stateLayer.addTo(map);
+    map.flyToBounds(stateBounds, { paddingTopLeft: [40, 40], paddingBottomRight: [40, 40], duration: 0 });
+
+    muniLayer = L.geoJSON(muniGeo, {
+      renderer: L.canvas({ padding: 0.3 }),
+      interactive: false,
+      style: (f) => styleMuniFeature(swingRecords[f.properties.ags], STEPS[2]),
+    });
+
+    initObserver();
+  });
+
+  const eyebrowFloat = document.getElementById("eyebrowFloat");
+  const dotsWrap = document.getElementById("progressDots");
+  const stepEls = Array.from(document.querySelectorAll(".step"));
+  const eyebrows = stepEls.map((el) => el.querySelector(".step-eyebrow").textContent);
+
+  stepEls.forEach((_, i) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.setAttribute("aria-label", "Go to step " + (i + 1));
+    dot.addEventListener("click", () => stepEls[i].scrollIntoView({ behavior: "smooth", block: "center" }));
+    dotsWrap.appendChild(dot);
+  });
+  const dotEls = Array.from(dotsWrap.children);
+
+  let currentIndex = -1;
+  function setActive(index) {
+    if (index === currentIndex) return;
+    currentIndex = index;
+    applyStep(index);
+    eyebrowFloat.textContent = eyebrows[index];
+    eyebrowFloat.classList.add("show");
+    dotEls.forEach((d, i) => d.classList.toggle("active", i === index));
+  }
+
+  function initObserver() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        entry.target.classList.toggle("in-view", entry.isIntersecting);
+        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+          setActive(Number(entry.target.dataset.step));
+        }
+      });
+    }, { threshold: [0, 0.5, 0.75] });
+    stepEls.forEach((el) => observer.observe(el));
+  }
+
+  document.querySelectorAll(".dropdown").forEach((dd) => {
+    const toggle = dd.querySelector(".dropdown-toggle");
+    const menu = dd.querySelector(".dropdown-menu");
+    if (!toggle || !menu) return;
+    const position = () => {
+      const r = toggle.getBoundingClientRect();
+      menu.style.left = Math.round(r.left) + "px";
+      menu.style.top = Math.round(r.bottom + 4) + "px";
+    };
+    dd.addEventListener("mouseenter", position);
+    toggle.addEventListener("focus", position);
+    window.addEventListener("resize", position);
+    window.addEventListener("scroll", position, true);
+  });
+
+  document.querySelectorAll(".topnav").forEach((nav) => {
+    const toggle = nav.querySelector(".nav-toggle");
+    const menu = nav.querySelector(".mobile-menu");
+    if (!toggle || !menu) return;
+    toggle.addEventListener("click", () => {
+      const open = menu.classList.toggle("open");
+      toggle.classList.toggle("open", open);
+    });
+    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+      menu.classList.remove("open");
+      toggle.classList.remove("open");
+    }));
+  });
+})();
+</script>
+</body>
+</html>

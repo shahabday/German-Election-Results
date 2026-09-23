@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Rise of the AfD, 2013–2025 — Germany in Maps</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel-border: #2a2e38;
+    --text: #e8eaed; --text-dim: #9aa0ab; --accent: #4a90e2; --afd: #009EE0;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  a { color: inherit; }
+
+  /* ---- top nav ---- */
+  .topnav {
+    position: relative; z-index: 2000; height: 54px; flex-shrink: 0;
+    background: rgba(15, 17, 21, 0.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--panel-border);
+  }
+  .topnav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 54px;
+    display: flex; align-items: center; gap: 22px;
+  }
+  .topnav .brand { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+  .topnav .nav-links { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .topnav .nav-link { white-space: nowrap; font-size: 13px; color: var(--text-dim); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
+  .topnav .nav-link:hover { color: var(--text); background: #1e222b; }
+  .dropdown { position: relative; }
+  .dropdown-toggle {
+    font: inherit; font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer;
+    padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .dropdown-toggle:hover, .dropdown:focus-within .dropdown-toggle { color: var(--text); background: #1e222b; }
+  .dropdown-caret { font-size: 9px; transition: transform 0.15s; }
+  .dropdown:hover .dropdown-caret, .dropdown:focus-within .dropdown-caret { transform: rotate(180deg); }
+  .dropdown-menu {
+    position: fixed; top: 0; left: 0; min-width: 170px;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5); padding: 6px; display: flex; flex-direction: column; gap: 2px;
+    z-index: 2500; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.12s;
+  }
+  .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+  .dropdown-menu a { font-size: 12.5px; color: var(--text-dim); text-decoration: none; padding: 7px 9px; border-radius: 6px; }
+  .dropdown-menu a:hover { color: var(--text); background: #20242e; }
+
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 4px;
+    width: 30px; height: 30px; background: none; border: none; cursor: pointer; padding: 0; margin-left: auto; flex-shrink: 0;
+  }
+  .nav-toggle span { display: block; width: 100%; height: 2px; background: var(--text-dim); border-radius: 2px; transition: transform 0.15s, opacity 0.15s; }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 2100;
+    flex-direction: column; padding: 6px 16px 16px; background: var(--bg); border-bottom: 1px solid var(--panel-border);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.5); max-height: calc(100vh - 54px); overflow-y: auto;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 14px; color: var(--text-dim); text-decoration: none; padding: 10px 6px; border-radius: 6px; }
+  .mobile-menu a:hover { color: var(--text); background: #1e222b; }
+  .mobile-menu .mobile-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); opacity: 0.65; margin: 10px 6px 0; }
+
+  @media (max-width: 760px) {
+    .topnav .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+  }
+
+  /* ---- story ---- */
+  #storyRoot { position: relative; }
+
+  #stage {
+    position: sticky; top: 54px; height: calc(100vh - 54px); width: 100%;
+    overflow: hidden; background: #0b0d11; z-index: 1;
+  }
+  #map { position: absolute; inset: 0; background: #0b0d11; }
+  #map .leaflet-container { background: #0b0d11; }
+  #map .leaflet-interactive { transition: fill 0.9s ease, fill-opacity 0.9s ease, stroke 0.9s ease, stroke-width 0.5s ease; }
+
+  #stageVeil {
+    position: absolute; inset: 0; pointer-events: none; z-index: 400;
+    background: linear-gradient(90deg, rgba(11,13,17,0.88) 0%, rgba(11,13,17,0.55) 32%, rgba(11,13,17,0.0) 62%);
+  }
+
+  #eyebrowFloat {
+    position: absolute; top: 28px; left: 32px; z-index: 401; pointer-events: none;
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim);
+    opacity: 0; transition: opacity 0.5s ease;
+  }
+  #eyebrowFloat.show { opacity: 1; }
+
+  #closingStat {
+    position: absolute; inset: 0; z-index: 402; display: flex; flex-direction: column;
+    align-items: flex-end; justify-content: center; text-align: right; padding: 0 6vw;
+    pointer-events: none; opacity: 0; transition: opacity 0.8s ease;
+  }
+  #closingStat.show { opacity: 1; }
+  #closingStat .num { font-size: clamp(32px, 5vw, 64px); font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; }
+  #closingStat .sub { font-size: 12px; color: var(--text-dim); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.08em; max-width: 220px; }
+  @media (max-width: 760px) { #closingStat { display: none; } }
+  @media (max-width: 760px) { #stageVeil { background: rgba(11,13,17,0.72); } }
+
+  #progressDots {
+    position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 500;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  #progressDots button {
+    width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--text-dim); background: transparent;
+    padding: 0; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  #progressDots button.active { background: var(--afd); border-color: var(--afd); transform: scale(1.3); }
+  @media (max-width: 760px) { #progressDots { display: none; } }
+
+  #steps { position: relative; z-index: 2; margin-top: calc(-100vh + 54px); pointer-events: none; }
+  #steps .hero, #steps .step { pointer-events: none; }
+  #steps a, #steps button { pointer-events: auto; }
+
+  .hero {
+    min-height: calc(100vh - 54px); display: flex; flex-direction: column; align-items: flex-start;
+    justify-content: center; padding: 40px 8vw; max-width: 900px;
+  }
+  .hero .kicker { font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--afd); font-weight: 700; margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(32px, 5vw, 56px); font-weight: 800; line-height: 1.08; margin: 0 0 20px; }
+  .hero p { font-size: 15.5px; color: var(--text-dim); line-height: 1.7; max-width: 560px; margin: 0 0 28px; }
+  .hero .scroll-hint { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
+  .hero .scroll-hint .arrow { animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  .step { min-height: 100vh; display: flex; align-items: center; padding: 60px 8vw; }
+  .step-card {
+    max-width: 480px; opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .step.in-view .step-card { opacity: 1; transform: translateY(0); }
+  .step-eyebrow { font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--afd); font-weight: 700; margin-bottom: 10px; }
+  .step-headline { font-size: clamp(24px, 3.4vw, 36px); font-weight: 800; line-height: 1.15; margin: 0 0 16px; }
+  .step-body { font-size: 14.5px; color: var(--text-dim); line-height: 1.75; margin: 0; }
+
+  .closing-cta { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .closing-cta a {
+    font-size: 12.5px; font-weight: 600; text-decoration: none; padding: 9px 15px; border-radius: 6px;
+    border: 1px solid var(--panel-border); color: var(--text);
+  }
+  .closing-cta a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .closing-cta a:hover { filter: brightness(1.1); }
+
+  footer.site-footer {
+    position: relative; z-index: 3; margin-top: 0; padding: 26px 8vw 40px; border-top: 1px solid var(--panel-border);
+    font-size: 11.5px; color: var(--text-dim); line-height: 1.7; background: var(--bg);
+  }
+  footer.site-footer a { color: var(--text-dim); }
+  footer.site-footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html">Germany in Maps</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Home</a>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#political-map">Map visualizations</a>
+          <a href="../index.html#political-trend">Trend visualizations</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#demo-map">Map visualization</a>
+          <a href="../index.html#demo-trend">Trend visualization</a>
+        </div>
+      </div>
+      <a class="nav-link current" href="../index.html#stories">Stories</a>
+      <a class="nav-link" href="../about/project.html">About</a>
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <div class="mobile-group-title">Political</div>
+    <a href="../index.html#political-map">Map visualizations</a>
+    <a href="../index.html#political-trend">Trend visualizations</a>
+    <div class="mobile-group-title">Demographics &amp; Economy</div>
+    <a href="../index.html#demo-map">Map visualization</a>
+    <a href="../index.html#demo-trend">Trend visualization</a>
+    <a href="../index.html#stories">Stories</a>
+    <a href="../about/project.html">About</a>
+  </div>
+</nav>
+
+<div id="progressDots"></div>
+
+<div id="storyRoot">
+  <div id="stage">
+    <div id="map"></div>
+    <div id="stageVeil"></div>
+    <div id="eyebrowFloat"></div>
+    <div id="closingStat">
+      <div class="num">4.7% → 20.8%</div>
+      <div class="sub">Nationwide Bundestag vote share, 2013–2025</div>
+    </div>
+  </div>
+
+  <div id="steps">
+    <section class="hero">
+      <div class="kicker">A Germany in Maps story</div>
+      <h1>The Rise of the AfD<br>2013 – 2025</h1>
+      <p>Twelve years, four federal elections, and a handful of state elections turned a party that missed parliament by a fraction of a point into Germany's second-largest political force. Scroll to watch it happen, region by region.</p>
+      <div class="scroll-hint"><span class="arrow">↓</span> Scroll to begin</div>
+    </section>
+
+    <section class="step" data-step="0">
+      <div class="step-card">
+        <div class="step-eyebrow">2013</div>
+        <h2 class="step-headline">A rounding error</h2>
+        <p class="step-body">The AfD contests its first Bundestag election. Nationally it wins <strong>4.7%</strong> of the vote — just short of the 5% threshold needed to enter parliament at all. In most of the country, it barely registers.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="1">
+      <div class="step-card">
+        <div class="step-eyebrow">2017</div>
+        <h2 class="step-headline">Through the door</h2>
+        <p class="step-body">AfD clears <strong>12.6%</strong> nationally and enters the Bundestag for the first time. It's already the single strongest party in Saxony — an early sign of the regional pattern that will come to define the next decade.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="2">
+      <div class="step-card">
+        <div class="step-eyebrow">2021</div>
+        <h2 class="step-headline">A pause, not a retreat</h2>
+        <p class="step-body">Nationally, AfD's vote share actually dips slightly to <strong>10.3%</strong>. But look closer: in Saxony and Thuringia it has just become the leading party outright for the first time — growth that a single national number hides completely.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="3">
+      <div class="step-card">
+        <div class="step-eyebrow">2024 · Thuringia</div>
+        <h2 class="step-headline">The first state</h2>
+        <p class="step-body">AfD wins the Thuringia state election outright — clear of the CDU. It's the first time since 1945 that a German state election has been won by a party the domestic intelligence service classifies as confirmed right-wing extremist.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="4">
+      <div class="step-card">
+        <div class="step-eyebrow">2024 · Saxony &amp; Brandenburg</div>
+        <h2 class="step-headline">A close second, twice</h2>
+        <p class="step-body">Days later, AfD finishes a strong second in both neighboring states — officially narrowly held off by the CDU in Saxony and the SPD in Brandenburg. In this project's own municipality-average view (shown here), the rural-leaning arithmetic actually puts AfD ahead in both — a reminder that <em>how</em> you average a vote can matter almost as much as the vote itself.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="5">
+      <div class="step-card">
+        <div class="step-eyebrow">2025</div>
+        <h2 class="step-headline">Second, nationally</h2>
+        <p class="step-body">Back at the federal level: AfD roughly doubles its 2021 result to <strong>20.8%</strong>, becoming Germany's second-largest party overall — and, for the first time, the leading party in every one of the five eastern states at once.</p>
+      </div>
+    </section>
+
+    <section class="step" data-step="6">
+      <div class="step-card">
+        <div class="step-eyebrow">12 years</div>
+        <h2 class="step-headline">One direction</h2>
+        <p class="step-body">4.7% → 12.6% → 10.3% → 20.8%. The map behind this text has shown every step of it. Explore the full, interactive versions to scrub through any year yourself, or compare this against unemployment, wages, and migration in the demographic tools.</p>
+        <div class="closing-cta">
+          <a class="primary" href="../map-current-standing-trends/">Explore the trend tool →</a>
+          <a href="../map/">Open the election map →</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<footer class="site-footer">
+  Made with ❤️ by @shahabday<br>
+  Email: <a href="mailto:shahabdaiani@gmail.com">shahabdaiani@gmail.com</a> · Instagram: <a href="https://instagram.com/shahabday" target="_blank" rel="noopener">@shahabday</a> · Website: <a href="https://shahabwrites.com" target="_blank" rel="noopener">shahabwrites.com</a>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const AFD = "#009EE0";
+  const DIM = "#3a3f4a";
+  const MAX_SHARE = 0.46;
+
+  const STEPS = [
+    { kind: "national", shares: { "01":0.028,"02":0.000,"03":0.022,"04":0.039,"05":0.010,"06":0.050,"07":0.030,"08":0.045,"09":0.029,"10":0.050,"11":0.049,"12":0.055,"13":0.052,"14":0.070,"15":0.038,"16":0.060 } },
+    { kind: "national", shares: { "01":0.061,"02":0.000,"03":0.083,"04":0.063,"05":0.085,"06":0.128,"07":0.099,"08":0.125,"09":0.131,"10":0.098,"11":0.120,"12":0.223,"13":0.205,"14":0.309,"15":0.205,"16":0.245 } },
+    { kind: "national", shares: { "01":0.060,"02":0.000,"03":0.077,"04":0.053,"05":0.074,"06":0.103,"07":0.088,"08":0.106,"09":0.088,"10":0.102,"11":0.000,"12":0.220,"13":0.215,"14":0.306,"15":0.223,"16":0.271 } },
+    { kind: "highlight", focus: { "16": 0.372 } },
+    { kind: "highlight", focus: { "14": 0.374, "12": 0.343 } },
+    { kind: "national", shares: { "01":0.179,"02":0.109,"03":0.191,"04":0.185,"05":0.179,"06":0.209,"07":0.207,"08":0.220,"09":0.217,"10":0.219,"11":0.152,"12":0.385,"13":0.408,"14":0.453,"15":0.417,"16":0.429 } },
+    { kind: "closing", shares: { "01":0.179,"02":0.109,"03":0.191,"04":0.185,"05":0.179,"06":0.209,"07":0.207,"08":0.220,"09":0.217,"10":0.219,"11":0.152,"12":0.385,"13":0.408,"14":0.453,"15":0.417,"16":0.429 } },
+  ];
+
+  const map = L.map("map", { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, touchZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false });
+  map.setView([51.1, 10.4], 6);
+
+  let boundary = null;
+  let layer = null;
+  const layerByCode = {};
+
+  function opacityForShare(share) {
+    const t = Math.max(0, Math.min(1, share / MAX_SHARE));
+    return 0.08 + t * 0.84;
+  }
+
+  function styleForStep(code, step) {
+    if (step.kind === "highlight") {
+      if (step.focus[code] != null) {
+        return { color: "#ffffff", weight: 1.6, fillColor: AFD, fillOpacity: opacityForShare(step.focus[code]) };
+      }
+      return { color: "#0b0d11", weight: 0.4, fillColor: DIM, fillOpacity: 0.12 };
+    }
+    const share = step.shares[code] || 0;
+    return { color: "#0b0d11", weight: 0.6, fillColor: AFD, fillOpacity: opacityForShare(share) };
+  }
+
+  function applyStep(index) {
+    const step = STEPS[index];
+    if (!layer) return;
+    layer.eachLayer((lyr) => {
+      const code = lyr.feature.properties.code;
+      lyr.setStyle(styleForStep(code, step));
+    });
+
+    let bounds;
+    if (step.kind === "highlight") {
+      const codes = Object.keys(step.focus);
+      const layers = codes.map((c) => layerByCode[c]).filter(Boolean);
+      bounds = layers.length ? L.featureGroup(layers).getBounds() : layer.getBounds();
+      map.flyToBounds(bounds, { paddingTopLeft: [40, 40], paddingBottomRight: [40, 40], duration: 1.3 });
+    } else {
+      map.flyToBounds(layer.getBounds(), { paddingTopLeft: [40, 40], paddingBottomRight: [40, 40], duration: 1.3 });
+    }
+  }
+
+  fetch("data/state_outlines.geojson").then((r) => r.json()).then((geo) => {
+    boundary = geo;
+    layer = L.geoJSON(boundary, {
+      style: (f) => styleForStep(f.properties.code, STEPS[0]),
+    }).addTo(map);
+    layer.eachLayer((lyr) => { layerByCode[lyr.feature.properties.code] = lyr; });
+    map.flyToBounds(layer.getBounds(), { paddingTopLeft: [40, 40], paddingBottomRight: [40, 40], duration: 0 });
+    initObserver();
+  });
+
+  const eyebrowFloat = document.getElementById("eyebrowFloat");
+  const closingStat = document.getElementById("closingStat");
+  const dotsWrap = document.getElementById("progressDots");
+  const stepEls = Array.from(document.querySelectorAll(".step"));
+  const eyebrows = stepEls.map((el) => el.querySelector(".step-eyebrow").textContent);
+
+  stepEls.forEach((_, i) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.setAttribute("aria-label", "Go to step " + (i + 1));
+    dot.addEventListener("click", () => stepEls[i].scrollIntoView({ behavior: "smooth", block: "center" }));
+    dotsWrap.appendChild(dot);
+  });
+  const dotEls = Array.from(dotsWrap.children);
+
+  let currentIndex = -1;
+  function setActive(index) {
+    if (index === currentIndex) return;
+    currentIndex = index;
+    applyStep(index);
+    eyebrowFloat.textContent = eyebrows[index];
+    eyebrowFloat.classList.add("show");
+    dotEls.forEach((d, i) => d.classList.toggle("active", i === index));
+    closingStat.classList.toggle("show", STEPS[index].kind === "closing");
+  }
+
+  function initObserver() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        entry.target.classList.toggle("in-view", entry.isIntersecting);
+        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+          setActive(Number(entry.target.dataset.step));
+        }
+      });
+    }, { threshold: [0, 0.5, 0.75] });
+    stepEls.forEach((el) => observer.observe(el));
+  }
+
+  document.querySelectorAll(".dropdown").forEach((dd) => {
+    const toggle = dd.querySelector(".dropdown-toggle");
+    const menu = dd.querySelector(".dropdown-menu");
+    if (!toggle || !menu) return;
+    const position = () => {
+      const r = toggle.getBoundingClientRect();
+      menu.style.left = Math.round(r.left) + "px";
+      menu.style.top = Math.round(r.bottom + 4) + "px";
+    };
+    dd.addEventListener("mouseenter", position);
+    toggle.addEventListener("focus", position);
+    window.addEventListener("resize", position);
+    window.addEventListener("scroll", position, true);
+  });
+
+  document.querySelectorAll(".topnav").forEach((nav) => {
+    const toggle = nav.querySelector(".nav-toggle");
+    const menu = nav.querySelector(".mobile-menu");
+    if (!toggle || !menu) return;
+    toggle.addEventListener("click", () => {
+      const open = menu.classList.toggle("open");
+      toggle.classList.toggle("open", open);
+    });
+    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+      menu.classList.remove("open");
+      toggle.classList.remove("open");
+    }));
+  });
+})();
+</script>
+</body>
+</html>

@@ -64,6 +64,8 @@
   #statusLine { font-size: 11px; color: var(--text-dim); margin-top: 10px; min-height: 14px; }
   #noteLine { font-size: 10.5px; color: var(--text-dim); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--panel-border); }
   #metricDescription { font-size: 11px; color: var(--text-dim); margin-top: 6px; line-height: 1.4; }
+  #metricDescription .learn-more { color: var(--accent); text-decoration: none; white-space: nowrap; }
+  #metricDescription .learn-more:hover { text-decoration: underline; }
 
   #legend {
     position: absolute; bottom: 16px; left: 16px; z-index: 1000;
@@ -196,6 +198,7 @@
           <a href="../index.html#demo-trend">Trend visualization</a>
         </div>
       </div>
+      <a class="nav-link" href="../index.html#stories">Stories</a>
       <a class="nav-link" href="../about/project.html">About</a>
     </div>
     <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
@@ -208,6 +211,7 @@
     <div class="mobile-group-title">Demographics &amp; Economy</div>
     <a href="../index.html#demo-map">Map visualization</a>
     <a href="../index.html#demo-trend">Trend visualization</a>
+    <a href="../index.html#stories">Stories</a>
     <a href="../about/project.html">About</a>
   </div>
 </nav>
@@ -430,7 +434,18 @@
 
   function updateMetricDescription() {
     const info = currentMetricInfo();
-    document.getElementById("metricDescription").textContent = info ? (info.description || "") : "";
+    const el = document.getElementById("metricDescription");
+    el.textContent = "";
+    if (!info) return;
+    el.appendChild(document.createTextNode(info.description || ""));
+    const link = document.createElement("a");
+    link.className = "learn-more";
+    link.href = `../about/metrics.html#m-demographics-${info.key}`;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.textContent = "Learn more →";
+    el.appendChild(document.createTextNode(" "));
+    el.appendChild(link);
   }
 
   // In growth mode a year is only selectable if the metric also has data for the year
