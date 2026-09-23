@@ -11,6 +11,7 @@ scripts/
 docs/
 **/*.py
 **/data/boundaries/
+**/data/raw/
 
 # Project docs and tooling, not part of the served site.
 README.md
