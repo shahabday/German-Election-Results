@@ -125,6 +125,19 @@
   .card:hover { border-color: var(--accent); transform: translateY(-2px); }
   .card .card-illus { width: 100%; height: 110px; border-radius: 8px; overflow: hidden; margin-bottom: 14px; background: #0b0d11; border: 1px solid var(--panel-border); }
   .card .card-illus.tall { height: 190px; }
+  .story-illus { position: relative; }
+  .story-play {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(11,13,17,0.28); transition: background 0.15s;
+  }
+  .story-play::before {
+    content: ""; width: 52px; height: 52px; border-radius: 50%; background: rgba(15,17,21,0.72);
+    border: 1px solid rgba(255,255,255,0.25); position: absolute;
+  }
+  .story-play::after {
+    content: "▶"; position: relative; color: #fff; font-size: 17px; margin-left: 4px;
+  }
+  .card:hover .story-play { background: rgba(11,13,17,0.12); }
   .card .card-illus svg { width: 100%; height: 100%; display: block; }
   .card h3 { font-size: 15px; margin: 0 0 8px; font-weight: 600; color: var(--text); }
   .card p.desc { font-size: 12.5px; color: var(--text-dim); line-height: 1.55; margin: 0 0 16px; flex: 1; }
@@ -1054,6 +1067,8 @@
           <a href="index.html#demo-trend">Trend visualization</a>
         </div>
       </div>
+      <a class="nav-link" href="index.html#stories">Stories</a>
+      <a class="nav-link" href="about/metrics.html">Glossary</a>
       <a class="nav-link" href="about/project.html">About</a>
     </div>
     <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
@@ -1066,6 +1081,8 @@
     <div class="mobile-group-title">Demographics &amp; Economy</div>
     <a href="index.html#demo-map">Map visualization</a>
     <a href="index.html#demo-trend">Trend visualization</a>
+    <a href="index.html#stories">Stories</a>
+    <a href="about/metrics.html">Metrics Glossary</a>
     <a href="about/project.html">About</a>
   </div>
 </nav>
@@ -1077,6 +1094,171 @@
     <p>Data from open sources has been gathered here to tell a visual story of how Germany's economic and political landscape has changed over the past nearly three decades.</p>
     <p>Explore the data for yourself — choose a tool below to understand how Germany is breathing under data.</p>
   </header>
+
+  <section class="major-block" id="stories">
+    <h2 class="major-title">Stories</h2>
+    <p class="category-intro">Scroll-driven visual stories built from the same real data behind every tool on this site — pick a thread and watch the map walk you through it.</p>
+    <div class="carousel-wrap">
+      <button class="carousel-btn prev" type="button" aria-label="Scroll left">‹</button>
+      <button class="carousel-btn next" type="button" aria-label="Scroll right">›</button>
+      <div class="carousel">
+        <a class="card story-card" href="story/bundestag-explained.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-map-wkr"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>How to Read a Bundestag Map</h3>
+          <p class="desc">A visual primer on the map language this whole site speaks — what a swing is, what "flipped" and "at risk" mean, and why turnout matters too. Bundestag elections only.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-map-standing"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>The Rise of the AfD, 2013–2025</h3>
+          <p class="desc">Twelve years, four federal elections, three state elections — scroll through the real numbers behind Germany's biggest political shift in a generation.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/sachsen-opposition.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>Sachsen: The Opposition That Changed</h3>
+          <p class="desc">One state, four parties, 36 years — Die Linke was the CDU's real opposition for two decades, until 2013 handed that role to the AfD for good.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/sachsen-anhalt.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>Sachsen-Anhalt: No Party Holds On For Long</h3>
+          <p class="desc">The Magdeburg Model, Die Linke's best-ever state result, and the state that gave the AfD its first big win.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/thueringen.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>Thüringen: Where the AfD Won First</h3>
+          <p class="desc">Germany's first Die Linke state premier in 2014 — and ten years later, its first outright AfD win in a state election.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/brandenburg.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>Brandenburg: The State CDU Never Won</h3>
+          <p class="desc">The one East German state SPD has governed since reunification — right up to a photo-finish win over the AfD in 2024.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/berlin.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>Berlin: Four Parties, Real Competition</h3>
+          <p class="desc">No opposition-flip story here — SPD, CDU, Die Linke and the Greens have all taken real turns leading the city. AfD included.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/baden-wuerttemberg.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>Baden-Württemberg: The State That Went Green</h3>
+          <p class="desc">Germany's most reliably CDU state in federal votes — until 2011, when it elected the country's first Green minister-president.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/nrw-opposition.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>Nordrhein-Westfalen: Still CDU vs. SPD</h3>
+          <p class="desc">Germany's most populous state has run on the same two-party rivalry for 35 years — the AfD hasn't displaced it.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/schleswig-holstein.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>Schleswig-Holstein: The North's Steady Rivalry</h3>
+          <p class="desc">CDU on top, SPD close behind, and the Greens' single best moment of any state in this series — in one European election.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/saarland.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>Saarland: SPD's Smallest Stronghold</h3>
+          <p class="desc">Germany's strongest-ever SPD state, until its own former leader Oskar Lafontaine split the left vote for Die Linke.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/east-germany-opposition.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>The East: One Region, One Opposition</h3>
+          <p class="desc">Five states, averaged: Die Linke was the East's real challenger to the CDU until 2013 — then the AfD took over everywhere.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/west-germany-opposition.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>The West: CDU vs. SPD, With Greens Closing In</h3>
+          <p class="desc">Four states, averaged: a far steadier rivalry than the East's, with the AfD's 2025 share barely half the eastern average.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+        <a class="card story-card" href="story/income-and-the-vote.html">
+          <div class="card-illus tall story-illus">
+            <svg><use href="#illus-trend-timeseries"/></svg>
+            <div class="story-play"></div>
+          </div>
+          <h3>Income and the Vote</h3>
+          <p class="desc">Group states by average income instead of geography, and the AfD numbers split — but not quite the way you'd expect.</p>
+          <div class="card-actions">
+            <span class="open">Watch the story <span class="arrow">→</span></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
 
   <section class="major-block" id="political">
     <h2 class="major-title">Political</h2>
@@ -1181,6 +1363,14 @@
         <div class="card-illus tall"><svg><use href="#illus-map-demo"/></svg></div>
         <h3>Demographics &amp; Economy Map</h3>
         <p class="desc">Zensus 2022 census data at municipality resolution, plus county-level income and INKAR indicators as a multi-year time series.</p>
+        <div class="card-actions">
+          <span class="open">Open tool <span class="arrow">→</span></span>
+        </div>
+      </a>
+      <a class="card" href="map-society/">
+        <div class="card-illus tall"><svg><use href="#illus-map-demo"/></svg></div>
+        <h3>Society &amp; Culture Map</h3>
+        <p class="desc">Marriage, divorce, education, crime, welfare receipt and economic structure by county; religion, sports, happiness and volunteering by state — 13 metrics as a multi-year time series.</p>
         <div class="card-actions">
           <span class="open">Open tool <span class="arrow">→</span></span>
         </div>
