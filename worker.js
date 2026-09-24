@@ -23,6 +23,12 @@ export default {
     }
 
     url.pathname = url.pathname.slice(PREFIX.length) || "/";
+    // The asset binding's default document for "/" is index.html, but that's
+    // now the tool index, not the landing page - serve home.html at the root
+    // instead. index.html is still reachable directly at /germany/index.html.
+    if (url.pathname === "/") {
+      url.pathname = "/home.html";
+    }
     const assetResponse = await env.ASSETS.fetch(new Request(url.toString(), request));
 
     const location = assetResponse.headers.get("Location");
