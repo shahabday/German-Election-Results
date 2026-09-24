@@ -202,7 +202,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <a class="brand" href="{root}index.html">Germany in Maps</a>
+    <a class="brand" href="{root}home.html">Germany in Maps</a>
     <div class="nav-links">
       <a class="nav-link" href="{root}index.html">Home</a>
       <div class="dropdown">

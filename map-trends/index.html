@@ -190,7 +190,7 @@
 <body>
 <nav class="topnav">
   <div class="topnav-inner">
-    <a class="brand" href="../index.html">Germany in Maps</a>
+    <a class="brand" href="../home.html">Germany in Maps</a>
     <div class="nav-links">
       <a class="nav-link" href="../index.html">Home</a>
       <div class="dropdown">
@@ -373,7 +373,7 @@
   // schedule, there's no single simultaneous nationwide swing the way Bundestag/
   // Europawahl have. Instead this is a "latest swing as of year Y" merge - for each
   // state, whichever consecutive pair most recently landed on or before Y - same
-  // "current standing" idea map-municipality uses for its national snapshot, just
+  // "current standing" idea map-all-elections uses for its national snapshot, just
   // applied to swing pairs instead of single-year results.
   const NATIONAL_SLUG = "__national__";
 
@@ -577,7 +577,7 @@
   }
 
   // Fetch every state's latest pair as of targetYear and merge into one AGS-keyed dict,
-  // mirroring map-municipality's loadNationalAggregate - a per-state try/catch so one
+  // mirroring map-all-elections's loadNationalAggregate - a per-state try/catch so one
   // state's missing/not-yet-happened data doesn't break the whole merge.
   function loadNationalAggregateData(targetYear) {
     const states = state.manifest[state.type].states;

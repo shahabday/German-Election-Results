@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 TOOLS = [
-    "map", "map-municipality", "map-trends", "map-current-standing",
+    "map", "map-all-elections", "map-trends", "map-current-standing",
     "map-election-timeseries", "map-election-profile",
     "map-current-standing-trends", "map-demographics", "map-timeseries",
 ]
@@ -118,7 +118,7 @@ NEW_NAV_CSS = """  /* ---- top nav (shared across the site) ---- */
 
 NAV_HTML = """<nav class="topnav">
   <div class="topnav-inner">
-    <a class="brand" href="../index.html">Germany in Maps</a>
+    <a class="brand" href="../home.html">Germany in Maps</a>
     <div class="nav-links">
       <a class="nav-link" href="../index.html">Home</a>
       <div class="dropdown">

@@ -23,7 +23,7 @@ actually came from: "y" (the real source year) and "src" (federal / european /
 landtag / kommunal) - since at any given slider year, different municipalities
 can legitimately be showing data from different source years.
 
-Run from the repo root, after map-municipality/ has been built:
+Run from the repo root, after map-all-elections/ has been built:
     python map-current-standing/build_current_standing_data.py
 """
 import json
@@ -31,7 +31,7 @@ import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-MUNI_SRC = ROOT / "map-municipality" / "data" / "prepared"
+MUNI_SRC = ROOT / "map-all-elections" / "data" / "prepared"
 TRENDS_SRC = ROOT / "map-trends" / "data" / "prepared"
 OUT = Path(__file__).resolve().parent / "data" / "prepared"
 

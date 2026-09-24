@@ -1,6 +1,6 @@
 # German States & Counties — Time Series Compare
 
-A fourth, fully independent visualization alongside [`map`](../map/), [`map-municipality`](../map-municipality/),
+A fourth, fully independent visualization alongside [`map`](../map/), [`map-all-elections`](../map-all-elections/),
 [`map-trends`](../map-trends/) and [`map-demographics`](../map-demographics/) - none of
 those are touched by this one. Where `map-demographics` plots one metric on the whole
 country for one year at a time, this plots one metric across *time* for whichever

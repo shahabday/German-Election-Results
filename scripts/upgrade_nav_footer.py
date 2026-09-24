@@ -108,7 +108,7 @@ NEW_NAV_CSS = """  .topnav {
 def nav_html(site_prefix, about_href):
     return f"""<nav class="topnav">
   <div class="topnav-inner">
-    <a class="brand" href="{site_prefix}index.html">Germany in Maps</a>
+    <a class="brand" href="{site_prefix}home.html">Germany in Maps</a>
     <div class="nav-links">
       <a class="nav-link" href="{site_prefix}index.html">Home</a>
       <div class="dropdown">

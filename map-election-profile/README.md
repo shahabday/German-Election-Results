@@ -1,6 +1,6 @@
 # German Voting Profile — All Elections Blended
 
-A sixth, fully independent visualization alongside [`map`](../map/), [`map-municipality`](../map-municipality/),
+A sixth, fully independent visualization alongside [`map`](../map/), [`map-all-elections`](../map-all-elections/),
 [`map-trends`](../map-trends/), [`map-demographics`](../map-demographics/),
 [`map-timeseries`](../map-timeseries/) and [`map-election-timeseries`](../map-election-timeseries/) -
 none of those are touched by this one. Where the other election apps look at one
@@ -11,7 +11,7 @@ election types even agree with each other?
 
 Run locally:
 ```
-python build_election_profile_data.py   # reads map-municipality/ output, which must already be built
+python build_election_profile_data.py   # reads map-all-elections/ output, which must already be built
 python -m http.server 8426 --directory map-election-profile
 ```
 (or use the `election-map-election-profile` entry in `.claude/launch.json`.)
@@ -74,7 +74,7 @@ artificially strong. Both scripts document this explicitly rather than picking s
 
 ## No new data prep
 
-Like `map-election-timeseries`, this reads `map-municipality`'s already-built per-year
+Like `map-election-timeseries`, this reads `map-all-elections`'s already-built per-year
 files directly (`ags -> {w, s, b: [[party,share],...top5], t: turnout}`) and computes
 the blend entirely client-side, since the window is arbitrary and user-chosen - there's
 nothing meaningful to precompute in Python beyond copying the source files in.

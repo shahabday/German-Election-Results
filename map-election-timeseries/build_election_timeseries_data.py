@@ -2,20 +2,20 @@
 Build the dataset for map-election-timeseries: pick any set of areas (states,
 counties, or specific municipalities) and compare a party's vote share, or turnout,
 across every election of one type. Fifth independent app - reads from
-map-municipality/data/prepared/ (per-year municipality-level results, already built),
+map-all-elections/data/prepared/ (per-year municipality-level results, already built),
 map-demographics/data/prepared/counties.geojson (county boundary) and
 map-trends/data/prepared/state_outlines.geojson (state boundary), never writes to any
 of them.
 
 No new per-year/per-metric files are computed here, unlike map-demographics/
 map-timeseries - a "metric" here is just "this party's share" or "turnout", both
-already present in every map-municipality per-year file
+already present in every map-all-elections per-year file
 (ags -> {w, s, b: [[party,share],...top5], t: turnout}). State/county rollups (simple
 unweighted means, same limitation as map-timeseries) are computed client-side on
 demand from whichever year files are already loaded, since there's no fixed small set
 of "metrics" to precompute against like map-demographics had.
 
-Run from the repo root or map-election-timeseries/, after map-municipality/,
+Run from the repo root or map-election-timeseries/, after map-all-elections/,
 map-demographics/ and map-trends/ have already been built:
     python map-election-timeseries/build_election_timeseries_data.py
 """
@@ -24,8 +24,8 @@ import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-MUNI_SRC = ROOT / "map-municipality" / "data" / "prepared"
-MUNI_SPECIAL_SRC = ROOT / "map-municipality" / "data" / "special"
+MUNI_SRC = ROOT / "map-all-elections" / "data" / "prepared"
+MUNI_SPECIAL_SRC = ROOT / "map-all-elections" / "data" / "special"
 DEMO_SRC = ROOT / "map-demographics" / "data" / "prepared"
 TRENDS_SRC = ROOT / "map-trends" / "data" / "prepared"
 OUT = Path(__file__).resolve().parent / "data" / "prepared"
@@ -61,7 +61,7 @@ def main():
     # Berlin's Landtag (Abgeordnetenhaus) is one municipality (AGS 11000000) everywhere
     # else in this dataset, so its own Landtag time series is a single flat line - the
     # 2026 election is the one exception, with a real 78-Wahlkreis breakdown scraped
-    # from wahlen-berlin.de (see map-municipality/build_berlin_2026.py). Copying just
+    # from wahlen-berlin.de (see map-all-elections/build_berlin_2026.py). Copying just
     # those two small files lets the frontend offer Berlin's districts as click targets,
     # even though only the 2026 point will have data - every other year stays blank for
     # those areas, which the frontend explains inline.

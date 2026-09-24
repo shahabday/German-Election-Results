@@ -181,7 +181,7 @@
 <body>
 <nav class="topnav">
   <div class="topnav-inner">
-    <a class="brand" href="../index.html">Germany in Maps</a>
+    <a class="brand" href="../home.html">Germany in Maps</a>
     <div class="nav-links">
       <a class="nav-link" href="../index.html">Home</a>
       <div class="dropdown">
@@ -658,7 +658,7 @@
       ? (growth
           ? "Change vs. the previous year this metric has data for (not always exactly one calendar year apart - see the year label). Delta = current minus previous, so it's always finite even near zero, same convention as map-trends' swing. \"This year\" scale sets red/blue intensity from this one year pair's spread; \"Fixed\" uses one cap for the whole series (95th percentile of every year-over-year change on record), so a given € or point change always reads the same color no matter which year you're on."
           : "County-level income (VGRdL) and INKAR indicators. Not every metric covers every year (INKAR coverage thins out before ~2005, and a few series stop around 2019-2021) - the year slider only offers years this metric actually has data for. \"Fixed\" scale colors every year against the same whole-period range, so color is comparable across years, not just within one. County boundaries: m-ad/geofeatures-ags-germany (GADM-derived), so exact borders are approximate, not the official BKG line.")
-      : "Zensus 2022 (German census), one snapshot in time - no earlier years exist at this resolution. Municipality boundaries are the same file map-municipality and map-trends use.";
+      : "Zensus 2022 (German census), one snapshot in time - no earlier years exist at this resolution. Municipality boundaries are the same file map-all-elections and map-trends use.";
   }
 
   function fitDefault() {

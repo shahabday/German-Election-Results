@@ -1,6 +1,6 @@
 # German Election Results — Time Series Compare
 
-A fifth, fully independent visualization alongside [`map`](../map/), [`map-municipality`](../map-municipality/),
+A fifth, fully independent visualization alongside [`map`](../map/), [`map-all-elections`](../map-all-elections/),
 [`map-trends`](../map-trends/), [`map-demographics`](../map-demographics/) and
 [`map-timeseries`](../map-timeseries/) - none of those are touched by this one. Same
 interaction model as `map-timeseries` (click/hover the mini map, or search, to build a
@@ -10,7 +10,7 @@ whichever states/counties/municipalities you pick.
 
 Run locally:
 ```
-python build_election_timeseries_data.py   # reads map-municipality/, map-demographics/ and map-trends/ output, all three must already be built
+python build_election_timeseries_data.py   # reads map-all-elections/, map-demographics/ and map-trends/ output, all three must already be built
 python -m http.server 8425 --directory map-election-timeseries
 ```
 (or use the `election-map-election-timeseries` entry in `.claude/launch.json`.)
@@ -40,7 +40,7 @@ end to end from raw data through this chart.
 
 There's no fixed small set of "metrics" here the way `map-demographics` had 14 curated
 INKAR columns - the metric is "whichever party you pick," and every party's share for
-every area/year is already sitting in `map-municipality`'s per-year files
+every area/year is already sitting in `map-all-elections`'s per-year files
 (`ags -> {w, s, b: [[party,share],...top5], t: turnout}`). So this app does no
 Python-side aggregation at all beyond copying those files in and writing one manifest;
 state/county rollups (simple unweighted means, same limitation as `map-timeseries`) are

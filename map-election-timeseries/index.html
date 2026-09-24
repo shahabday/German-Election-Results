@@ -208,7 +208,7 @@
 <body>
 <nav class="topnav">
   <div class="topnav-inner">
-    <a class="brand" href="../index.html">Germany in Maps</a>
+    <a class="brand" href="../home.html">Germany in Maps</a>
     <div class="nav-links">
       <a class="nav-link" href="../index.html">Home</a>
       <div class="dropdown">
@@ -1121,6 +1121,36 @@
     });
   }
 
+  // Linked to from the home page's East Germany slide (?preset=east-opposition):
+  // jumps straight to the Bundestag time series for the five eastern states,
+  // comparing the four parties whose story that slide is actually about.
+  function applyEastOppositionPreset() {
+    if (!state.manifest) return;
+    state.type = "federal";
+    document.querySelectorAll("#typeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.type === "federal"));
+    onContextChange().then(() => {
+      state.metricMode = "party";
+      document.querySelectorAll("#metricModeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.mode === "party"));
+      state.partyMode = "multi";
+      document.querySelectorAll("#partyModeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.mode === "multi"));
+      updatePartyRowsVisibility();
+
+      const wanted = ["cdu", "spd", "linke_pds", "afd"];
+      wanted.forEach((p) => { if (!state.partyOptions.includes(p)) state.partyOptions.push(p); });
+      state.parties = wanted.slice();
+      renderPartyChecklist();
+
+      const eastSlugs = ["brandenburg", "mecklenburg_vorpommern", "saxony", "saxony_anhalt", "thuringia"];
+      state.selected = eastSlugs.map((slug) => {
+        const info = state.manifest.landtag.states[slug];
+        return { type: "state", key: slug, label: info ? info.label : slug, color: nextColor() };
+      });
+      renderSelectedList();
+      restyleMiniMap();
+      renderChart();
+    });
+  }
+
   document.getElementById("typeToggle").addEventListener("click", (e) => {
     const btn = e.target.closest("button");
     if (!btn) return;
@@ -1178,7 +1208,15 @@
       document.getElementById("noteLine").textContent =
         "A party's value is only shown for years/areas where it placed in that area's local top 5 - left blank (not zero) otherwise, since \"outside the top 5\" could mean anything from 4% to 0%. State/county lines are a simple (unweighted) average of their municipalities, not population-weighted. Switching election type or state clears the current comparison, since the underlying data source changes entirely.";
       updatePartyRowsVisibility();
-      populatePartySelect().then(() => { populatePartyChecklist(); renderChart(); });
+      populatePartySelect().then(() => {
+        populatePartyChecklist();
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("preset") === "east-opposition") {
+          applyEastOppositionPreset();
+        } else {
+          renderChart();
+        }
+      });
     }).catch((err) => {
       document.getElementById("noteLine").textContent = `Failed to load: ${err.message}`;
     }).finally(() => setLoading(false));

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Germany in Maps</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel-border: #2a2e38;
+    --text: #e8eaed; --text-dim: #9aa0ab; --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  a { color: inherit; }
+
+  /* ---- top nav (shared across the site) ---- */
+  .topnav {
+    position: relative; z-index: 2000; height: 54px; flex-shrink: 0;
+    background: rgba(15, 17, 21, 0.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--panel-border);
+  }
+  .topnav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 54px;
+    display: flex; align-items: center; gap: 22px;
+  }
+  .topnav .brand { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+  .topnav .nav-links { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .topnav .nav-link { white-space: nowrap; font-size: 13px; color: var(--text-dim); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
+  .topnav .nav-link:hover { color: var(--text); background: #1e222b; }
+  .dropdown { position: relative; }
+  .dropdown-toggle {
+    font: inherit; font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer;
+    padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .dropdown-toggle:hover, .dropdown:focus-within .dropdown-toggle { color: var(--text); background: #1e222b; }
+  .dropdown-caret { font-size: 9px; transition: transform 0.15s; }
+  .dropdown:hover .dropdown-caret, .dropdown:focus-within .dropdown-caret { transform: rotate(180deg); }
+  .dropdown-menu {
+    position: fixed; top: 0; left: 0; min-width: 170px;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5); padding: 6px; display: flex; flex-direction: column; gap: 2px;
+    z-index: 2500; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.12s;
+  }
+  .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+  .dropdown-menu a { font-size: 12.5px; color: var(--text-dim); text-decoration: none; padding: 7px 9px; border-radius: 6px; }
+  .dropdown-menu a:hover { color: var(--text); background: #20242e; }
+
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 4px;
+    width: 30px; height: 30px; background: none; border: none; cursor: pointer; padding: 0; margin-left: auto; flex-shrink: 0;
+  }
+  .nav-toggle span { display: block; width: 100%; height: 2px; background: var(--text-dim); border-radius: 2px; transition: transform 0.15s, opacity 0.15s; }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 2100;
+    flex-direction: column; padding: 6px 16px 16px; background: var(--bg); border-bottom: 1px solid var(--panel-border);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.5); max-height: calc(100vh - 54px); overflow-y: auto;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 14px; color: var(--text-dim); text-decoration: none; padding: 10px 6px; border-radius: 6px; }
+  .mobile-menu a:hover { color: var(--text); background: #1e222b; }
+  .mobile-menu .mobile-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); opacity: 0.65; margin: 10px 6px 0; }
+
+  @media (max-width: 760px) {
+    .topnav .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+  }
+
+  /* ---- story engine ---- */
+  #storyRoot { position: relative; }
+
+  #stage {
+    position: sticky; top: 54px; height: calc(100vh - 54px); width: 100%;
+    overflow: hidden; background: #0b0d11; z-index: 1;
+  }
+  #map { position: absolute; inset: 0; background: #0b0d11; }
+  #map .leaflet-container { background: #0b0d11; }
+
+  #stageVeil {
+    position: absolute; inset: 0; pointer-events: none; z-index: 400;
+    background: linear-gradient(90deg, rgba(11,13,17,0.90) 0%, rgba(11,13,17,0.60) 34%, rgba(11,13,17,0.05) 64%);
+    transition: opacity 0.8s ease;
+  }
+  @media (max-width: 760px) { #stageVeil { background: rgba(11,13,17,0.76); } }
+
+  #eyebrowFloat {
+    position: absolute; top: 28px; left: 32px; z-index: 401; pointer-events: none;
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim);
+    opacity: 0; transition: opacity 1.3s ease;
+  }
+  #eyebrowFloat.show { opacity: 1; }
+
+  #legendFloat {
+    position: absolute; right: 22px; bottom: 22px; z-index: 401; pointer-events: none;
+    font-size: 11px; color: var(--text-dim); background: rgba(15,17,21,0.75); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 8px 12px; opacity: 0; transition: opacity 0.6s ease; max-width: 220px;
+  }
+  #legendFloat.show { opacity: 1; }
+  #legendFloat .row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  #legendFloat .row:last-child { margin-bottom: 0; }
+  #legendFloat .sw { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  @media (max-width: 760px) { #legendFloat { display: none; } }
+
+  #progressDots {
+    position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 500;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  #progressDots button {
+    width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--text-dim); background: transparent;
+    padding: 0; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  #progressDots button.active { background: var(--accent); border-color: var(--accent); transform: scale(1.3); }
+  @media (max-width: 760px) { #progressDots { display: none; } }
+
+  #steps { position: relative; z-index: 2; margin-top: calc(-100vh + 54px); pointer-events: none; }
+  #steps .hero, #steps .step { pointer-events: none; }
+  #steps a, #steps button { pointer-events: auto; }
+
+  .hero {
+    min-height: calc(100vh - 54px); display: flex; flex-direction: column; align-items: flex-start;
+    justify-content: center; padding: 40px 8vw; max-width: 900px;
+  }
+  /* Pure scroll buffer between the title screen and the first slide, so the
+     title has fully scrolled away before the first slide's text is allowed
+     to appear, instead of the two overlapping mid-scroll. Holds no content. */
+  .hero-spacer { min-height: 70vh; }
+  .hero .kicker { font-size: 12.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(38px, 7vw, 78px); font-weight: 800; line-height: 1.05; margin: 0 0 18px; }
+  .hero p.sub { font-size: clamp(15px, 2vw, 19px); color: var(--text-dim); line-height: 1.6; max-width: 620px; margin: 0 0 30px; }
+  .hero .scroll-hint { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
+  .hero .scroll-hint .arrow { animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  /* Each .step is now just an invisible scroll trigger: it controls pacing and
+     tells the observer when to activate, but holds no visible text of its own.
+     The actual text lives in #storyCardFloat inside the pinned stage below, so
+     it never travels with the page scroll, only its opacity changes. */
+  .step { min-height: 100vh; }
+  .step-card { display: none; }
+
+  #storyCardFloat {
+    position: absolute; left: 8vw; top: 50%; transform: translateY(-50%);
+    max-width: 540px; z-index: 402; opacity: 0; transition: opacity 1.3s ease;
+  }
+  #storyCardFloat.show { opacity: 1; }
+  @media (max-width: 760px) { #storyCardFloat { left: 6vw; right: 6vw; max-width: none; } }
+
+  /* East-Germany trend chart: a decorative background layer shown only behind
+     the "election results, time series" step, sitting above the dimmed map
+     but below the eyebrow/card text. Static, non-interactive. */
+  #trendChartFloat {
+    position: absolute; left: 34vw; right: 4vw; top: 70px; bottom: 60px; z-index: 399;
+    opacity: 0; transition: opacity 1.3s ease; pointer-events: none;
+  }
+  #trendChartFloat.show { opacity: 1; }
+  #trendChartFloat svg { width: 100%; height: 100%; overflow: visible; }
+  #trendChartFloat .axis-line { stroke: #262a33; stroke-width: 1; }
+  #trendChartFloat .axis-label { fill: var(--text-dim); font-size: 11px; }
+  #trendChartFloat .axis-label.x { text-anchor: middle; }
+  #trendChartFloat .axis-label.y { text-anchor: end; }
+  #trendChartFloat .party-line { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  #trendChartFloat .chart-caption { fill: var(--text-dim); font-size: 11.5px; }
+  @media (max-width: 760px) { #trendChartFloat { display: none; } }
+
+  .step-eyebrow { font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+  .step-headline { font-size: clamp(24px, 3.4vw, 38px); font-weight: 800; line-height: 1.15; margin: 0 0 16px; }
+  .step-body { font-size: 15px; color: var(--text-dim); line-height: 1.75; margin: 0; }
+  .step-body strong { color: var(--text); }
+
+  .closing-cta { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .closing-cta a {
+    font-size: 12.5px; font-weight: 600; text-decoration: none; padding: 9px 15px; border-radius: 6px;
+    border: 1px solid var(--panel-border); color: var(--text); background: rgba(23,26,33,0.7);
+  }
+  .closing-cta a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .closing-cta a:hover { filter: brightness(1.12); }
+
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 22px; max-width: 620px; }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .mini-card {
+    display: block; text-decoration: none; color: var(--text); background: rgba(23,26,33,0.78);
+    border: 1px solid var(--panel-border); border-radius: 10px; padding: 13px 15px; transition: border-color 0.15s, background 0.15s;
+  }
+  .mini-card:hover { border-color: var(--accent); background: rgba(23,26,33,0.95); }
+  .mini-card .mc-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .mini-card .mc-desc { font-size: 11.5px; color: var(--text-dim); line-height: 1.5; }
+
+  .final-list { display: flex; flex-direction: column; gap: 6px; margin: 20px 0 26px; max-width: 560px; }
+  .final-list a {
+    display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--text);
+    font-size: 13.5px; padding: 9px 13px; border-radius: 7px; background: rgba(23,26,33,0.6);
+    border: 1px solid var(--panel-border);
+  }
+  .final-list a:hover { border-color: var(--accent); }
+  .final-list a span.arrow { color: var(--text-dim); }
+
+  .big-index-link {
+    display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: #fff;
+    background: var(--accent); padding: 14px 24px; border-radius: 10px; font-size: 16px; font-weight: 700;
+    margin-top: 8px;
+  }
+  .big-index-link:hover { filter: brightness(1.1); }
+
+  footer.site-footer {
+    position: relative; z-index: 3; margin-top: 0; padding: 26px 8vw 40px; border-top: 1px solid var(--panel-border);
+    font-size: 11.5px; color: var(--text-dim); line-height: 1.7; background: var(--bg);
+  }
+  footer.site-footer a { color: var(--text-dim); }
+  footer.site-footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="home.html">Germany in Maps</a>
+    <div class="nav-links">
+      <a class="nav-link" href="index.html">Home</a>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="index.html#political-map">Map visualizations</a>
+          <a href="index.html#political-trend">Trend visualizations</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="index.html#demo-map">Map visualization</a>
+          <a href="index.html#demo-trend">Trend visualization</a>
+          <a href="index.html#demo-pyramid">Population pyramid</a>
+          <a href="index.html#demo-age-map">Population by age group</a>
+          <a href="index.html#demo-correlation">Correlation explorer</a>
+        </div>
+      </div>
+      <a class="nav-link" href="index.html#stories">Stories</a>
+      <a class="nav-link" href="about/metrics.html">Glossary</a>
+      <a class="nav-link" href="about/project.html">About</a>
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu">
+    <a href="index.html">Home</a>
+    <div class="mobile-group-title">Political</div>
+    <a href="index.html#political-map">Map visualizations</a>
+    <a href="index.html#political-trend">Trend visualizations</a>
+    <div class="mobile-group-title">Demographics &amp; Economy</div>
+    <a href="index.html#demo-map">Map visualization</a>
+    <a href="index.html#demo-trend">Trend visualization</a>
+    <a href="index.html#demo-pyramid">Population pyramid</a>
+    <a href="index.html#demo-age-map">Population by age group</a>
+    <a href="index.html#demo-correlation">Correlation explorer</a>
+    <a href="index.html#stories">Stories</a>
+    <a href="about/metrics.html">Metrics Glossary</a>
+    <a href="about/project.html">About</a>
+  </div>
+</nav>
+
+<div id="progressDots"></div>
+
+<div id="storyRoot">
+  <div id="stage">
+    <div id="map"></div>
+    <div id="stageVeil"></div>
+    <div id="eyebrowFloat"></div>
+    <div id="legendFloat"></div>
+    <div id="storyCardFloat"></div>
+    <div id="trendChartFloat">
+      <svg viewBox="0 0 900 460" preserveAspectRatio="xMidYMid meet">
+        <g id="trendAxis"></g>
+        <g id="trendLines"></g>
+        <text class="chart-caption" x="50" y="440">East Germany, 5 states equal-weighted average · 1990–2026</text>
+      </svg>
+    </div>
+  </div>
+
+  <div id="steps">
+    <section class="hero">
+      <div class="kicker">Germany in Maps</div>
+      <h1>Germany in Maps</h1>
+      <p class="sub">Visualizing Germany's political, economic, and social data.</p>
+      <div class="scroll-hint"><span class="arrow">↓</span> Scroll to begin</div>
+    </section>
+
+    <div class="hero-spacer"></div>
+
+    <section class="step" data-step="0">
+      <div class="step-card">
+        <div class="step-eyebrow">Bundestag Election</div>
+        <h2 class="step-headline">Germany's parliament, chosen nationwide</h2>
+        <p class="step-body">Every four years, the whole country votes on the same day for the Bundestag. This is the most recent result, municipality by municipality.</p>
+        <div class="closing-cta">
+          <a class="primary" href="map-all-elections/?type=federal">Open the Bundestag map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="1">
+      <div class="step-card">
+        <div class="step-eyebrow">Landtag Election</div>
+        <h2 class="step-headline">Sixteen states, sixteen calendars</h2>
+        <p class="step-body">Each state elects its own parliament on its own schedule, not all at once. Our tools always show every state at its own most recent vote, which is exactly what this map does.</p>
+        <div class="closing-cta">
+          <a class="primary" href="map-all-elections/?type=landtag">Open the Landtag map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="2">
+      <div class="step-card">
+        <div class="step-eyebrow">Kommunalwahl</div>
+        <h2 class="step-headline">Local councils, closest to home</h2>
+        <p class="step-body">Municipal councils are also elected state by state, on their own staggered schedules. Again, every area here is shown at its own most recent vote.</p>
+        <div class="closing-cta">
+          <a class="primary" href="map-all-elections/?type=kommunal">Open the Kommunalwahl map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="3">
+      <div class="step-card">
+        <div class="step-eyebrow">Europawahl</div>
+        <h2 class="step-headline">One ballot, shared across Europe</h2>
+        <p class="step-body">Every five years, Germany votes alongside the rest of the EU for the European Parliament, all on the same day, nationwide.</p>
+        <div class="closing-cta">
+          <a class="primary" href="map-all-elections/?type=european">Open the Europawahl map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="4">
+      <div class="step-card">
+        <div class="step-eyebrow">Aggregating every election</div>
+        <h2 class="step-headline">All elections, into one yearly trend</h2>
+        <p class="step-body">Germany holds some election almost every year, nationwide or local, as you just saw. This tool combines all of them into one always-current picture, so you can watch a party rise and fall over time, not just at four snapshots a decade apart.</p>
+        <div class="closing-cta">
+          <a class="primary" href="map-current-standing/">Open the current standing map →</a>
+          <a href="map-current-standing-trends/">Open the trend view →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="5">
+      <div class="step-card">
+        <div class="step-eyebrow">Election results, time series</div>
+        <h2 class="step-headline">Watch one place change over decades</h2>
+        <p class="step-body">Pick any state, county, or municipality and follow a party's vote share across every election it has ever had. In the East, <strong>Die Linke</strong> was the CDU's real opposition for years, until the <strong>AfD</strong> took that role over.</p>
+        <div class="closing-cta">
+          <a class="primary" href="map-election-timeseries/?preset=east-opposition">Open the time series tool →</a>
+          <a href="story/east-germany-opposition.html">Read the story →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="6">
+      <div class="step-card" style="max-width:620px;">
+        <div class="step-eyebrow">Stories</div>
+        <h2 class="step-headline">A few threads worth following</h2>
+        <p class="step-body">Scroll-driven pieces built from the same real data behind every tool on this site.</p>
+        <div class="card-grid">
+          <a class="mini-card" href="story/bundestag-explained.html">
+            <div class="mc-title">How to Read a Bundestag Map</div>
+            <div class="mc-desc">A primer on the map language this whole site speaks.</div>
+          </a>
+          <a class="mini-card" href="story/index.html">
+            <div class="mc-title">The Rise of the AfD, 2013–2025</div>
+            <div class="mc-desc">Twelve years, four federal elections, three state elections.</div>
+          </a>
+          <a class="mini-card" href="story/east-germany-opposition.html">
+            <div class="mc-title">The East: One Region, One Opposition</div>
+            <div class="mc-desc">Five states, averaged, and the handover from Die Linke to the AfD.</div>
+          </a>
+          <a class="mini-card" href="story/income-and-the-vote.html">
+            <div class="mc-title">Income and the Vote</div>
+            <div class="mc-desc">Group states by average income instead of geography.</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="7">
+      <div class="step-card" style="max-width:600px;">
+        <div class="step-eyebrow">Explore for yourself</div>
+        <h2 class="step-headline">Every tool, in one place</h2>
+        <p class="step-body">Maps, trends, and a few things in between, all built from real German election, demographic, and economic data. Try them yourself.</p>
+        <div class="final-list">
+          <a href="map-all-elections/">All Elections Map <span class="arrow">→</span></a>
+          <a href="map/">Bundestag Wahlkreis Map <span class="arrow">→</span></a>
+          <a href="map-trends/">Election Trends, Swing Map <span class="arrow">→</span></a>
+          <a href="map-society/">Society &amp; Culture Map <span class="arrow">→</span></a>
+          <a href="map-population-pyramid/">Population Pyramid <span class="arrow">→</span></a>
+          <a href="map-population-age/">Population by Age Group <span class="arrow">→</span></a>
+          <a href="map-correlation/">Correlation Explorer <span class="arrow">→</span></a>
+        </div>
+        <a class="big-index-link" href="index.html">See the full index of tools →</a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<footer class="site-footer">
+  Made with ❤️ by @shahabday<br>
+  Email: <a href="mailto:shahabdaiani@gmail.com">shahabdaiani@gmail.com</a> · Instagram: <a href="https://instagram.com/shahabday" target="_blank" rel="noopener">@shahabday</a> · Website: <a href="https://shahabwrites.com" target="_blank" rel="noopener">shahabwrites.com</a>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const PARTY_COLORS = {
+    cdu: "#4D4D52", csu: "#4D4D52", cdu_csu: "#4D4D52",
+    spd: "#E3000F", gruene: "#46962B", fdp: "#FFED00",
+    linke_pds: "#BE3075", die_linke: "#BE3075", afd: "#009EE0",
+    bsw: "#7D2E68", freie_waehler: "#F7A800", ssw: "#003C8F", other: "#6f7580",
+  };
+  const PARTY_LABELS = {
+    cdu_csu: "CDU/CSU", spd: "SPD", gruene: "Grüne", fdp: "FDP",
+    linke_pds: "Die Linke", afd: "AfD", bsw: "BSW", freie_waehler: "Freie Wähler",
+    ssw: "SSW", other: "Other",
+  };
+  const DIM = "#3a3f4a";
+
+  // East Germany (5 states, equal-weighted) trend for the "election results,
+  // time series" step's background chart - same source data as
+  // story/east-germany-opposition.html, restricted to the four parties that
+  // step's text is actually about.
+  const TREND_PARTY_COLORS = { cdu: "#8a8f99", spd: "#E3000F", linke_pds: "#BE3075", afd: "#009EE0" };
+  const TREND_PARTY_ORDER = ["cdu", "spd", "linke_pds", "afd"];
+  const TREND_YEARS = [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+  const TREND_ELECTION_YEARS = [1990, 1994, 1998, 2002, 2005, 2009, 2013, 2017, 2021, 2025];
+  const TREND_DATA = {
+    cdu: [44.33, 44.33, 44.33, 38.8, 39.63, 40.84, 40.84, 40.84, 28.32, 35.62, 35.62, 32.22, 29.86, 28.31, 29.62, 26.95, 28.54, 28.53, 26.54, 30.13, 29.94, 28.69, 28.69, 39.53, 30.34, 30.34, 26.48, 30.28, 30.28, 22.75, 22.75, 18.84, 18.84, 21.31, 21.46, 18.64, 15.63],
+    spd: [27.3, 27.3, 27.3, 23.38, 33.95, 31.86, 31.86, 31.86, 37.57, 20.73, 20.73, 22.19, 40.27, 33.94, 19.52, 31.08, 28.38, 28.37, 24.06, 18.54, 18.46, 24.99, 24.99, 18.97, 20.66, 20.66, 20.24, 15.33, 15.33, 13.25, 13.25, 25.08, 25.08, 24.07, 9.47, 11.27, 14.49],
+    linke_pds: [8.01, 8.01, 8.01, 7.77, 15.12, 15.08, 15.08, 15.08, 17.82, 13.82, 13.82, 14.79, 14.21, 12.86, 14.95, 23.19, 20.41, 20.4, 17.34, 26.86, 26.54, 21.2, 21.2, 21.02, 17.99, 17.99, 15.94, 16.27, 16.27, 11.96, 11.96, 9.2, 9.2, 9.35, 2.47, 11.8, 11.54],
+    afd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.09, 6.75, 6.75, 15.43, 19.77, 19.77, 19.37, 19.37, 20.54, 20.54, 20.3, 28.77, 35.6, 38.53],
+  };
+
+  function buildTrendChart() {
+    const CHART = { x0: 50, x1: 860, y0: 20, y1: 400, yMax: 45, xMin: 1990, xMax: 2026 };
+    const xPos = (year) => CHART.x0 + ((year - CHART.xMin) / (CHART.xMax - CHART.xMin)) * (CHART.x1 - CHART.x0);
+    const yPos = (pct) => CHART.y1 - (pct / CHART.yMax) * (CHART.y1 - CHART.y0);
+    const NS = "http://www.w3.org/2000/svg";
+    function svgEl(tag, attrs) {
+      const el = document.createElementNS(NS, tag);
+      for (const k in attrs) el.setAttribute(k, attrs[k]);
+      return el;
+    }
+    const axisG = document.getElementById("trendAxis");
+    for (let pct = 0; pct <= CHART.yMax; pct += 10) {
+      const y = yPos(pct);
+      axisG.appendChild(svgEl("line", { class: "axis-line", x1: CHART.x0, x2: CHART.x1, y1: y, y2: y }));
+      const t = svgEl("text", { class: "axis-label y", x: CHART.x0 - 10, y: y + 4 });
+      t.textContent = pct + "%";
+      axisG.appendChild(t);
+    }
+    TREND_ELECTION_YEARS.forEach((yr) => {
+      const t = svgEl("text", { class: "axis-label x", x: xPos(yr), y: CHART.y1 + 20 });
+      t.textContent = yr;
+      axisG.appendChild(t);
+    });
+
+    const linesG = document.getElementById("trendLines");
+    TREND_PARTY_ORDER.forEach((party) => {
+      const values = TREND_DATA[party];
+      const d = values.map((v, i) => (i === 0 ? "M" : "L") + xPos(TREND_YEARS[i]).toFixed(1) + "," + yPos(v).toFixed(1)).join(" ");
+      linesG.appendChild(svgEl("path", { class: "party-line", d, stroke: TREND_PARTY_COLORS[party] }));
+      TREND_YEARS.forEach((yr, i) => {
+        if (TREND_ELECTION_YEARS.indexOf(yr) === -1) return;
+        linesG.appendChild(svgEl("circle", { cx: xPos(yr).toFixed(1), cy: yPos(values[i]).toFixed(1), r: 3, fill: TREND_PARTY_COLORS[party] }));
+      });
+    });
+  }
+
+  const STEPS = [
+    { type: "federal" },
+    { type: "landtag" },
+    { type: "kommunal" },
+    { type: "european" },
+    { type: "dim" },
+    { type: "dim" },
+    { type: "dim" },
+    { type: "dim" },
+  ];
+
+  const map = L.map("map", { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, touchZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false });
+  map.setView([51.1, 10.4], 6);
+
+  const LOOKUPS = {};
+  const LEGENDS = {};
+  let muniLayer = null;
+  let muniBounds = null;
+
+  function colorFor(party) {
+    return PARTY_COLORS[party] || PARTY_COLORS.other;
+  }
+
+  function buildLegend(type) {
+    const legend = LEGENDS[type];
+    if (!legend) return null;
+    return legend.map((party) => [party, PARTY_LABELS[party] || party]);
+  }
+
+  function styleFeature(ags, step) {
+    if (step.type === "dim") {
+      return { stroke: false, fillColor: DIM, fillOpacity: 0.16 };
+    }
+    const party = LOOKUPS[step.type] ? LOOKUPS[step.type][ags] : null;
+    if (!party) return { stroke: false, fillColor: DIM, fillOpacity: 0.05 };
+    return { stroke: false, fillColor: colorFor(party), fillOpacity: 0.88 };
+  }
+
+  function renderLegend(step) {
+    const el = document.getElementById("legendFloat");
+    const rows = buildLegend(step.type);
+    if (!rows) { el.classList.remove("show"); return; }
+    el.innerHTML = rows.map(([key, label]) =>
+      `<div class="row"><span class="sw" style="background:${colorFor(key)}"></span>${label}</div>`
+    ).join("");
+    el.classList.add("show");
+  }
+
+  function applyStep(index) {
+    const step = STEPS[index];
+    if (muniLayer) {
+      muniLayer.eachLayer((lyr) => {
+        lyr.setStyle(styleFeature(lyr.feature.properties.ags, step));
+      });
+    }
+    renderLegend(step);
+  }
+
+  function topParties(lookup, n) {
+    const counts = {};
+    for (const ags in lookup) {
+      const p = lookup[ags];
+      counts[p] = (counts[p] || 0) + 1;
+    }
+    return Object.keys(counts).sort((a, b) => counts[b] - counts[a]).slice(0, n);
+  }
+
+  Promise.all([
+    fetch("story/data/gemeinden.geojson").then((r) => r.json()),
+    fetch("data/home_story/federal.json").then((r) => r.json()),
+    fetch("data/home_story/landtag.json").then((r) => r.json()),
+    fetch("data/home_story/kommunal.json").then((r) => r.json()),
+    fetch("data/home_story/european.json").then((r) => r.json()),
+  ]).then(([muniGeo, federal, landtag, kommunal, european]) => {
+    LOOKUPS.federal = federal;
+    LOOKUPS.landtag = landtag;
+    LOOKUPS.kommunal = kommunal;
+    LOOKUPS.european = european;
+    LEGENDS.federal = topParties(federal, 5);
+    LEGENDS.landtag = topParties(landtag, 5);
+    LEGENDS.kommunal = topParties(kommunal, 6);
+    LEGENDS.european = topParties(european, 5);
+
+    muniLayer = L.geoJSON(muniGeo, {
+      renderer: L.canvas({ padding: 0.3 }),
+      interactive: false,
+      style: (f) => styleFeature(f.properties.ags, STEPS[0]),
+    }).addTo(map);
+    muniBounds = muniLayer.getBounds();
+    map.fitBounds(muniBounds, { paddingTopLeft: [40, 40], paddingBottomRight: [40, 40] });
+
+    initObserver();
+  });
+
+  buildTrendChart();
+
+  const eyebrowFloat = document.getElementById("eyebrowFloat");
+  const storyCardFloat = document.getElementById("storyCardFloat");
+  const trendChartFloat = document.getElementById("trendChartFloat");
+  const dotsWrap = document.getElementById("progressDots");
+  const stepEls = Array.from(document.querySelectorAll(".step"));
+  const eyebrows = stepEls.map((el) => el.querySelector(".step-eyebrow").textContent);
+  const cardHtml = stepEls.map((el) => el.querySelector(".step-card").innerHTML);
+
+  stepEls.forEach((_, i) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.setAttribute("aria-label", "Go to step " + (i + 1));
+    dot.addEventListener("click", () => stepEls[i].scrollIntoView({ behavior: "smooth", block: "center" }));
+    dotsWrap.appendChild(dot);
+  });
+  const dotEls = Array.from(dotsWrap.children);
+
+  // Fixed in place inside the pinned stage; only opacity ever changes here,
+  // never position, so the text never travels with the page scroll.
+  let cardSwapTimer = null;
+  function setStoryCard(html) {
+    clearTimeout(cardSwapTimer);
+    storyCardFloat.classList.remove("show");
+    cardSwapTimer = setTimeout(() => {
+      storyCardFloat.innerHTML = html;
+      void storyCardFloat.offsetWidth; // force reflow so the fade-in transition runs
+      storyCardFloat.classList.add("show");
+    }, 650);
+  }
+
+  let eyebrowSwapTimer = null;
+  function setEyebrow(text) {
+    clearTimeout(eyebrowSwapTimer);
+    eyebrowFloat.classList.remove("show");
+    eyebrowSwapTimer = setTimeout(() => {
+      eyebrowFloat.textContent = text;
+      void eyebrowFloat.offsetWidth;
+      eyebrowFloat.classList.add("show");
+    }, 650);
+  }
+
+  // Index of the "election results, time series" step (data-step="5") - the
+  // one step whose background is the East Germany trend chart instead of a
+  // dimmed map.
+  const TREND_CHART_STEP_INDEX = 5;
+
+  let currentIndex = -1;
+  function setActive(index) {
+    if (index === currentIndex) return;
+    currentIndex = index;
+    applyStep(index);
+    setEyebrow(eyebrows[index]);
+    setStoryCard(cardHtml[index]);
+    trendChartFloat.classList.toggle("show", index === TREND_CHART_STEP_INDEX);
+    dotEls.forEach((d, i) => d.classList.toggle("active", i === index));
+  }
+
+  function clearActive() {
+    if (currentIndex === -1) return;
+    currentIndex = -1;
+    clearTimeout(cardSwapTimer);
+    clearTimeout(eyebrowSwapTimer);
+    storyCardFloat.classList.remove("show");
+    eyebrowFloat.classList.remove("show");
+    trendChartFloat.classList.remove("show");
+    dotEls.forEach((d) => d.classList.remove("active"));
+  }
+
+  function initObserver() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        entry.target.classList.toggle("in-view", entry.isIntersecting);
+        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+          setActive(Number(entry.target.dataset.step));
+        }
+      });
+    }, { threshold: [0, 0.5, 0.75] });
+    stepEls.forEach((el) => observer.observe(el));
+
+    // Scrolling back up above the first slide (into the title screen) clears
+    // whichever slide was last active, so the title is alone again up there
+    // instead of showing the previous slide's leftover text underneath it.
+    const firstStepEl = stepEls[0];
+    window.addEventListener("scroll", () => {
+      if (firstStepEl.getBoundingClientRect().top > window.innerHeight * 0.6) {
+        clearActive();
+      }
+    }, { passive: true });
+  }
+
+  document.querySelectorAll(".dropdown").forEach((dd) => {
+    const toggle = dd.querySelector(".dropdown-toggle");
+    const menu = dd.querySelector(".dropdown-menu");
+    if (!toggle || !menu) return;
+    const position = () => {
+      const r = toggle.getBoundingClientRect();
+      menu.style.left = Math.round(r.left) + "px";
+      menu.style.top = Math.round(r.bottom + 4) + "px";
+    };
+    dd.addEventListener("mouseenter", position);
+    toggle.addEventListener("focus", position);
+    window.addEventListener("resize", position);
+    window.addEventListener("scroll", position, true);
+  });
+
+  document.querySelectorAll(".topnav").forEach((nav) => {
+    const toggle = nav.querySelector(".nav-toggle");
+    const menu = nav.querySelector(".mobile-menu");
+    if (!toggle || !menu) return;
+    toggle.addEventListener("click", () => {
+      const open = menu.classList.toggle("open");
+      toggle.classList.toggle("open", open);
+    });
+    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+      menu.classList.remove("open");
+      toggle.classList.remove("open");
+    }));
+  });
+})();
+</script>
+</body>
+</html>

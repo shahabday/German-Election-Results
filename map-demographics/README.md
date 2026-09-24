@@ -1,6 +1,6 @@
 # German Demographics & Economy Map
 
-A third, fully independent visualization alongside [`map`](../map/), [`map-municipality`](../map-municipality/)
+A third, fully independent visualization alongside [`map`](../map/), [`map-all-elections`](../map-all-elections/)
 and [`map-trends`](../map-trends/) - none of those are touched by this one. Where the
 other three plot election results, this one plots the demographic and economic
 covariate data harvested earlier in this project (`processed/covariates/`), as spatial
@@ -9,7 +9,7 @@ migration, housing, unemployment, etc.).
 
 Run locally:
 ```
-python build_demographics_data.py   # reads processed/covariates/ and map-municipality/data/prepared/
+python build_demographics_data.py   # reads processed/covariates/ and map-all-elections/data/prepared/
 python -m http.server 8423 --directory map-demographics
 ```
 (or use the `election-map-demographics` entry in `.claude/launch.json`.)
@@ -19,7 +19,7 @@ python -m http.server 8423 --directory map-demographics
 - **Municipality (~10,800 Gemeinden), single snapshot: Zensus 2022.** Age structure,
   foreign nationals, migration background, household size, housing type, vacancy,
   owner-occupied share, rent. One point in time - the German census doesn't run
-  annually, so there's no year slider here. Reuses `map-municipality`'s
+  annually, so there's no year slider here. Reuses `map-all-elections`'s
   `gemeinden.geojson` boundary exactly (same AGS keys), copied in at build time so this
   app has no runtime dependency on that one.
 - **County (~400 Kreise), multi-year: income + INKAR.** Average gross wage and household

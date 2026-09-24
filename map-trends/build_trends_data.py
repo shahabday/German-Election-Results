@@ -1,16 +1,16 @@
 """
 Build the "trends" dataset: swing between each consecutive pair of elections of the
 same type (Bundestag/Europawahl/Landtag/Kommunalwahl), per municipality, derived
-entirely from map-municipality's already-prepared per-year files
-(../map-municipality/data/prepared/<type>/[<state>/]<year>.json, each a dict
+entirely from map-all-elections's already-prepared per-year files
+(../map-all-elections/data/prepared/<type>/[<state>/]<year>.json, each a dict
 ags -> {w: winner key, s: winner share, b: top-5 [party, share] pairs, t: turnout}).
 
-This is a read-only consumer of that data - it never writes into map-municipality/.
+This is a read-only consumer of that data - it never writes into map-all-elections/.
 Its own output goes under map-trends/data/prepared/, mirroring the same
 <type>/[<state>/]<year>.json layout, except each file here represents "swing arriving
 at <year>, relative to the previous election of the same type/state" rather than a
 snapshot, and the boundary files (gemeinden.geojson, state_outlines.geojson) are
-copied in once so this app has no path dependency on map-municipality/ at runtime.
+copied in once so this app has no path dependency on map-all-elections/ at runtime.
 
 Metric design note (the "how do you show growth of a brand-new party without
 infinity" problem): the primary metric is percentage-point (pp) swing, i.e.
@@ -24,7 +24,7 @@ out of the top 5 in one of the two years has its share in that year treated as 0
 swing purposes. This under-counts small/fading parties slightly but is the same
 resolution the rest of the app already works at.
 
-Run from the repo root, after map-municipality/build_municipality_data.py (and any
+Run from the repo root, after map-all-elections/build_municipality_data.py (and any
 of its 2026 add-on scripts) have produced current data:
     python map-trends/build_trends_data.py
 """
@@ -33,7 +33,7 @@ import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "map-municipality" / "data" / "prepared"
+SRC = ROOT / "map-all-elections" / "data" / "prepared"
 OUT = Path(__file__).resolve().parent / "data" / "prepared"
 
 STATE_SLUG_TO_CODE = {

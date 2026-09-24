@@ -7,10 +7,10 @@ solidly SPD in the 90s and solidly AfD now would look like neither).
 
 No new per-window files are precomputed here - the blend depends on an arbitrary
 year-range the user picks at runtime, so it's computed client-side from the same
-already-built map-municipality per-year files this app copies in wholesale (same
+already-built map-all-elections per-year files this app copies in wholesale (same
 approach as map-election-timeseries). This script is just that copy step + a manifest.
 
-Run from the repo root or map-election-profile/, after map-municipality/ has been built:
+Run from the repo root or map-election-profile/, after map-all-elections/ has been built:
     python map-election-profile/build_election_profile_data.py
 """
 import json
@@ -18,7 +18,7 @@ import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-MUNI_SRC = ROOT / "map-municipality" / "data" / "prepared"
+MUNI_SRC = ROOT / "map-all-elections" / "data" / "prepared"
 OUT = Path(__file__).resolve().parent / "data" / "prepared"
 
 

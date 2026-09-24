@@ -1,0 +1,5720 @@
+{
+  "election": "Abgeordnetenhauswahl Berlin 2026",
+  "election_date": "2026-09-20",
+  "status": "Vorläufiges Ergebnis (preliminary, as published 2026-09-21)",
+  "source": "https://wahlen-berlin.de/wahlen/BE2026/Afspraes/AGH/ergebnisse.html",
+  "results": {
+    "0101": {
+      "gebiet_nr": "0101",
+      "eligible_voters": 32501.0,
+      "voters_count": 25703.0,
+      "turnout": 0.7908,
+      "valid_votes_zweit": 25170.0,
+      "winner_erststimme": "gruene",
+      "winner_erststimme_candidate": "Gebel, Silke",
+      "winner_erststimme_share": 0.2838,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.266,
+      "top5_erststimme": [
+        [
+          "gruene",
+          0.2838
+        ],
+        [
+          "linke_pds",
+          0.2519
+        ],
+        [
+          "cdu_csu",
+          0.1618
+        ],
+        [
+          "spd",
+          0.1124
+        ],
+        [
+          "afd",
+          0.0635
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.266
+        ],
+        [
+          "gruene",
+          0.2403
+        ],
+        [
+          "cdu_csu",
+          0.1915
+        ],
+        [
+          "spd",
+          0.1073
+        ],
+        [
+          "afd",
+          0.0665
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4819.0,
+        "spd": 2700.0,
+        "gruene": 6049.0,
+        "linke_pds": 6695.0,
+        "afd": 1673.0,
+        "fdp": 873.0,
+        "tierschutzpartei": 205.0,
+        "die_partei": 152.0,
+        "volt": 1125.0,
+        "die_urbane": 18.0,
+        "dkp": 31.0,
+        "oedp": 22.0,
+        "sgp": 4.0,
+        "bsw": 743.0,
+        "pdf": 61.0
+      }
+    },
+    "0102": {
+      "gebiet_nr": "0102",
+      "eligible_voters": 33885.0,
+      "voters_count": 25192.0,
+      "turnout": 0.7435,
+      "valid_votes_zweit": 24957.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Diederich, Leonard",
+      "winner_erststimme_share": 0.2816,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.301,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.2816
+        ],
+        [
+          "cdu_csu",
+          0.1984
+        ],
+        [
+          "gruene",
+          0.1846
+        ],
+        [
+          "spd",
+          0.1169
+        ],
+        [
+          "afd",
+          0.1122
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.301
+        ],
+        [
+          "cdu_csu",
+          0.1842
+        ],
+        [
+          "gruene",
+          0.1502
+        ],
+        [
+          "afd",
+          0.1175
+        ],
+        [
+          "spd",
+          0.1079
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4596.0,
+        "spd": 2694.0,
+        "gruene": 3749.0,
+        "linke_pds": 7513.0,
+        "afd": 2932.0,
+        "fdp": 745.0,
+        "tierschutzpartei": 333.0,
+        "die_partei": 152.0,
+        "volt": 730.0,
+        "die_urbane": 19.0,
+        "dkp": 55.0,
+        "oedp": 28.0,
+        "sgp": 13.0,
+        "bsw": 1340.0,
+        "pdf": 58.0
+      }
+    },
+    "0103": {
+      "gebiet_nr": "0103",
+      "eligible_voters": 30837.0,
+      "voters_count": 23195.0,
+      "turnout": 0.7522,
+      "valid_votes_zweit": 23034.0,
+      "winner_erststimme": "gruene",
+      "winner_erststimme_candidate": "Omar, Jian",
+      "winner_erststimme_share": 0.2905,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2838,
+      "top5_erststimme": [
+        [
+          "gruene",
+          0.2905
+        ],
+        [
+          "linke_pds",
+          0.2454
+        ],
+        [
+          "cdu_csu",
+          0.1721
+        ],
+        [
+          "spd",
+          0.131
+        ],
+        [
+          "afd",
+          0.0754
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2838
+        ],
+        [
+          "gruene",
+          0.2166
+        ],
+        [
+          "cdu_csu",
+          0.178
+        ],
+        [
+          "spd",
+          0.1293
+        ],
+        [
+          "afd",
+          0.0768
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4100.0,
+        "spd": 2978.0,
+        "gruene": 4990.0,
+        "linke_pds": 6538.0,
+        "afd": 1768.0,
+        "fdp": 620.0,
+        "tierschutzpartei": 308.0,
+        "die_partei": 141.0,
+        "volt": 591.0,
+        "die_urbane": 12.0,
+        "dkp": 18.0,
+        "oedp": 25.0,
+        "sgp": 7.0,
+        "bsw": 889.0,
+        "pdf": 49.0
+      }
+    },
+    "0104": {
+      "gebiet_nr": "0104",
+      "eligible_voters": 29424.0,
+      "voters_count": 21434.0,
+      "turnout": 0.7285,
+      "valid_votes_zweit": 21252.0,
+      "winner_erststimme": "gruene",
+      "winner_erststimme_candidate": "Kurt, Taylan",
+      "winner_erststimme_share": 0.3658,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.4091,
+      "top5_erststimme": [
+        [
+          "gruene",
+          0.3658
+        ],
+        [
+          "linke_pds",
+          0.3096
+        ],
+        [
+          "cdu_csu",
+          0.0928
+        ],
+        [
+          "spd",
+          0.0839
+        ],
+        [
+          "afd",
+          0.0702
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.4091
+        ],
+        [
+          "gruene",
+          0.2117
+        ],
+        [
+          "spd",
+          0.105
+        ],
+        [
+          "cdu_csu",
+          0.0992
+        ],
+        [
+          "afd",
+          0.0704
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2109.0,
+        "spd": 2231.0,
+        "gruene": 4500.0,
+        "linke_pds": 8695.0,
+        "afd": 1496.0,
+        "fdp": 360.0,
+        "tierschutzpartei": 270.0,
+        "die_partei": 161.0,
+        "volt": 442.0,
+        "die_urbane": 12.0,
+        "dkp": 21.0,
+        "oedp": 29.0,
+        "sgp": 8.0,
+        "bsw": 854.0,
+        "pdf": 64.0
+      }
+    },
+    "0105": {
+      "gebiet_nr": "0105",
+      "eligible_voters": 27912.0,
+      "voters_count": 18679.0,
+      "turnout": 0.6692,
+      "valid_votes_zweit": 18429.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Dr. Umgelter, Andreas",
+      "winner_erststimme_share": 0.3644,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.3713,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.3644
+        ],
+        [
+          "gruene",
+          0.1508
+        ],
+        [
+          "spd",
+          0.1388
+        ],
+        [
+          "cdu_csu",
+          0.1376
+        ],
+        [
+          "afd",
+          0.1319
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.3713
+        ],
+        [
+          "cdu_csu",
+          0.131
+        ],
+        [
+          "afd",
+          0.1304
+        ],
+        [
+          "gruene",
+          0.1274
+        ],
+        [
+          "spd",
+          0.1236
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2414.0,
+        "spd": 2277.0,
+        "gruene": 2347.0,
+        "linke_pds": 6842.0,
+        "afd": 2404.0,
+        "fdp": 366.0,
+        "tierschutzpartei": 382.0,
+        "die_partei": 155.0,
+        "volt": 298.0,
+        "die_urbane": 16.0,
+        "dkp": 35.0,
+        "oedp": 17.0,
+        "sgp": 13.0,
+        "bsw": 795.0,
+        "pdf": 68.0
+      }
+    },
+    "0106": {
+      "gebiet_nr": "0106",
+      "eligible_voters": 28050.0,
+      "voters_count": 18029.0,
+      "turnout": 0.6427,
+      "valid_votes_zweit": 17845.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Kleedörfer, Martha",
+      "winner_erststimme_share": 0.4618,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.5054,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.4618
+        ],
+        [
+          "gruene",
+          0.2183
+        ],
+        [
+          "spd",
+          0.093
+        ],
+        [
+          "afd",
+          0.0799
+        ],
+        [
+          "cdu_csu",
+          0.0708
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.5054
+        ],
+        [
+          "gruene",
+          0.1495
+        ],
+        [
+          "spd",
+          0.0892
+        ],
+        [
+          "afd",
+          0.0797
+        ],
+        [
+          "cdu_csu",
+          0.0734
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 1310.0,
+        "spd": 1592.0,
+        "gruene": 2667.0,
+        "linke_pds": 9019.0,
+        "afd": 1422.0,
+        "fdp": 235.0,
+        "tierschutzpartei": 233.0,
+        "die_partei": 148.0,
+        "volt": 234.0,
+        "die_urbane": 20.0,
+        "dkp": 36.0,
+        "oedp": 23.0,
+        "sgp": 17.0,
+        "bsw": 824.0,
+        "pdf": 65.0
+      }
+    },
+    "0107": {
+      "gebiet_nr": "0107",
+      "eligible_voters": 29285.0,
+      "voters_count": 19340.0,
+      "turnout": 0.6604,
+      "valid_votes_zweit": 19105.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Janssen, Deike",
+      "winner_erststimme_share": 0.4341,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.4405,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.4341
+        ],
+        [
+          "gruene",
+          0.1803
+        ],
+        [
+          "spd",
+          0.1249
+        ],
+        [
+          "cdu_csu",
+          0.09
+        ],
+        [
+          "afd",
+          0.0877
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.4405
+        ],
+        [
+          "gruene",
+          0.1548
+        ],
+        [
+          "spd",
+          0.1089
+        ],
+        [
+          "cdu_csu",
+          0.0919
+        ],
+        [
+          "afd",
+          0.0873
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 1756.0,
+        "spd": 2080.0,
+        "gruene": 2958.0,
+        "linke_pds": 8416.0,
+        "afd": 1667.0,
+        "fdp": 294.0,
+        "tierschutzpartei": 286.0,
+        "die_partei": 132.0,
+        "volt": 373.0,
+        "die_urbane": 15.0,
+        "dkp": 25.0,
+        "oedp": 25.0,
+        "sgp": 16.0,
+        "bsw": 1019.0,
+        "pdf": 43.0
+      }
+    },
+    "0201": {
+      "gebiet_nr": "0201",
+      "eligible_voters": 32832.0,
+      "voters_count": 22515.0,
+      "turnout": 0.6858,
+      "valid_votes_zweit": 22225.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Eralp, Elif",
+      "winner_erststimme_share": 0.5041,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.4695,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.5041
+        ],
+        [
+          "gruene",
+          0.172
+        ],
+        [
+          "spd",
+          0.106
+        ],
+        [
+          "cdu_csu",
+          0.0749
+        ],
+        [
+          "afd",
+          0.0545
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.4695
+        ],
+        [
+          "gruene",
+          0.1791
+        ],
+        [
+          "spd",
+          0.1006
+        ],
+        [
+          "cdu_csu",
+          0.0802
+        ],
+        [
+          "afd",
+          0.0548
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 1783.0,
+        "spd": 2235.0,
+        "gruene": 3980.0,
+        "linke_pds": 10434.0,
+        "afd": 1217.0,
+        "fdp": 348.0,
+        "tierschutzpartei": 277.0,
+        "die_partei": 202.0,
+        "volt": 422.0,
+        "die_urbane": 34.0,
+        "dkp": 40.0,
+        "oedp": 8.0,
+        "other": 10.0,
+        "sgp": 11.0,
+        "bsw": 1193.0,
+        "pdf": 31.0
+      }
+    },
+    "0202": {
+      "gebiet_nr": "0202",
+      "eligible_voters": 33942.0,
+      "voters_count": 27185.0,
+      "turnout": 0.8009,
+      "valid_votes_zweit": 27013.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Efler, Michael",
+      "winner_erststimme_share": 0.3708,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.424,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.3708
+        ],
+        [
+          "gruene",
+          0.3346
+        ],
+        [
+          "spd",
+          0.0994
+        ],
+        [
+          "cdu_csu",
+          0.0749
+        ],
+        [
+          "afd",
+          0.0347
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.424
+        ],
+        [
+          "gruene",
+          0.2609
+        ],
+        [
+          "spd",
+          0.1076
+        ],
+        [
+          "cdu_csu",
+          0.0801
+        ],
+        [
+          "afd",
+          0.0355
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2165.0,
+        "spd": 2907.0,
+        "gruene": 7049.0,
+        "linke_pds": 11453.0,
+        "afd": 959.0,
+        "fdp": 375.0,
+        "tierschutzpartei": 291.0,
+        "die_partei": 223.0,
+        "volt": 596.0,
+        "die_urbane": 28.0,
+        "dkp": 29.0,
+        "oedp": 26.0,
+        "other": 10.0,
+        "sgp": 6.0,
+        "bsw": 843.0,
+        "pdf": 53.0
+      }
+    },
+    "0203": {
+      "gebiet_nr": "0203",
+      "eligible_voters": 34765.0,
+      "voters_count": 27598.0,
+      "turnout": 0.7938,
+      "valid_votes_zweit": 27444.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Wolter-Ehling, Kerstin",
+      "winner_erststimme_share": 0.4216,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.47,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.4216
+        ],
+        [
+          "gruene",
+          0.2807
+        ],
+        [
+          "spd",
+          0.083
+        ],
+        [
+          "cdu_csu",
+          0.0823
+        ],
+        [
+          "afd",
+          0.0448
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.47
+        ],
+        [
+          "gruene",
+          0.2173
+        ],
+        [
+          "spd",
+          0.0873
+        ],
+        [
+          "cdu_csu",
+          0.0841
+        ],
+        [
+          "afd",
+          0.0464
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2309.0,
+        "spd": 2396.0,
+        "gruene": 5964.0,
+        "linke_pds": 12898.0,
+        "afd": 1274.0,
+        "fdp": 379.0,
+        "tierschutzpartei": 261.0,
+        "die_partei": 252.0,
+        "volt": 679.0,
+        "die_urbane": 23.0,
+        "dkp": 40.0,
+        "oedp": 18.0,
+        "other": 21.0,
+        "sgp": 8.0,
+        "bsw": 858.0,
+        "pdf": 64.0
+      }
+    },
+    "0204": {
+      "gebiet_nr": "0204",
+      "eligible_voters": 35793.0,
+      "voters_count": 27273.0,
+      "turnout": 0.762,
+      "valid_votes_zweit": 27020.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Valgolio, Damiano",
+      "winner_erststimme_share": 0.3907,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.3939,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.3907
+        ],
+        [
+          "gruene",
+          0.1955
+        ],
+        [
+          "cdu_csu",
+          0.109
+        ],
+        [
+          "afd",
+          0.104
+        ],
+        [
+          "spd",
+          0.0925
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.3939
+        ],
+        [
+          "gruene",
+          0.1604
+        ],
+        [
+          "cdu_csu",
+          0.1123
+        ],
+        [
+          "afd",
+          0.1045
+        ],
+        [
+          "spd",
+          0.0974
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3035.0,
+        "spd": 2632.0,
+        "gruene": 4333.0,
+        "linke_pds": 10643.0,
+        "afd": 2823.0,
+        "fdp": 535.0,
+        "tierschutzpartei": 427.0,
+        "die_partei": 272.0,
+        "volt": 754.0,
+        "die_urbane": 26.0,
+        "dkp": 58.0,
+        "oedp": 32.0,
+        "other": 17.0,
+        "sgp": 10.0,
+        "bsw": 1320.0,
+        "pdf": 103.0
+      }
+    },
+    "0205": {
+      "gebiet_nr": "0205",
+      "eligible_voters": 34106.0,
+      "voters_count": 27890.0,
+      "turnout": 0.8177,
+      "valid_votes_zweit": 27745.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Spiegel, Ekkehard",
+      "winner_erststimme_share": 0.4085,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.4581,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.4085
+        ],
+        [
+          "gruene",
+          0.2759
+        ],
+        [
+          "spd",
+          0.0851
+        ],
+        [
+          "cdu_csu",
+          0.0729
+        ],
+        [
+          "afd",
+          0.0564
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.4581
+        ],
+        [
+          "gruene",
+          0.213
+        ],
+        [
+          "spd",
+          0.0858
+        ],
+        [
+          "cdu_csu",
+          0.0798
+        ],
+        [
+          "afd",
+          0.0584
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2213.0,
+        "spd": 2381.0,
+        "gruene": 5910.0,
+        "linke_pds": 12711.0,
+        "afd": 1620.0,
+        "fdp": 434.0,
+        "tierschutzpartei": 396.0,
+        "die_partei": 276.0,
+        "volt": 793.0,
+        "die_urbane": 20.0,
+        "dkp": 32.0,
+        "oedp": 36.0,
+        "other": 22.0,
+        "sgp": 7.0,
+        "bsw": 824.0,
+        "pdf": 70.0
+      }
+    },
+    "0301": {
+      "gebiet_nr": "0301",
+      "eligible_voters": 34980.0,
+      "voters_count": 26241.0,
+      "turnout": 0.7502,
+      "valid_votes_zweit": 25899.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Kraft, Johannes",
+      "winner_erststimme_share": 0.2828,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.277,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.2828
+        ],
+        [
+          "afd",
+          0.2666
+        ],
+        [
+          "linke_pds",
+          0.1681
+        ],
+        [
+          "gruene",
+          0.0946
+        ],
+        [
+          "spd",
+          0.091
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.277
+        ],
+        [
+          "cdu_csu",
+          0.1928
+        ],
+        [
+          "linke_pds",
+          0.1798
+        ],
+        [
+          "spd",
+          0.097
+        ],
+        [
+          "gruene",
+          0.0954
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4994.0,
+        "spd": 2511.0,
+        "gruene": 2472.0,
+        "linke_pds": 4656.0,
+        "afd": 7175.0,
+        "fdp": 684.0,
+        "tierschutzpartei": 775.0,
+        "die_partei": 248.0,
+        "volt": 476.0,
+        "die_urbane": 11.0,
+        "dkp": 39.0,
+        "oedp": 46.0,
+        "sgp": 9.0,
+        "bsw": 1706.0,
+        "pdf": 97.0
+      }
+    },
+    "0302": {
+      "gebiet_nr": "0302",
+      "eligible_voters": 33681.0,
+      "voters_count": 26791.0,
+      "turnout": 0.7954,
+      "valid_votes_zweit": 26511.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Bocian, Lars",
+      "winner_erststimme_share": 0.2504,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.2172,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.2504
+        ],
+        [
+          "afd",
+          0.2092
+        ],
+        [
+          "linke_pds",
+          0.1818
+        ],
+        [
+          "gruene",
+          0.1525
+        ],
+        [
+          "spd",
+          0.1099
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.2172
+        ],
+        [
+          "linke_pds",
+          0.1998
+        ],
+        [
+          "cdu_csu",
+          0.1954
+        ],
+        [
+          "gruene",
+          0.1361
+        ],
+        [
+          "spd",
+          0.1083
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 5179.0,
+        "spd": 2870.0,
+        "gruene": 3607.0,
+        "linke_pds": 5298.0,
+        "afd": 5758.0,
+        "fdp": 744.0,
+        "tierschutzpartei": 662.0,
+        "die_partei": 185.0,
+        "volt": 513.0,
+        "die_urbane": 23.0,
+        "dkp": 27.0,
+        "oedp": 48.0,
+        "sgp": 6.0,
+        "bsw": 1498.0,
+        "pdf": 93.0
+      }
+    },
+    "0303": {
+      "gebiet_nr": "0303",
+      "eligible_voters": 35116.0,
+      "voters_count": 28142.0,
+      "turnout": 0.8014,
+      "valid_votes_zweit": 27902.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Zebisch, Christian",
+      "winner_erststimme_share": 0.2604,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2873,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.2604
+        ],
+        [
+          "gruene",
+          0.2546
+        ],
+        [
+          "afd",
+          0.1437
+        ],
+        [
+          "cdu_csu",
+          0.1296
+        ],
+        [
+          "spd",
+          0.1094
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2873
+        ],
+        [
+          "gruene",
+          0.1897
+        ],
+        [
+          "afd",
+          0.1445
+        ],
+        [
+          "cdu_csu",
+          0.1348
+        ],
+        [
+          "spd",
+          0.1126
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3760.0,
+        "spd": 3141.0,
+        "gruene": 5294.0,
+        "linke_pds": 8017.0,
+        "afd": 4032.0,
+        "fdp": 582.0,
+        "tierschutzpartei": 554.0,
+        "die_partei": 223.0,
+        "volt": 710.0,
+        "die_urbane": 24.0,
+        "dkp": 46.0,
+        "oedp": 54.0,
+        "sgp": 8.0,
+        "bsw": 1350.0,
+        "pdf": 107.0
+      }
+    },
+    "0304": {
+      "gebiet_nr": "0304",
+      "eligible_voters": 29178.0,
+      "voters_count": 22071.0,
+      "turnout": 0.7564,
+      "valid_votes_zweit": 21808.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Mohr, Herbert",
+      "winner_erststimme_share": 0.2293,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2348,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.2293
+        ],
+        [
+          "linke_pds",
+          0.2134
+        ],
+        [
+          "cdu_csu",
+          0.1731
+        ],
+        [
+          "spd",
+          0.1305
+        ],
+        [
+          "gruene",
+          0.1211
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2348
+        ],
+        [
+          "afd",
+          0.2325
+        ],
+        [
+          "cdu_csu",
+          0.1586
+        ],
+        [
+          "gruene",
+          0.1091
+        ],
+        [
+          "spd",
+          0.1085
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3458.0,
+        "spd": 2366.0,
+        "gruene": 2380.0,
+        "linke_pds": 5120.0,
+        "afd": 5070.0,
+        "fdp": 508.0,
+        "tierschutzpartei": 653.0,
+        "die_partei": 198.0,
+        "volt": 439.0,
+        "die_urbane": 28.0,
+        "dkp": 32.0,
+        "oedp": 48.0,
+        "sgp": 5.0,
+        "bsw": 1400.0,
+        "pdf": 103.0
+      }
+    },
+    "0305": {
+      "gebiet_nr": "0305",
+      "eligible_voters": 31445.0,
+      "voters_count": 24558.0,
+      "turnout": 0.781,
+      "valid_votes_zweit": 24345.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Springob, Enja",
+      "winner_erststimme_share": 0.2813,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2945,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.2813
+        ],
+        [
+          "gruene",
+          0.2207
+        ],
+        [
+          "afd",
+          0.1714
+        ],
+        [
+          "cdu_csu",
+          0.1192
+        ],
+        [
+          "spd",
+          0.1061
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2945
+        ],
+        [
+          "afd",
+          0.1666
+        ],
+        [
+          "gruene",
+          0.1653
+        ],
+        [
+          "cdu_csu",
+          0.1214
+        ],
+        [
+          "spd",
+          0.1075
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2956.0,
+        "spd": 2617.0,
+        "gruene": 4025.0,
+        "linke_pds": 7170.0,
+        "afd": 4056.0,
+        "fdp": 478.0,
+        "tierschutzpartei": 608.0,
+        "die_partei": 237.0,
+        "volt": 568.0,
+        "die_urbane": 27.0,
+        "dkp": 46.0,
+        "oedp": 30.0,
+        "sgp": 12.0,
+        "bsw": 1402.0,
+        "pdf": 113.0
+      }
+    },
+    "0306": {
+      "gebiet_nr": "0306",
+      "eligible_voters": 32268.0,
+      "voters_count": 26692.0,
+      "turnout": 0.8272,
+      "valid_votes_zweit": 26570.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Bigos, Maria",
+      "winner_erststimme_share": 0.3244,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.3532,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.3244
+        ],
+        [
+          "gruene",
+          0.3057
+        ],
+        [
+          "spd",
+          0.1441
+        ],
+        [
+          "cdu_csu",
+          0.0951
+        ],
+        [
+          "afd",
+          0.0532
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.3532
+        ],
+        [
+          "gruene",
+          0.2727
+        ],
+        [
+          "cdu_csu",
+          0.1067
+        ],
+        [
+          "spd",
+          0.1027
+        ],
+        [
+          "afd",
+          0.054
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2835.0,
+        "spd": 2728.0,
+        "gruene": 7246.0,
+        "linke_pds": 9385.0,
+        "afd": 1435.0,
+        "fdp": 459.0,
+        "tierschutzpartei": 302.0,
+        "die_partei": 232.0,
+        "volt": 963.0,
+        "die_urbane": 18.0,
+        "dkp": 44.0,
+        "oedp": 37.0,
+        "sgp": 9.0,
+        "bsw": 804.0,
+        "pdf": 73.0
+      }
+    },
+    "0307": {
+      "gebiet_nr": "0307",
+      "eligible_voters": 30377.0,
+      "voters_count": 23992.0,
+      "turnout": 0.7898,
+      "valid_votes_zweit": 23827.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Schrader, Niklas",
+      "winner_erststimme_share": 0.3206,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.3503,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.3206
+        ],
+        [
+          "gruene",
+          0.2593
+        ],
+        [
+          "afd",
+          0.12
+        ],
+        [
+          "cdu_csu",
+          0.0963
+        ],
+        [
+          "spd",
+          0.0959
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.3503
+        ],
+        [
+          "gruene",
+          0.2009
+        ],
+        [
+          "afd",
+          0.1206
+        ],
+        [
+          "cdu_csu",
+          0.1018
+        ],
+        [
+          "spd",
+          0.0958
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2426.0,
+        "spd": 2282.0,
+        "gruene": 4788.0,
+        "linke_pds": 8346.0,
+        "afd": 2873.0,
+        "fdp": 447.0,
+        "tierschutzpartei": 452.0,
+        "die_partei": 289.0,
+        "volt": 665.0,
+        "die_urbane": 22.0,
+        "dkp": 63.0,
+        "oedp": 40.0,
+        "sgp": 18.0,
+        "bsw": 1037.0,
+        "pdf": 79.0
+      }
+    },
+    "0308": {
+      "gebiet_nr": "0308",
+      "eligible_voters": 30301.0,
+      "voters_count": 24988.0,
+      "turnout": 0.8247,
+      "valid_votes_zweit": 24876.0,
+      "winner_erststimme": "gruene",
+      "winner_erststimme_candidate": "Billig, Daniela",
+      "winner_erststimme_share": 0.3429,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.3175,
+      "top5_erststimme": [
+        [
+          "gruene",
+          0.3429
+        ],
+        [
+          "linke_pds",
+          0.2672
+        ],
+        [
+          "cdu_csu",
+          0.1189
+        ],
+        [
+          "spd",
+          0.1018
+        ],
+        [
+          "afd",
+          0.0598
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.3175
+        ],
+        [
+          "gruene",
+          0.2563
+        ],
+        [
+          "cdu_csu",
+          0.1382
+        ],
+        [
+          "spd",
+          0.1002
+        ],
+        [
+          "afd",
+          0.0607
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3438.0,
+        "spd": 2493.0,
+        "gruene": 6375.0,
+        "linke_pds": 7897.0,
+        "afd": 1511.0,
+        "fdp": 573.0,
+        "tierschutzpartei": 252.0,
+        "die_partei": 184.0,
+        "volt": 1159.0,
+        "die_urbane": 14.0,
+        "dkp": 37.0,
+        "oedp": 39.0,
+        "sgp": 16.0,
+        "bsw": 840.0,
+        "pdf": 48.0
+      }
+    },
+    "0309": {
+      "gebiet_nr": "0309",
+      "eligible_voters": 34144.0,
+      "voters_count": 26744.0,
+      "turnout": 0.7833,
+      "valid_votes_zweit": 26458.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Schirmer, Maximilian",
+      "winner_erststimme_share": 0.2811,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.3139,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.2811
+        ],
+        [
+          "spd",
+          0.2525
+        ],
+        [
+          "gruene",
+          0.1656
+        ],
+        [
+          "afd",
+          0.1232
+        ],
+        [
+          "cdu_csu",
+          0.0921
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.3139
+        ],
+        [
+          "gruene",
+          0.1832
+        ],
+        [
+          "afd",
+          0.127
+        ],
+        [
+          "spd",
+          0.1249
+        ],
+        [
+          "cdu_csu",
+          0.1185
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3134.0,
+        "spd": 3305.0,
+        "gruene": 4847.0,
+        "linke_pds": 8305.0,
+        "afd": 3360.0,
+        "fdp": 489.0,
+        "tierschutzpartei": 512.0,
+        "die_partei": 246.0,
+        "volt": 807.0,
+        "die_urbane": 24.0,
+        "dkp": 50.0,
+        "oedp": 47.0,
+        "sgp": 12.0,
+        "bsw": 1237.0,
+        "pdf": 83.0
+      }
+    },
+    "0401": {
+      "gebiet_nr": "0401",
+      "eligible_voters": 28767.0,
+      "voters_count": 20083.0,
+      "turnout": 0.6981,
+      "valid_votes_zweit": 19855.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Schenker, Niklas",
+      "winner_erststimme_share": 0.2484,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2605,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.2484
+        ],
+        [
+          "spd",
+          0.2031
+        ],
+        [
+          "cdu_csu",
+          0.1685
+        ],
+        [
+          "afd",
+          0.1403
+        ],
+        [
+          "gruene",
+          0.1324
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2605
+        ],
+        [
+          "cdu_csu",
+          0.1756
+        ],
+        [
+          "spd",
+          0.149
+        ],
+        [
+          "afd",
+          0.1421
+        ],
+        [
+          "gruene",
+          0.1399
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3486.0,
+        "spd": 2959.0,
+        "gruene": 2778.0,
+        "linke_pds": 5172.0,
+        "afd": 2821.0,
+        "fdp": 581.0,
+        "tierschutzpartei": 459.0,
+        "die_partei": 117.0,
+        "volt": 393.0,
+        "die_urbane": 11.0,
+        "dkp": 8.0,
+        "oedp": 30.0,
+        "sgp": 6.0,
+        "bsw": 976.0,
+        "pdf": 58.0
+      }
+    },
+    "0402": {
+      "gebiet_nr": "0402",
+      "eligible_voters": 31122.0,
+      "voters_count": 24111.0,
+      "turnout": 0.7747,
+      "valid_votes_zweit": 23869.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Hack, Ariturel",
+      "winner_erststimme_share": 0.331,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.307,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.331
+        ],
+        [
+          "gruene",
+          0.1888
+        ],
+        [
+          "spd",
+          0.1485
+        ],
+        [
+          "linke_pds",
+          0.1424
+        ],
+        [
+          "afd",
+          0.0955
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.307
+        ],
+        [
+          "gruene",
+          0.1617
+        ],
+        [
+          "linke_pds",
+          0.1601
+        ],
+        [
+          "spd",
+          0.149
+        ],
+        [
+          "afd",
+          0.0984
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 7327.0,
+        "spd": 3556.0,
+        "gruene": 3860.0,
+        "linke_pds": 3821.0,
+        "afd": 2348.0,
+        "fdp": 1067.0,
+        "tierschutzpartei": 360.0,
+        "die_partei": 113.0,
+        "volt": 564.0,
+        "die_urbane": 20.0,
+        "dkp": 10.0,
+        "oedp": 30.0,
+        "sgp": 3.0,
+        "bsw": 740.0,
+        "pdf": 50.0
+      }
+    },
+    "0403": {
+      "gebiet_nr": "0403",
+      "eligible_voters": 31153.0,
+      "voters_count": 24591.0,
+      "turnout": 0.7894,
+      "valid_votes_zweit": 24412.0,
+      "winner_erststimme": "gruene",
+      "winner_erststimme_candidate": "Dr. Vandrey, Petra",
+      "winner_erststimme_share": 0.2571,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2362,
+      "top5_erststimme": [
+        [
+          "gruene",
+          0.2571
+        ],
+        [
+          "spd",
+          0.1962
+        ],
+        [
+          "cdu_csu",
+          0.1941
+        ],
+        [
+          "linke_pds",
+          0.1908
+        ],
+        [
+          "afd",
+          0.0722
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2362
+        ],
+        [
+          "gruene",
+          0.2214
+        ],
+        [
+          "cdu_csu",
+          0.2004
+        ],
+        [
+          "spd",
+          0.1538
+        ],
+        [
+          "afd",
+          0.0756
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4893.0,
+        "spd": 3755.0,
+        "gruene": 5405.0,
+        "linke_pds": 5765.0,
+        "afd": 1846.0,
+        "fdp": 761.0,
+        "tierschutzpartei": 319.0,
+        "die_partei": 164.0,
+        "volt": 595.0,
+        "die_urbane": 11.0,
+        "dkp": 15.0,
+        "oedp": 36.0,
+        "sgp": 5.0,
+        "bsw": 789.0,
+        "pdf": 53.0
+      }
+    },
+    "0404": {
+      "gebiet_nr": "0404",
+      "eligible_voters": 32381.0,
+      "voters_count": 24365.0,
+      "turnout": 0.7524,
+      "valid_votes_zweit": 24194.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Niemczyk, Aldona",
+      "winner_erststimme_share": 0.245,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2464,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.245
+        ],
+        [
+          "gruene",
+          0.2412
+        ],
+        [
+          "linke_pds",
+          0.1775
+        ],
+        [
+          "spd",
+          0.1456
+        ],
+        [
+          "afd",
+          0.0814
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2464
+        ],
+        [
+          "linke_pds",
+          0.2069
+        ],
+        [
+          "gruene",
+          0.1962
+        ],
+        [
+          "spd",
+          0.1409
+        ],
+        [
+          "afd",
+          0.0836
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 5962.0,
+        "spd": 3410.0,
+        "gruene": 4748.0,
+        "linke_pds": 5006.0,
+        "afd": 2023.0,
+        "fdp": 1062.0,
+        "tierschutzpartei": 286.0,
+        "die_partei": 114.0,
+        "volt": 693.0,
+        "die_urbane": 12.0,
+        "dkp": 14.0,
+        "oedp": 33.0,
+        "sgp": 4.0,
+        "bsw": 783.0,
+        "pdf": 44.0
+      }
+    },
+    "0405": {
+      "gebiet_nr": "0405",
+      "eligible_voters": 30755.0,
+      "voters_count": 23236.0,
+      "turnout": 0.7555,
+      "valid_votes_zweit": 23038.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Khalatbari, Sandra",
+      "winner_erststimme_share": 0.355,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.3395,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.355
+        ],
+        [
+          "gruene",
+          0.1645
+        ],
+        [
+          "spd",
+          0.1463
+        ],
+        [
+          "linke_pds",
+          0.1237
+        ],
+        [
+          "afd",
+          0.104
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.3395
+        ],
+        [
+          "gruene",
+          0.1446
+        ],
+        [
+          "linke_pds",
+          0.144
+        ],
+        [
+          "spd",
+          0.1354
+        ],
+        [
+          "afd",
+          0.1073
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 7822.0,
+        "spd": 3120.0,
+        "gruene": 3331.0,
+        "linke_pds": 3318.0,
+        "afd": 2472.0,
+        "fdp": 1358.0,
+        "tierschutzpartei": 285.0,
+        "die_partei": 81.0,
+        "volt": 520.0,
+        "die_urbane": 8.0,
+        "dkp": 10.0,
+        "oedp": 17.0,
+        "sgp": 5.0,
+        "bsw": 645.0,
+        "pdf": 46.0
+      }
+    },
+    "0406": {
+      "gebiet_nr": "0406",
+      "eligible_voters": 31667.0,
+      "voters_count": 24310.0,
+      "turnout": 0.7677,
+      "valid_votes_zweit": 24116.0,
+      "winner_erststimme": "gruene",
+      "winner_erststimme_candidate": "Zimmer, Jakob",
+      "winner_erststimme_share": 0.2963,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2387,
+      "top5_erststimme": [
+        [
+          "gruene",
+          0.2963
+        ],
+        [
+          "cdu_csu",
+          0.2393
+        ],
+        [
+          "linke_pds",
+          0.1611
+        ],
+        [
+          "spd",
+          0.1506
+        ],
+        [
+          "afd",
+          0.078
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2387
+        ],
+        [
+          "gruene",
+          0.2133
+        ],
+        [
+          "linke_pds",
+          0.2087
+        ],
+        [
+          "spd",
+          0.1516
+        ],
+        [
+          "afd",
+          0.0813
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 5756.0,
+        "spd": 3655.0,
+        "gruene": 5144.0,
+        "linke_pds": 5034.0,
+        "afd": 1960.0,
+        "fdp": 779.0,
+        "tierschutzpartei": 328.0,
+        "die_partei": 92.0,
+        "volt": 575.0,
+        "die_urbane": 14.0,
+        "dkp": 12.0,
+        "oedp": 29.0,
+        "sgp": 8.0,
+        "bsw": 685.0,
+        "pdf": 45.0
+      }
+    },
+    "0407": {
+      "gebiet_nr": "0407",
+      "eligible_voters": 32533.0,
+      "voters_count": 25668.0,
+      "turnout": 0.789,
+      "valid_votes_zweit": 25428.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Dr. Badenberg, Felor",
+      "winner_erststimme_share": 0.2609,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2608,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.2609
+        ],
+        [
+          "gruene",
+          0.2226
+        ],
+        [
+          "spd",
+          0.1778
+        ],
+        [
+          "linke_pds",
+          0.1497
+        ],
+        [
+          "afd",
+          0.0995
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2608
+        ],
+        [
+          "linke_pds",
+          0.1827
+        ],
+        [
+          "gruene",
+          0.1796
+        ],
+        [
+          "spd",
+          0.158
+        ],
+        [
+          "afd",
+          0.1013
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 6631.0,
+        "spd": 4017.0,
+        "gruene": 4567.0,
+        "linke_pds": 4645.0,
+        "afd": 2577.0,
+        "fdp": 901.0,
+        "tierschutzpartei": 415.0,
+        "die_partei": 117.0,
+        "volt": 677.0,
+        "die_urbane": 19.0,
+        "dkp": 13.0,
+        "oedp": 37.0,
+        "sgp": 3.0,
+        "bsw": 765.0,
+        "pdf": 44.0
+      }
+    },
+    "0501": {
+      "gebiet_nr": "0501",
+      "eligible_voters": 34898.0,
+      "voters_count": 22978.0,
+      "turnout": 0.6584,
+      "valid_votes_zweit": 22598.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Meißner, Bettina",
+      "winner_erststimme_share": 0.2316,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.2247,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.2316
+        ],
+        [
+          "afd",
+          0.228
+        ],
+        [
+          "spd",
+          0.1887
+        ],
+        [
+          "linke_pds",
+          0.1702
+        ],
+        [
+          "gruene",
+          0.0752
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.2247
+        ],
+        [
+          "cdu_csu",
+          0.2173
+        ],
+        [
+          "linke_pds",
+          0.1749
+        ],
+        [
+          "spd",
+          0.157
+        ],
+        [
+          "gruene",
+          0.0831
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4910.0,
+        "spd": 3547.0,
+        "gruene": 1877.0,
+        "linke_pds": 3953.0,
+        "afd": 5078.0,
+        "fdp": 684.0,
+        "tierschutzpartei": 819.0,
+        "die_partei": 222.0,
+        "volt": 286.0,
+        "die_urbane": 26.0,
+        "dkp": 5.0,
+        "oedp": 45.0,
+        "sgp": 4.0,
+        "bsw": 1055.0,
+        "pdf": 87.0
+      }
+    },
+    "0502": {
+      "gebiet_nr": "0502",
+      "eligible_voters": 28442.0,
+      "voters_count": 18222.0,
+      "turnout": 0.6407,
+      "valid_votes_zweit": 17868.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Otti, Andreas",
+      "winner_erststimme_share": 0.2379,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.2333,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.2379
+        ],
+        [
+          "cdu_csu",
+          0.214
+        ],
+        [
+          "spd",
+          0.2073
+        ],
+        [
+          "linke_pds",
+          0.1749
+        ],
+        [
+          "gruene",
+          0.0763
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.2333
+        ],
+        [
+          "cdu_csu",
+          0.1935
+        ],
+        [
+          "linke_pds",
+          0.1879
+        ],
+        [
+          "spd",
+          0.158
+        ],
+        [
+          "gruene",
+          0.081
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3457.0,
+        "spd": 2823.0,
+        "gruene": 1447.0,
+        "linke_pds": 3358.0,
+        "afd": 4168.0,
+        "fdp": 424.0,
+        "tierschutzpartei": 593.0,
+        "die_partei": 186.0,
+        "volt": 242.0,
+        "die_urbane": 19.0,
+        "dkp": 10.0,
+        "oedp": 26.0,
+        "sgp": 12.0,
+        "bsw": 1021.0,
+        "pdf": 82.0
+      }
+    },
+    "0503": {
+      "gebiet_nr": "0503",
+      "eligible_voters": 33630.0,
+      "voters_count": 22060.0,
+      "turnout": 0.656,
+      "valid_votes_zweit": 21748.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Wulfes, Thomas",
+      "winner_erststimme_share": 0.2125,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2182,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.2125
+        ],
+        [
+          "cdu_csu",
+          0.2013
+        ],
+        [
+          "afd",
+          0.1991
+        ],
+        [
+          "spd",
+          0.1719
+        ],
+        [
+          "gruene",
+          0.0979
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2182
+        ],
+        [
+          "afd",
+          0.1969
+        ],
+        [
+          "cdu_csu",
+          0.1917
+        ],
+        [
+          "spd",
+          0.1475
+        ],
+        [
+          "gruene",
+          0.0949
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4170.0,
+        "spd": 3208.0,
+        "gruene": 2063.0,
+        "linke_pds": 4745.0,
+        "afd": 4282.0,
+        "fdp": 620.0,
+        "tierschutzpartei": 636.0,
+        "die_partei": 216.0,
+        "volt": 317.0,
+        "die_urbane": 30.0,
+        "dkp": 22.0,
+        "oedp": 51.0,
+        "sgp": 10.0,
+        "bsw": 1294.0,
+        "pdf": 84.0
+      }
+    },
+    "0504": {
+      "gebiet_nr": "0504",
+      "eligible_voters": 31088.0,
+      "voters_count": 21777.0,
+      "turnout": 0.7005,
+      "valid_votes_zweit": 21438.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Melzer, Heiko",
+      "winner_erststimme_share": 0.2951,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2747,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.2951
+        ],
+        [
+          "afd",
+          0.231
+        ],
+        [
+          "spd",
+          0.1616
+        ],
+        [
+          "linke_pds",
+          0.1292
+        ],
+        [
+          "gruene",
+          0.0682
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2747
+        ],
+        [
+          "afd",
+          0.2372
+        ],
+        [
+          "spd",
+          0.1484
+        ],
+        [
+          "linke_pds",
+          0.1338
+        ],
+        [
+          "gruene",
+          0.0732
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 5890.0,
+        "spd": 3181.0,
+        "gruene": 1570.0,
+        "linke_pds": 2868.0,
+        "afd": 5085.0,
+        "fdp": 662.0,
+        "tierschutzpartei": 731.0,
+        "die_partei": 166.0,
+        "volt": 259.0,
+        "die_urbane": 15.0,
+        "dkp": 8.0,
+        "oedp": 27.0,
+        "sgp": 11.0,
+        "bsw": 894.0,
+        "pdf": 71.0
+      }
+    },
+    "0505": {
+      "gebiet_nr": "0505",
+      "eligible_voters": 31802.0,
+      "voters_count": 24248.0,
+      "turnout": 0.7625,
+      "valid_votes_zweit": 23908.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Wegner, Kai",
+      "winner_erststimme_share": 0.3185,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.3269,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.3185
+        ],
+        [
+          "spd",
+          0.1939
+        ],
+        [
+          "afd",
+          0.1719
+        ],
+        [
+          "gruene",
+          0.1071
+        ],
+        [
+          "linke_pds",
+          0.0942
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.3269
+        ],
+        [
+          "afd",
+          0.1753
+        ],
+        [
+          "spd",
+          0.1537
+        ],
+        [
+          "gruene",
+          0.1135
+        ],
+        [
+          "linke_pds",
+          0.11
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 7815.0,
+        "spd": 3675.0,
+        "gruene": 2714.0,
+        "linke_pds": 2631.0,
+        "afd": 4190.0,
+        "fdp": 920.0,
+        "tierschutzpartei": 520.0,
+        "die_partei": 139.0,
+        "volt": 379.0,
+        "die_urbane": 16.0,
+        "dkp": 7.0,
+        "oedp": 42.0,
+        "sgp": 5.0,
+        "bsw": 778.0,
+        "pdf": 77.0
+      }
+    },
+    "0601": {
+      "gebiet_nr": "0601",
+      "eligible_voters": 32046.0,
+      "voters_count": 25617.0,
+      "turnout": 0.7994,
+      "valid_votes_zweit": 25419.0,
+      "winner_erststimme": "gruene",
+      "winner_erststimme_candidate": "Wojahn, Tonka",
+      "winner_erststimme_share": 0.2461,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2366,
+      "top5_erststimme": [
+        [
+          "gruene",
+          0.2461
+        ],
+        [
+          "cdu_csu",
+          0.2432
+        ],
+        [
+          "linke_pds",
+          0.1683
+        ],
+        [
+          "spd",
+          0.1636
+        ],
+        [
+          "afd",
+          0.0931
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2366
+        ],
+        [
+          "linke_pds",
+          0.204
+        ],
+        [
+          "gruene",
+          0.201
+        ],
+        [
+          "spd",
+          0.1559
+        ],
+        [
+          "afd",
+          0.091
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 6013.0,
+        "spd": 3963.0,
+        "gruene": 5108.0,
+        "linke_pds": 5185.0,
+        "afd": 2313.0,
+        "fdp": 750.0,
+        "tierschutzpartei": 387.0,
+        "die_partei": 179.0,
+        "volt": 571.0,
+        "die_urbane": 17.0,
+        "dkp": 11.0,
+        "oedp": 42.0,
+        "sgp": 12.0,
+        "bsw": 788.0,
+        "pdf": 80.0
+      }
+    },
+    "0602": {
+      "gebiet_nr": "0602",
+      "eligible_voters": 30957.0,
+      "voters_count": 23968.0,
+      "turnout": 0.7742,
+      "valid_votes_zweit": 23721.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Cywinski, Tom",
+      "winner_erststimme_share": 0.2273,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2209,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.2273
+        ],
+        [
+          "gruene",
+          0.2055
+        ],
+        [
+          "spd",
+          0.197
+        ],
+        [
+          "linke_pds",
+          0.1755
+        ],
+        [
+          "afd",
+          0.1105
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2209
+        ],
+        [
+          "linke_pds",
+          0.2016
+        ],
+        [
+          "gruene",
+          0.1788
+        ],
+        [
+          "spd",
+          0.165
+        ],
+        [
+          "afd",
+          0.1131
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 5239.0,
+        "spd": 3914.0,
+        "gruene": 4241.0,
+        "linke_pds": 4782.0,
+        "afd": 2683.0,
+        "fdp": 732.0,
+        "tierschutzpartei": 487.0,
+        "die_partei": 130.0,
+        "volt": 512.0,
+        "die_urbane": 14.0,
+        "dkp": 18.0,
+        "oedp": 44.0,
+        "sgp": 8.0,
+        "bsw": 838.0,
+        "pdf": 79.0
+      }
+    },
+    "0603": {
+      "gebiet_nr": "0603",
+      "eligible_voters": 31328.0,
+      "voters_count": 25616.0,
+      "turnout": 0.8177,
+      "valid_votes_zweit": 25435.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Hoffmann, Jens",
+      "winner_erststimme_share": 0.3325,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.325,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.3325
+        ],
+        [
+          "gruene",
+          0.2089
+        ],
+        [
+          "spd",
+          0.1713
+        ],
+        [
+          "linke_pds",
+          0.1019
+        ],
+        [
+          "afd",
+          0.0978
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.325
+        ],
+        [
+          "gruene",
+          0.176
+        ],
+        [
+          "spd",
+          0.1615
+        ],
+        [
+          "linke_pds",
+          0.1236
+        ],
+        [
+          "afd",
+          0.1004
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 8267.0,
+        "spd": 4108.0,
+        "gruene": 4476.0,
+        "linke_pds": 3145.0,
+        "afd": 2553.0,
+        "fdp": 1027.0,
+        "tierschutzpartei": 334.0,
+        "die_partei": 104.0,
+        "volt": 679.0,
+        "die_urbane": 16.0,
+        "dkp": 11.0,
+        "oedp": 26.0,
+        "sgp": 6.0,
+        "bsw": 611.0,
+        "pdf": 72.0
+      }
+    },
+    "0604": {
+      "gebiet_nr": "0604",
+      "eligible_voters": 31317.0,
+      "voters_count": 24249.0,
+      "turnout": 0.7743,
+      "valid_votes_zweit": 24007.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Seibeld, Cornelia",
+      "winner_erststimme_share": 0.3269,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.3013,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.3269
+        ],
+        [
+          "gruene",
+          0.1733
+        ],
+        [
+          "spd",
+          0.1643
+        ],
+        [
+          "afd",
+          0.1255
+        ],
+        [
+          "linke_pds",
+          0.1184
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.3013
+        ],
+        [
+          "spd",
+          0.1681
+        ],
+        [
+          "gruene",
+          0.1424
+        ],
+        [
+          "linke_pds",
+          0.1378
+        ],
+        [
+          "afd",
+          0.128
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 7234.0,
+        "spd": 4036.0,
+        "gruene": 3419.0,
+        "linke_pds": 3308.0,
+        "afd": 3072.0,
+        "fdp": 916.0,
+        "tierschutzpartei": 440.0,
+        "die_partei": 103.0,
+        "volt": 517.0,
+        "die_urbane": 16.0,
+        "dkp": 11.0,
+        "oedp": 43.0,
+        "sgp": 6.0,
+        "bsw": 822.0,
+        "pdf": 64.0
+      }
+    },
+    "0605": {
+      "gebiet_nr": "0605",
+      "eligible_voters": 30171.0,
+      "voters_count": 22411.0,
+      "turnout": 0.7428,
+      "valid_votes_zweit": 22154.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Hahnfeld, Marco",
+      "winner_erststimme_share": 0.2851,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2746,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.2851
+        ],
+        [
+          "spd",
+          0.168
+        ],
+        [
+          "afd",
+          0.1604
+        ],
+        [
+          "gruene",
+          0.1544
+        ],
+        [
+          "linke_pds",
+          0.1397
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2746
+        ],
+        [
+          "linke_pds",
+          0.1578
+        ],
+        [
+          "afd",
+          0.1562
+        ],
+        [
+          "spd",
+          0.1536
+        ],
+        [
+          "gruene",
+          0.1274
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 6084.0,
+        "spd": 3403.0,
+        "gruene": 2822.0,
+        "linke_pds": 3495.0,
+        "afd": 3460.0,
+        "fdp": 775.0,
+        "tierschutzpartei": 527.0,
+        "die_partei": 121.0,
+        "volt": 426.0,
+        "die_urbane": 19.0,
+        "dkp": 9.0,
+        "oedp": 44.0,
+        "sgp": 9.0,
+        "bsw": 877.0,
+        "pdf": 83.0
+      }
+    },
+    "0606": {
+      "gebiet_nr": "0606",
+      "eligible_voters": 32091.0,
+      "voters_count": 26631.0,
+      "turnout": 0.8299,
+      "valid_votes_zweit": 26399.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Wegener, Christoph",
+      "winner_erststimme_share": 0.3369,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.3366,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.3369
+        ],
+        [
+          "gruene",
+          0.2134
+        ],
+        [
+          "spd",
+          0.1555
+        ],
+        [
+          "linke_pds",
+          0.1112
+        ],
+        [
+          "afd",
+          0.0849
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.3366
+        ],
+        [
+          "gruene",
+          0.1805
+        ],
+        [
+          "spd",
+          0.1451
+        ],
+        [
+          "linke_pds",
+          0.1321
+        ],
+        [
+          "afd",
+          0.0912
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 8886.0,
+        "spd": 3831.0,
+        "gruene": 4766.0,
+        "linke_pds": 3486.0,
+        "afd": 2407.0,
+        "fdp": 1102.0,
+        "tierschutzpartei": 356.0,
+        "die_partei": 103.0,
+        "volt": 737.0,
+        "die_urbane": 9.0,
+        "dkp": 12.0,
+        "oedp": 33.0,
+        "sgp": 3.0,
+        "bsw": 627.0,
+        "pdf": 41.0
+      }
+    },
+    "0607": {
+      "gebiet_nr": "0607",
+      "eligible_voters": 29929.0,
+      "voters_count": 25049.0,
+      "turnout": 0.8369,
+      "valid_votes_zweit": 24860.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Standfuß, Stephan",
+      "winner_erststimme_share": 0.3824,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.3707,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.3824
+        ],
+        [
+          "gruene",
+          0.2082
+        ],
+        [
+          "spd",
+          0.138
+        ],
+        [
+          "afd",
+          0.0912
+        ],
+        [
+          "linke_pds",
+          0.0876
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.3707
+        ],
+        [
+          "gruene",
+          0.1745
+        ],
+        [
+          "spd",
+          0.1412
+        ],
+        [
+          "linke_pds",
+          0.1064
+        ],
+        [
+          "afd",
+          0.0943
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 9216.0,
+        "spd": 3510.0,
+        "gruene": 4337.0,
+        "linke_pds": 2644.0,
+        "afd": 2345.0,
+        "fdp": 1284.0,
+        "tierschutzpartei": 292.0,
+        "die_partei": 102.0,
+        "volt": 583.0,
+        "die_urbane": 10.0,
+        "dkp": 18.0,
+        "oedp": 31.0,
+        "sgp": 4.0,
+        "bsw": 435.0,
+        "pdf": 49.0
+      }
+    },
+    "0701": {
+      "gebiet_nr": "0701",
+      "eligible_voters": 35034.0,
+      "voters_count": 26867.0,
+      "turnout": 0.7669,
+      "valid_votes_zweit": 26681.0,
+      "winner_erststimme": "gruene",
+      "winner_erststimme_candidate": "Walter, Sebastian",
+      "winner_erststimme_share": 0.2744,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2969,
+      "top5_erststimme": [
+        [
+          "gruene",
+          0.2744
+        ],
+        [
+          "linke_pds",
+          0.2608
+        ],
+        [
+          "cdu_csu",
+          0.1667
+        ],
+        [
+          "spd",
+          0.1395
+        ],
+        [
+          "afd",
+          0.0672
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2969
+        ],
+        [
+          "gruene",
+          0.221
+        ],
+        [
+          "cdu_csu",
+          0.1688
+        ],
+        [
+          "spd",
+          0.1349
+        ],
+        [
+          "afd",
+          0.0691
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4503.0,
+        "spd": 3600.0,
+        "gruene": 5897.0,
+        "linke_pds": 7921.0,
+        "afd": 1843.0,
+        "fdp": 651.0,
+        "tierschutzpartei": 308.0,
+        "die_partei": 142.0,
+        "volt": 629.0,
+        "die_urbane": 31.0,
+        "dkp": 17.0,
+        "oedp": 24.0,
+        "sgp": 7.0,
+        "bsw": 1051.0,
+        "pdf": 57.0
+      }
+    },
+    "0702": {
+      "gebiet_nr": "0702",
+      "eligible_voters": 33576.0,
+      "voters_count": 26221.0,
+      "turnout": 0.7809,
+      "valid_votes_zweit": 26014.0,
+      "winner_erststimme": "gruene",
+      "winner_erststimme_candidate": "Zander-Rade, Martina",
+      "winner_erststimme_share": 0.2936,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.3253,
+      "top5_erststimme": [
+        [
+          "gruene",
+          0.2936
+        ],
+        [
+          "linke_pds",
+          0.2721
+        ],
+        [
+          "spd",
+          0.1695
+        ],
+        [
+          "cdu_csu",
+          0.1201
+        ],
+        [
+          "afd",
+          0.0629
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.3253
+        ],
+        [
+          "gruene",
+          0.2442
+        ],
+        [
+          "spd",
+          0.1385
+        ],
+        [
+          "cdu_csu",
+          0.1307
+        ],
+        [
+          "afd",
+          0.0643
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3401.0,
+        "spd": 3602.0,
+        "gruene": 6352.0,
+        "linke_pds": 8462.0,
+        "afd": 1672.0,
+        "fdp": 467.0,
+        "tierschutzpartei": 383.0,
+        "die_partei": 159.0,
+        "volt": 523.0,
+        "die_urbane": 21.0,
+        "dkp": 18.0,
+        "oedp": 31.0,
+        "sgp": 12.0,
+        "bsw": 857.0,
+        "pdf": 54.0
+      }
+    },
+    "0703": {
+      "gebiet_nr": "0703",
+      "eligible_voters": 34950.0,
+      "voters_count": 28581.0,
+      "turnout": 0.8178,
+      "valid_votes_zweit": 28358.0,
+      "winner_erststimme": "gruene",
+      "winner_erststimme_candidate": "Störmer, Christoph",
+      "winner_erststimme_share": 0.2809,
+      "winner_zweitstimme": "gruene",
+      "winner_zweitstimme_share": 0.2556,
+      "top5_erststimme": [
+        [
+          "gruene",
+          0.2809
+        ],
+        [
+          "spd",
+          0.2615
+        ],
+        [
+          "cdu_csu",
+          0.1729
+        ],
+        [
+          "linke_pds",
+          0.1455
+        ],
+        [
+          "afd",
+          0.0657
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "gruene",
+          0.2556
+        ],
+        [
+          "linke_pds",
+          0.2282
+        ],
+        [
+          "cdu_csu",
+          0.1806
+        ],
+        [
+          "spd",
+          0.1652
+        ],
+        [
+          "afd",
+          0.0706
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 5121.0,
+        "spd": 4686.0,
+        "gruene": 7249.0,
+        "linke_pds": 6471.0,
+        "afd": 2003.0,
+        "fdp": 683.0,
+        "tierschutzpartei": 390.0,
+        "die_partei": 136.0,
+        "volt": 645.0,
+        "die_urbane": 19.0,
+        "dkp": 17.0,
+        "oedp": 36.0,
+        "sgp": 5.0,
+        "bsw": 842.0,
+        "pdf": 55.0
+      }
+    },
+    "0704": {
+      "gebiet_nr": "0704",
+      "eligible_voters": 32710.0,
+      "voters_count": 24637.0,
+      "turnout": 0.7532,
+      "valid_votes_zweit": 24385.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Bremer, Sarah",
+      "winner_erststimme_share": 0.2551,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2845,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.2551
+        ],
+        [
+          "gruene",
+          0.2451
+        ],
+        [
+          "cdu_csu",
+          0.1691
+        ],
+        [
+          "spd",
+          0.1422
+        ],
+        [
+          "afd",
+          0.1049
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2845
+        ],
+        [
+          "gruene",
+          0.1861
+        ],
+        [
+          "cdu_csu",
+          0.1639
+        ],
+        [
+          "spd",
+          0.1418
+        ],
+        [
+          "afd",
+          0.1062
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3996.0,
+        "spd": 3457.0,
+        "gruene": 4537.0,
+        "linke_pds": 6937.0,
+        "afd": 2590.0,
+        "fdp": 549.0,
+        "tierschutzpartei": 506.0,
+        "die_partei": 173.0,
+        "volt": 415.0,
+        "die_urbane": 23.0,
+        "dkp": 28.0,
+        "oedp": 32.0,
+        "sgp": 20.0,
+        "bsw": 1049.0,
+        "pdf": 73.0
+      }
+    },
+    "0705": {
+      "gebiet_nr": "0705",
+      "eligible_voters": 33239.0,
+      "voters_count": 23319.0,
+      "turnout": 0.7016,
+      "valid_votes_zweit": 23004.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Simon, Roman",
+      "winner_erststimme_share": 0.2494,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2344,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.2494
+        ],
+        [
+          "linke_pds",
+          0.1971
+        ],
+        [
+          "spd",
+          0.1719
+        ],
+        [
+          "afd",
+          0.1645
+        ],
+        [
+          "gruene",
+          0.1189
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2344
+        ],
+        [
+          "linke_pds",
+          0.2098
+        ],
+        [
+          "afd",
+          0.1632
+        ],
+        [
+          "spd",
+          0.1489
+        ],
+        [
+          "gruene",
+          0.1088
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 5392.0,
+        "spd": 3426.0,
+        "gruene": 2503.0,
+        "linke_pds": 4826.0,
+        "afd": 3754.0,
+        "fdp": 674.0,
+        "tierschutzpartei": 582.0,
+        "die_partei": 159.0,
+        "volt": 409.0,
+        "die_urbane": 31.0,
+        "dkp": 10.0,
+        "oedp": 48.0,
+        "sgp": 9.0,
+        "bsw": 1108.0,
+        "pdf": 73.0
+      }
+    },
+    "0706": {
+      "gebiet_nr": "0706",
+      "eligible_voters": 31256.0,
+      "voters_count": 22663.0,
+      "turnout": 0.7251,
+      "valid_votes_zweit": 22342.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Körber, Scott",
+      "winner_erststimme_share": 0.3182,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.3058,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.3182
+        ],
+        [
+          "afd",
+          0.196
+        ],
+        [
+          "spd",
+          0.159
+        ],
+        [
+          "linke_pds",
+          0.1165
+        ],
+        [
+          "gruene",
+          0.0967
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.3058
+        ],
+        [
+          "afd",
+          0.1998
+        ],
+        [
+          "spd",
+          0.1432
+        ],
+        [
+          "linke_pds",
+          0.1341
+        ],
+        [
+          "gruene",
+          0.088
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 6833.0,
+        "spd": 3199.0,
+        "gruene": 1965.0,
+        "linke_pds": 2995.0,
+        "afd": 4463.0,
+        "fdp": 757.0,
+        "tierschutzpartei": 577.0,
+        "die_partei": 111.0,
+        "volt": 273.0,
+        "die_urbane": 25.0,
+        "dkp": 16.0,
+        "oedp": 40.0,
+        "sgp": 4.0,
+        "bsw": 1025.0,
+        "pdf": 59.0
+      }
+    },
+    "0707": {
+      "gebiet_nr": "0707",
+      "eligible_voters": 32586.0,
+      "voters_count": 24226.0,
+      "turnout": 0.7434,
+      "valid_votes_zweit": 23916.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Zander, Christian",
+      "winner_erststimme_share": 0.3497,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.3174,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.3497
+        ],
+        [
+          "afd",
+          0.1949
+        ],
+        [
+          "spd",
+          0.1366
+        ],
+        [
+          "linke_pds",
+          0.1181
+        ],
+        [
+          "gruene",
+          0.1118
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.3174
+        ],
+        [
+          "afd",
+          0.1992
+        ],
+        [
+          "spd",
+          0.136
+        ],
+        [
+          "linke_pds",
+          0.1209
+        ],
+        [
+          "gruene",
+          0.1008
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 7590.0,
+        "spd": 3253.0,
+        "gruene": 2411.0,
+        "linke_pds": 2891.0,
+        "afd": 4765.0,
+        "fdp": 896.0,
+        "tierschutzpartei": 651.0,
+        "die_partei": 110.0,
+        "volt": 349.0,
+        "die_urbane": 19.0,
+        "dkp": 10.0,
+        "oedp": 34.0,
+        "sgp": 30.0,
+        "bsw": 828.0,
+        "pdf": 79.0
+      }
+    },
+    "0801": {
+      "gebiet_nr": "0801",
+      "eligible_voters": 31892.0,
+      "voters_count": 23535.0,
+      "turnout": 0.738,
+      "valid_votes_zweit": 23352.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Emde, Vanessa",
+      "winner_erststimme_share": 0.4621,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.5014,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.4621
+        ],
+        [
+          "gruene",
+          0.2595
+        ],
+        [
+          "spd",
+          0.0931
+        ],
+        [
+          "cdu_csu",
+          0.0605
+        ],
+        [
+          "afd",
+          0.0547
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.5014
+        ],
+        [
+          "gruene",
+          0.2092
+        ],
+        [
+          "spd",
+          0.088
+        ],
+        [
+          "cdu_csu",
+          0.0608
+        ],
+        [
+          "afd",
+          0.0549
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 1420.0,
+        "spd": 2056.0,
+        "gruene": 4885.0,
+        "linke_pds": 11708.0,
+        "afd": 1281.0,
+        "fdp": 205.0,
+        "tierschutzpartei": 307.0,
+        "die_partei": 231.0,
+        "volt": 354.0,
+        "die_urbane": 37.0,
+        "dkp": 38.0,
+        "oedp": 17.0,
+        "sgp": 28.0,
+        "bsw": 747.0,
+        "pdf": 38.0
+      }
+    },
+    "0802": {
+      "gebiet_nr": "0802",
+      "eligible_voters": 32127.0,
+      "voters_count": 22839.0,
+      "turnout": 0.7109,
+      "valid_votes_zweit": 22666.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Dehne, Philipp-Martin",
+      "winner_erststimme_share": 0.4996,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.5309,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.4996
+        ],
+        [
+          "gruene",
+          0.2344
+        ],
+        [
+          "spd",
+          0.0841
+        ],
+        [
+          "afd",
+          0.0555
+        ],
+        [
+          "cdu_csu",
+          0.0526
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.5309
+        ],
+        [
+          "gruene",
+          0.1958
+        ],
+        [
+          "spd",
+          0.081
+        ],
+        [
+          "afd",
+          0.0562
+        ],
+        [
+          "cdu_csu",
+          0.0526
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 1193.0,
+        "spd": 1835.0,
+        "gruene": 4439.0,
+        "linke_pds": 12034.0,
+        "afd": 1273.0,
+        "fdp": 170.0,
+        "tierschutzpartei": 278.0,
+        "die_partei": 176.0,
+        "volt": 382.0,
+        "die_urbane": 20.0,
+        "dkp": 31.0,
+        "oedp": 22.0,
+        "sgp": 6.0,
+        "bsw": 769.0,
+        "pdf": 38.0
+      }
+    },
+    "0803": {
+      "gebiet_nr": "0803",
+      "eligible_voters": 33854.0,
+      "voters_count": 21662.0,
+      "turnout": 0.6399,
+      "valid_votes_zweit": 21408.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Taheri, Rouzbeh",
+      "winner_erststimme_share": 0.4122,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.4322,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.4122
+        ],
+        [
+          "gruene",
+          0.1491
+        ],
+        [
+          "spd",
+          0.1438
+        ],
+        [
+          "afd",
+          0.1131
+        ],
+        [
+          "cdu_csu",
+          0.0981
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.4322
+        ],
+        [
+          "gruene",
+          0.1318
+        ],
+        [
+          "spd",
+          0.1122
+        ],
+        [
+          "afd",
+          0.1087
+        ],
+        [
+          "cdu_csu",
+          0.0983
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2105.0,
+        "spd": 2401.0,
+        "gruene": 2821.0,
+        "linke_pds": 9252.0,
+        "afd": 2326.0,
+        "fdp": 272.0,
+        "tierschutzpartei": 391.0,
+        "die_partei": 162.0,
+        "volt": 327.0,
+        "die_urbane": 29.0,
+        "dkp": 22.0,
+        "oedp": 28.0,
+        "sgp": 8.0,
+        "bsw": 1202.0,
+        "pdf": 62.0
+      }
+    },
+    "0804": {
+      "gebiet_nr": "0804",
+      "eligible_voters": 32430.0,
+      "voters_count": 20911.0,
+      "turnout": 0.6448,
+      "valid_votes_zweit": 20176.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Förster, Christopher",
+      "winner_erststimme_share": 0.261,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2384,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.261
+        ],
+        [
+          "spd",
+          0.2394
+        ],
+        [
+          "afd",
+          0.2089
+        ],
+        [
+          "linke_pds",
+          0.1816
+        ],
+        [
+          "bsw",
+          0.0498
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2384
+        ],
+        [
+          "afd",
+          0.2106
+        ],
+        [
+          "linke_pds",
+          0.1947
+        ],
+        [
+          "spd",
+          0.1735
+        ],
+        [
+          "bsw",
+          0.0573
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4809.0,
+        "spd": 3501.0,
+        "gruene": 1056.0,
+        "linke_pds": 3928.0,
+        "afd": 4250.0,
+        "fdp": 492.0,
+        "tierschutzpartei": 558.0,
+        "die_partei": 101.0,
+        "volt": 217.0,
+        "die_urbane": 15.0,
+        "dkp": 7.0,
+        "oedp": 34.0,
+        "sgp": 10.0,
+        "bsw": 1156.0,
+        "pdf": 42.0
+      }
+    },
+    "0805": {
+      "gebiet_nr": "0805",
+      "eligible_voters": 33372.0,
+      "voters_count": 23650.0,
+      "turnout": 0.7087,
+      "valid_votes_zweit": 23323.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Dr. Juhnke, Robbin",
+      "winner_erststimme_share": 0.2818,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2501,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.2818
+        ],
+        [
+          "afd",
+          0.2045
+        ],
+        [
+          "linke_pds",
+          0.1846
+        ],
+        [
+          "spd",
+          0.184
+        ],
+        [
+          "gruene",
+          0.0847
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2501
+        ],
+        [
+          "afd",
+          0.1968
+        ],
+        [
+          "linke_pds",
+          0.1692
+        ],
+        [
+          "spd",
+          0.1634
+        ],
+        [
+          "gruene",
+          0.0835
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 5832.0,
+        "spd": 3811.0,
+        "gruene": 1947.0,
+        "linke_pds": 3946.0,
+        "afd": 4589.0,
+        "fdp": 721.0,
+        "tierschutzpartei": 604.0,
+        "die_partei": 145.0,
+        "volt": 277.0,
+        "die_urbane": 20.0,
+        "dkp": 13.0,
+        "oedp": 33.0,
+        "sgp": 4.0,
+        "bsw": 1312.0,
+        "pdf": 69.0
+      }
+    },
+    "0806": {
+      "gebiet_nr": "0806",
+      "eligible_voters": 32621.0,
+      "voters_count": 23656.0,
+      "turnout": 0.7252,
+      "valid_votes_zweit": 23137.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Schenk, Olaf",
+      "winner_erststimme_share": 0.2766,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2783,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.2766
+        ],
+        [
+          "spd",
+          0.2631
+        ],
+        [
+          "afd",
+          0.2116
+        ],
+        [
+          "linke_pds",
+          0.1317
+        ],
+        [
+          "gruene",
+          0.0426
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2783
+        ],
+        [
+          "afd",
+          0.2226
+        ],
+        [
+          "spd",
+          0.1679
+        ],
+        [
+          "linke_pds",
+          0.1463
+        ],
+        [
+          "gruene",
+          0.0631
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 6438.0,
+        "spd": 3884.0,
+        "gruene": 1459.0,
+        "linke_pds": 3386.0,
+        "afd": 5151.0,
+        "fdp": 613.0,
+        "tierschutzpartei": 620.0,
+        "die_partei": 130.0,
+        "volt": 273.0,
+        "die_urbane": 21.0,
+        "dkp": 14.0,
+        "oedp": 26.0,
+        "sgp": 5.0,
+        "bsw": 1058.0,
+        "pdf": 59.0
+      }
+    },
+    "0901": {
+      "gebiet_nr": "0901",
+      "eligible_voters": 28840.0,
+      "voters_count": 21981.0,
+      "turnout": 0.7622,
+      "valid_votes_zweit": 21736.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Warnke, Moritz",
+      "winner_erststimme_share": 0.4067,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.3927,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.4067
+        ],
+        [
+          "gruene",
+          0.1513
+        ],
+        [
+          "afd",
+          0.1444
+        ],
+        [
+          "spd",
+          0.1087
+        ],
+        [
+          "cdu_csu",
+          0.0973
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.3927
+        ],
+        [
+          "gruene",
+          0.1496
+        ],
+        [
+          "afd",
+          0.1457
+        ],
+        [
+          "spd",
+          0.0988
+        ],
+        [
+          "cdu_csu",
+          0.0943
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2049.0,
+        "spd": 2148.0,
+        "gruene": 3251.0,
+        "linke_pds": 8535.0,
+        "afd": 3168.0,
+        "fdp": 317.0,
+        "tierschutzpartei": 439.0,
+        "die_partei": 254.0,
+        "volt": 399.0,
+        "die_urbane": 19.0,
+        "dkp": 45.0,
+        "oedp": 40.0,
+        "heimat": 16.0,
+        "sgp": 13.0,
+        "bsw": 965.0,
+        "pdf": 78.0
+      }
+    },
+    "0902": {
+      "gebiet_nr": "0902",
+      "eligible_voters": 27757.0,
+      "voters_count": 20677.0,
+      "turnout": 0.7449,
+      "valid_votes_zweit": 20437.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Pfitzmann, Lisa",
+      "winner_erststimme_share": 0.3557,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.3312,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.3557
+        ],
+        [
+          "afd",
+          0.2073
+        ],
+        [
+          "spd",
+          0.1256
+        ],
+        [
+          "cdu_csu",
+          0.1165
+        ],
+        [
+          "gruene",
+          0.0912
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.3312
+        ],
+        [
+          "afd",
+          0.2049
+        ],
+        [
+          "cdu_csu",
+          0.1102
+        ],
+        [
+          "gruene",
+          0.1084
+        ],
+        [
+          "spd",
+          0.0961
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2253.0,
+        "spd": 1963.0,
+        "gruene": 2215.0,
+        "linke_pds": 6769.0,
+        "afd": 4188.0,
+        "fdp": 373.0,
+        "tierschutzpartei": 495.0,
+        "die_partei": 269.0,
+        "volt": 493.0,
+        "die_urbane": 17.0,
+        "dkp": 32.0,
+        "oedp": 46.0,
+        "heimat": 52.0,
+        "sgp": 7.0,
+        "bsw": 1162.0,
+        "pdf": 103.0
+      }
+    },
+    "0903": {
+      "gebiet_nr": "0903",
+      "eligible_voters": 29817.0,
+      "voters_count": 22521.0,
+      "turnout": 0.7553,
+      "valid_votes_zweit": 22226.0,
+      "winner_erststimme": "spd",
+      "winner_erststimme_candidate": "Düsterhöft, Lars",
+      "winner_erststimme_share": 0.2596,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2687,
+      "top5_erststimme": [
+        [
+          "spd",
+          0.2596
+        ],
+        [
+          "linke_pds",
+          0.2476
+        ],
+        [
+          "afd",
+          0.2185
+        ],
+        [
+          "cdu_csu",
+          0.1119
+        ],
+        [
+          "gruene",
+          0.0695
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2687
+        ],
+        [
+          "afd",
+          0.2265
+        ],
+        [
+          "cdu_csu",
+          0.1366
+        ],
+        [
+          "spd",
+          0.1269
+        ],
+        [
+          "gruene",
+          0.096
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3036.0,
+        "spd": 2820.0,
+        "gruene": 2134.0,
+        "linke_pds": 5973.0,
+        "afd": 5035.0,
+        "fdp": 473.0,
+        "tierschutzpartei": 551.0,
+        "die_partei": 198.0,
+        "volt": 431.0,
+        "die_urbane": 13.0,
+        "dkp": 38.0,
+        "oedp": 31.0,
+        "heimat": 30.0,
+        "sgp": 6.0,
+        "bsw": 1356.0,
+        "pdf": 101.0
+      }
+    },
+    "0904": {
+      "gebiet_nr": "0904",
+      "eligible_voters": 32726.0,
+      "voters_count": 24560.0,
+      "turnout": 0.7505,
+      "valid_votes_zweit": 24203.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Bertram, Alexander",
+      "winner_erststimme_share": 0.3149,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.3179,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.3149
+        ],
+        [
+          "cdu_csu",
+          0.245
+        ],
+        [
+          "linke_pds",
+          0.194
+        ],
+        [
+          "spd",
+          0.0887
+        ],
+        [
+          "bsw",
+          0.0638
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.3179
+        ],
+        [
+          "cdu_csu",
+          0.2006
+        ],
+        [
+          "linke_pds",
+          0.1808
+        ],
+        [
+          "spd",
+          0.0898
+        ],
+        [
+          "bsw",
+          0.0683
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4856.0,
+        "spd": 2173.0,
+        "gruene": 1461.0,
+        "linke_pds": 4375.0,
+        "afd": 7693.0,
+        "fdp": 560.0,
+        "tierschutzpartei": 667.0,
+        "die_partei": 192.0,
+        "volt": 290.0,
+        "die_urbane": 18.0,
+        "dkp": 30.0,
+        "oedp": 39.0,
+        "heimat": 42.0,
+        "sgp": 13.0,
+        "bsw": 1654.0,
+        "pdf": 140.0
+      }
+    },
+    "0905": {
+      "gebiet_nr": "0905",
+      "eligible_voters": 31010.0,
+      "voters_count": 23435.0,
+      "turnout": 0.7557,
+      "valid_votes_zweit": 23160.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Henkel, Denis",
+      "winner_erststimme_share": 0.2494,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.2446,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.2494
+        ],
+        [
+          "linke_pds",
+          0.2458
+        ],
+        [
+          "cdu_csu",
+          0.1775
+        ],
+        [
+          "spd",
+          0.131
+        ],
+        [
+          "gruene",
+          0.0898
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.2446
+        ],
+        [
+          "linke_pds",
+          0.2435
+        ],
+        [
+          "cdu_csu",
+          0.16
+        ],
+        [
+          "spd",
+          0.1043
+        ],
+        [
+          "gruene",
+          0.096
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3706.0,
+        "spd": 2415.0,
+        "gruene": 2223.0,
+        "linke_pds": 5639.0,
+        "afd": 5664.0,
+        "fdp": 536.0,
+        "tierschutzpartei": 614.0,
+        "die_partei": 223.0,
+        "volt": 526.0,
+        "die_urbane": 19.0,
+        "dkp": 18.0,
+        "oedp": 41.0,
+        "heimat": 31.0,
+        "sgp": 4.0,
+        "bsw": 1420.0,
+        "pdf": 81.0
+      }
+    },
+    "0906": {
+      "gebiet_nr": "0906",
+      "eligible_voters": 29701.0,
+      "voters_count": 22428.0,
+      "turnout": 0.7551,
+      "valid_votes_zweit": 22006.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Trefzer, Martin",
+      "winner_erststimme_share": 0.2975,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.2991,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.2975
+        ],
+        [
+          "linke_pds",
+          0.2339
+        ],
+        [
+          "cdu_csu",
+          0.1782
+        ],
+        [
+          "spd",
+          0.099
+        ],
+        [
+          "bsw",
+          0.071
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.2991
+        ],
+        [
+          "linke_pds",
+          0.2234
+        ],
+        [
+          "cdu_csu",
+          0.1538
+        ],
+        [
+          "spd",
+          0.1023
+        ],
+        [
+          "bsw",
+          0.0754
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3385.0,
+        "spd": 2252.0,
+        "gruene": 1445.0,
+        "linke_pds": 4916.0,
+        "afd": 6583.0,
+        "fdp": 458.0,
+        "tierschutzpartei": 552.0,
+        "die_partei": 228.0,
+        "volt": 295.0,
+        "die_urbane": 12.0,
+        "dkp": 38.0,
+        "oedp": 29.0,
+        "heimat": 46.0,
+        "sgp": 8.0,
+        "bsw": 1659.0,
+        "pdf": 100.0
+      }
+    },
+    "0907": {
+      "gebiet_nr": "0907",
+      "eligible_voters": 32176.0,
+      "voters_count": 25804.0,
+      "turnout": 0.802,
+      "valid_votes_zweit": 25435.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Dr. Kromrey, Hans",
+      "winner_erststimme_share": 0.267,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2412,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.267
+        ],
+        [
+          "cdu_csu",
+          0.2463
+        ],
+        [
+          "afd",
+          0.2068
+        ],
+        [
+          "spd",
+          0.112
+        ],
+        [
+          "gruene",
+          0.0802
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2412
+        ],
+        [
+          "afd",
+          0.2127
+        ],
+        [
+          "cdu_csu",
+          0.1901
+        ],
+        [
+          "gruene",
+          0.1126
+        ],
+        [
+          "spd",
+          0.1015
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4836.0,
+        "spd": 2582.0,
+        "gruene": 2865.0,
+        "linke_pds": 6135.0,
+        "afd": 5411.0,
+        "fdp": 496.0,
+        "tierschutzpartei": 467.0,
+        "die_partei": 249.0,
+        "volt": 437.0,
+        "die_urbane": 18.0,
+        "dkp": 53.0,
+        "oedp": 56.0,
+        "heimat": 31.0,
+        "sgp": 7.0,
+        "bsw": 1706.0,
+        "pdf": 86.0
+      }
+    },
+    "1001": {
+      "gebiet_nr": "1001",
+      "eligible_voters": 31803.0,
+      "voters_count": 19660.0,
+      "turnout": 0.6182,
+      "valid_votes_zweit": 19312.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Lindemann, Gunnar",
+      "winner_erststimme_share": 0.4512,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.442,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.4512
+        ],
+        [
+          "linke_pds",
+          0.2296
+        ],
+        [
+          "cdu_csu",
+          0.0904
+        ],
+        [
+          "spd",
+          0.0877
+        ],
+        [
+          "bsw",
+          0.0715
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.442
+        ],
+        [
+          "linke_pds",
+          0.2126
+        ],
+        [
+          "cdu_csu",
+          0.0858
+        ],
+        [
+          "bsw",
+          0.0709
+        ],
+        [
+          "spd",
+          0.0659
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 1657.0,
+        "spd": 1272.0,
+        "gruene": 599.0,
+        "linke_pds": 4105.0,
+        "afd": 8535.0,
+        "fdp": 293.0,
+        "tierschutzpartei": 891.0,
+        "die_partei": 168.0,
+        "volt": 236.0,
+        "die_urbane": 25.0,
+        "dkp": 22.0,
+        "oedp": 24.0,
+        "sgp": 15.0,
+        "bsw": 1369.0,
+        "pdf": 101.0
+      }
+    },
+    "1002": {
+      "gebiet_nr": "1002",
+      "eligible_voters": 33391.0,
+      "voters_count": 22110.0,
+      "turnout": 0.6622,
+      "valid_votes_zweit": 21724.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Dummer, Anneliese",
+      "winner_erststimme_share": 0.3569,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.3613,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.3569
+        ],
+        [
+          "linke_pds",
+          0.2393
+        ],
+        [
+          "cdu_csu",
+          0.1755
+        ],
+        [
+          "spd",
+          0.0838
+        ],
+        [
+          "bsw",
+          0.0741
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.3613
+        ],
+        [
+          "linke_pds",
+          0.2327
+        ],
+        [
+          "cdu_csu",
+          0.1248
+        ],
+        [
+          "spd",
+          0.0809
+        ],
+        [
+          "bsw",
+          0.0764
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2712.0,
+        "spd": 1758.0,
+        "gruene": 846.0,
+        "linke_pds": 5055.0,
+        "afd": 7849.0,
+        "fdp": 384.0,
+        "tierschutzpartei": 784.0,
+        "die_partei": 203.0,
+        "volt": 288.0,
+        "die_urbane": 26.0,
+        "dkp": 29.0,
+        "oedp": 22.0,
+        "sgp": 15.0,
+        "bsw": 1660.0,
+        "pdf": 93.0
+      }
+    },
+    "1003": {
+      "gebiet_nr": "1003",
+      "eligible_voters": 34408.0,
+      "voters_count": 21553.0,
+      "turnout": 0.6264,
+      "valid_votes_zweit": 21161.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Auricht, Jeannette",
+      "winner_erststimme_share": 0.4339,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.4228,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.4339
+        ],
+        [
+          "linke_pds",
+          0.2297
+        ],
+        [
+          "cdu_csu",
+          0.1238
+        ],
+        [
+          "bsw",
+          0.0701
+        ],
+        [
+          "spd",
+          0.0653
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.4228
+        ],
+        [
+          "linke_pds",
+          0.2102
+        ],
+        [
+          "cdu_csu",
+          0.0996
+        ],
+        [
+          "bsw",
+          0.0713
+        ],
+        [
+          "spd",
+          0.0654
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2108.0,
+        "spd": 1383.0,
+        "gruene": 756.0,
+        "linke_pds": 4447.0,
+        "afd": 8946.0,
+        "fdp": 315.0,
+        "tierschutzpartei": 947.0,
+        "die_partei": 191.0,
+        "volt": 308.0,
+        "die_urbane": 31.0,
+        "dkp": 36.0,
+        "oedp": 35.0,
+        "sgp": 14.0,
+        "bsw": 1509.0,
+        "pdf": 135.0
+      }
+    },
+    "1004": {
+      "gebiet_nr": "1004",
+      "eligible_voters": 34922.0,
+      "voters_count": 26175.0,
+      "turnout": 0.7495,
+      "valid_votes_zweit": 25870.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Koblischke, Martin",
+      "winner_erststimme_share": 0.2637,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.2738,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.2637
+        ],
+        [
+          "cdu_csu",
+          0.24
+        ],
+        [
+          "linke_pds",
+          0.1894
+        ],
+        [
+          "gruene",
+          0.1223
+        ],
+        [
+          "spd",
+          0.0727
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.2738
+        ],
+        [
+          "linke_pds",
+          0.2055
+        ],
+        [
+          "cdu_csu",
+          0.2001
+        ],
+        [
+          "spd",
+          0.0859
+        ],
+        [
+          "bsw",
+          0.0788
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 5177.0,
+        "spd": 2223.0,
+        "gruene": 1991.0,
+        "linke_pds": 5317.0,
+        "afd": 7082.0,
+        "fdp": 582.0,
+        "tierschutzpartei": 635.0,
+        "die_partei": 215.0,
+        "volt": 414.0,
+        "die_urbane": 20.0,
+        "dkp": 48.0,
+        "oedp": 31.0,
+        "sgp": 9.0,
+        "bsw": 2038.0,
+        "pdf": 88.0
+      }
+    },
+    "1005": {
+      "gebiet_nr": "1005",
+      "eligible_voters": 34280.0,
+      "voters_count": 28733.0,
+      "turnout": 0.8382,
+      "valid_votes_zweit": 28439.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Günther-Wünsch, Katharina",
+      "winner_erststimme_share": 0.3155,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.2599,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.3155
+        ],
+        [
+          "afd",
+          0.2474
+        ],
+        [
+          "linke_pds",
+          0.1651
+        ],
+        [
+          "spd",
+          0.0966
+        ],
+        [
+          "gruene",
+          0.067
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.2599
+        ],
+        [
+          "cdu_csu",
+          0.2557
+        ],
+        [
+          "linke_pds",
+          0.1638
+        ],
+        [
+          "spd",
+          0.0903
+        ],
+        [
+          "gruene",
+          0.0781
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 7273.0,
+        "spd": 2568.0,
+        "gruene": 2221.0,
+        "linke_pds": 4658.0,
+        "afd": 7390.0,
+        "fdp": 832.0,
+        "tierschutzpartei": 614.0,
+        "die_partei": 196.0,
+        "volt": 490.0,
+        "die_urbane": 22.0,
+        "dkp": 31.0,
+        "oedp": 42.0,
+        "sgp": 4.0,
+        "bsw": 1986.0,
+        "pdf": 112.0
+      }
+    },
+    "1006": {
+      "gebiet_nr": "1006",
+      "eligible_voters": 30966.0,
+      "voters_count": 20814.0,
+      "turnout": 0.6722,
+      "valid_votes_zweit": 20441.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Geißler, Jörn",
+      "winner_erststimme_share": 0.3385,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.362,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.3385
+        ],
+        [
+          "cdu_csu",
+          0.2853
+        ],
+        [
+          "linke_pds",
+          0.1847
+        ],
+        [
+          "spd",
+          0.0694
+        ],
+        [
+          "bsw",
+          0.0602
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.362
+        ],
+        [
+          "linke_pds",
+          0.1973
+        ],
+        [
+          "cdu_csu",
+          0.1679
+        ],
+        [
+          "spd",
+          0.0757
+        ],
+        [
+          "bsw",
+          0.072
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3432.0,
+        "spd": 1547.0,
+        "gruene": 874.0,
+        "linke_pds": 4034.0,
+        "afd": 7400.0,
+        "fdp": 362.0,
+        "tierschutzpartei": 708.0,
+        "die_partei": 145.0,
+        "volt": 273.0,
+        "die_urbane": 20.0,
+        "dkp": 38.0,
+        "oedp": 30.0,
+        "sgp": 13.0,
+        "bsw": 1472.0,
+        "pdf": 93.0
+      }
+    },
+    "1101": {
+      "gebiet_nr": "1101",
+      "eligible_voters": 34019.0,
+      "voters_count": 23214.0,
+      "turnout": 0.6824,
+      "valid_votes_zweit": 22743.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Knaute, Stephan",
+      "winner_erststimme_share": 0.3358,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.3627,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.3358
+        ],
+        [
+          "cdu_csu",
+          0.3091
+        ],
+        [
+          "linke_pds",
+          0.1938
+        ],
+        [
+          "bsw",
+          0.0593
+        ],
+        [
+          "spd",
+          0.0524
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.3627
+        ],
+        [
+          "linke_pds",
+          0.2069
+        ],
+        [
+          "cdu_csu",
+          0.1733
+        ],
+        [
+          "bsw",
+          0.079
+        ],
+        [
+          "spd",
+          0.0662
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3942.0,
+        "spd": 1505.0,
+        "gruene": 797.0,
+        "linke_pds": 4705.0,
+        "afd": 8248.0,
+        "fdp": 282.0,
+        "tierschutzpartei": 813.0,
+        "die_partei": 170.0,
+        "volt": 221.0,
+        "die_urbane": 25.0,
+        "dkp": 39.0,
+        "oedp": 28.0,
+        "heimat": 59.0,
+        "sgp": 11.0,
+        "bsw": 1796.0,
+        "pdf": 102.0
+      }
+    },
+    "1102": {
+      "gebiet_nr": "1102",
+      "eligible_voters": 32875.0,
+      "voters_count": 23930.0,
+      "turnout": 0.7279,
+      "valid_votes_zweit": 23570.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Dr. Pätzold, Martin",
+      "winner_erststimme_share": 0.283,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.2845,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.283
+        ],
+        [
+          "afd",
+          0.2675
+        ],
+        [
+          "linke_pds",
+          0.2411
+        ],
+        [
+          "spd",
+          0.0673
+        ],
+        [
+          "bsw",
+          0.0561
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.2845
+        ],
+        [
+          "linke_pds",
+          0.2366
+        ],
+        [
+          "cdu_csu",
+          0.1865
+        ],
+        [
+          "spd",
+          0.0786
+        ],
+        [
+          "bsw",
+          0.0767
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4396.0,
+        "spd": 1852.0,
+        "gruene": 1386.0,
+        "linke_pds": 5577.0,
+        "afd": 6706.0,
+        "fdp": 410.0,
+        "tierschutzpartei": 667.0,
+        "die_partei": 155.0,
+        "volt": 371.0,
+        "die_urbane": 19.0,
+        "dkp": 40.0,
+        "oedp": 31.0,
+        "heimat": 49.0,
+        "sgp": 4.0,
+        "bsw": 1807.0,
+        "pdf": 100.0
+      }
+    },
+    "1103": {
+      "gebiet_nr": "1103",
+      "eligible_voters": 33724.0,
+      "voters_count": 22885.0,
+      "turnout": 0.6786,
+      "valid_votes_zweit": 22507.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Engelmann, Claudia",
+      "winner_erststimme_share": 0.3288,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2996,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.3288
+        ],
+        [
+          "afd",
+          0.2516
+        ],
+        [
+          "cdu_csu",
+          0.1661
+        ],
+        [
+          "spd",
+          0.0869
+        ],
+        [
+          "bsw",
+          0.0696
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2996
+        ],
+        [
+          "afd",
+          0.2544
+        ],
+        [
+          "cdu_csu",
+          0.1252
+        ],
+        [
+          "spd",
+          0.0928
+        ],
+        [
+          "bsw",
+          0.0725
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2819.0,
+        "spd": 2089.0,
+        "gruene": 1532.0,
+        "linke_pds": 6744.0,
+        "afd": 5726.0,
+        "fdp": 400.0,
+        "tierschutzpartei": 686.0,
+        "die_partei": 207.0,
+        "volt": 401.0,
+        "die_urbane": 18.0,
+        "dkp": 39.0,
+        "oedp": 29.0,
+        "heimat": 55.0,
+        "sgp": 8.0,
+        "bsw": 1632.0,
+        "pdf": 122.0
+      }
+    },
+    "1104": {
+      "gebiet_nr": "1104",
+      "eligible_voters": 33474.0,
+      "voters_count": 24492.0,
+      "turnout": 0.7317,
+      "valid_votes_zweit": 24178.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Leonhardt, Antonio",
+      "winner_erststimme_share": 0.3835,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.3603,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.3835
+        ],
+        [
+          "afd",
+          0.1755
+        ],
+        [
+          "cdu_csu",
+          0.1177
+        ],
+        [
+          "spd",
+          0.1071
+        ],
+        [
+          "gruene",
+          0.0991
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.3603
+        ],
+        [
+          "afd",
+          0.1788
+        ],
+        [
+          "gruene",
+          0.1149
+        ],
+        [
+          "cdu_csu",
+          0.1053
+        ],
+        [
+          "spd",
+          0.095
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2547.0,
+        "spd": 2298.0,
+        "gruene": 2779.0,
+        "linke_pds": 8712.0,
+        "afd": 4323.0,
+        "fdp": 384.0,
+        "tierschutzpartei": 664.0,
+        "die_partei": 264.0,
+        "volt": 502.0,
+        "die_urbane": 32.0,
+        "dkp": 63.0,
+        "oedp": 25.0,
+        "heimat": 39.0,
+        "sgp": 16.0,
+        "bsw": 1443.0,
+        "pdf": 87.0
+      }
+    },
+    "1105": {
+      "gebiet_nr": "1105",
+      "eligible_voters": 32853.0,
+      "voters_count": 23870.0,
+      "turnout": 0.7266,
+      "valid_votes_zweit": 23506.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Klein, Hendrikje",
+      "winner_erststimme_share": 0.3932,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.3407,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.3932
+        ],
+        [
+          "afd",
+          0.2154
+        ],
+        [
+          "cdu_csu",
+          0.1116
+        ],
+        [
+          "gruene",
+          0.0854
+        ],
+        [
+          "spd",
+          0.0835
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.3407
+        ],
+        [
+          "afd",
+          0.2092
+        ],
+        [
+          "cdu_csu",
+          0.1053
+        ],
+        [
+          "gruene",
+          0.0985
+        ],
+        [
+          "spd",
+          0.0886
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2476.0,
+        "spd": 2082.0,
+        "gruene": 2316.0,
+        "linke_pds": 8009.0,
+        "afd": 4918.0,
+        "fdp": 412.0,
+        "tierschutzpartei": 712.0,
+        "die_partei": 248.0,
+        "volt": 554.0,
+        "die_urbane": 19.0,
+        "dkp": 36.0,
+        "oedp": 35.0,
+        "heimat": 43.0,
+        "sgp": 17.0,
+        "bsw": 1533.0,
+        "pdf": 96.0
+      }
+    },
+    "1106": {
+      "gebiet_nr": "1106",
+      "eligible_voters": 32731.0,
+      "voters_count": 26213.0,
+      "turnout": 0.8009,
+      "valid_votes_zweit": 25943.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Behrens, Julia",
+      "winner_erststimme_share": 0.3128,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.2817,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.3128
+        ],
+        [
+          "cdu_csu",
+          0.1855
+        ],
+        [
+          "afd",
+          0.1555
+        ],
+        [
+          "gruene",
+          0.1152
+        ],
+        [
+          "spd",
+          0.1011
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.2817
+        ],
+        [
+          "afd",
+          0.1619
+        ],
+        [
+          "cdu_csu",
+          0.1554
+        ],
+        [
+          "gruene",
+          0.1405
+        ],
+        [
+          "spd",
+          0.1038
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4032.0,
+        "spd": 2693.0,
+        "gruene": 3644.0,
+        "linke_pds": 7309.0,
+        "afd": 4199.0,
+        "fdp": 594.0,
+        "tierschutzpartei": 559.0,
+        "die_partei": 230.0,
+        "volt": 731.0,
+        "die_urbane": 26.0,
+        "dkp": 49.0,
+        "oedp": 38.0,
+        "heimat": 28.0,
+        "sgp": 8.0,
+        "bsw": 1681.0,
+        "pdf": 122.0
+      }
+    },
+    "1201": {
+      "gebiet_nr": "1201",
+      "eligible_voters": 28098.0,
+      "voters_count": 17562.0,
+      "turnout": 0.625,
+      "valid_votes_zweit": 17301.0,
+      "winner_erststimme": "linke_pds",
+      "winner_erststimme_candidate": "Caballero Alvarez, Pilar",
+      "winner_erststimme_share": 0.2701,
+      "winner_zweitstimme": "linke_pds",
+      "winner_zweitstimme_share": 0.283,
+      "top5_erststimme": [
+        [
+          "linke_pds",
+          0.2701
+        ],
+        [
+          "cdu_csu",
+          0.2047
+        ],
+        [
+          "afd",
+          0.1985
+        ],
+        [
+          "spd",
+          0.1608
+        ],
+        [
+          "gruene",
+          0.0779
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "linke_pds",
+          0.283
+        ],
+        [
+          "afd",
+          0.202
+        ],
+        [
+          "cdu_csu",
+          0.1717
+        ],
+        [
+          "spd",
+          0.1266
+        ],
+        [
+          "gruene",
+          0.0866
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 2971.0,
+        "spd": 2190.0,
+        "gruene": 1498.0,
+        "linke_pds": 4897.0,
+        "afd": 3494.0,
+        "fdp": 351.0,
+        "tierschutzpartei": 491.0,
+        "die_partei": 114.0,
+        "volt": 267.0,
+        "die_urbane": 23.0,
+        "dkp": 18.0,
+        "oedp": 18.0,
+        "sgp": 5.0,
+        "bsw": 917.0,
+        "pdf": 47.0
+      }
+    },
+    "1202": {
+      "gebiet_nr": "1202",
+      "eligible_voters": 28783.0,
+      "voters_count": 19085.0,
+      "turnout": 0.6631,
+      "valid_votes_zweit": 18810.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Schönebeck, Felix",
+      "winner_erststimme_share": 0.3211,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2278,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.3211
+        ],
+        [
+          "afd",
+          0.2073
+        ],
+        [
+          "linke_pds",
+          0.1758
+        ],
+        [
+          "spd",
+          0.1394
+        ],
+        [
+          "gruene",
+          0.0754
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2278
+        ],
+        [
+          "afd",
+          0.2274
+        ],
+        [
+          "linke_pds",
+          0.1918
+        ],
+        [
+          "spd",
+          0.1386
+        ],
+        [
+          "gruene",
+          0.0806
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 4285.0,
+        "spd": 2607.0,
+        "gruene": 1517.0,
+        "linke_pds": 3608.0,
+        "afd": 4277.0,
+        "fdp": 513.0,
+        "tierschutzpartei": 509.0,
+        "die_partei": 135.0,
+        "volt": 270.0,
+        "die_urbane": 18.0,
+        "dkp": 13.0,
+        "oedp": 29.0,
+        "sgp": 8.0,
+        "bsw": 974.0,
+        "pdf": 47.0
+      }
+    },
+    "1203": {
+      "gebiet_nr": "1203",
+      "eligible_voters": 30061.0,
+      "voters_count": 23973.0,
+      "turnout": 0.7975,
+      "valid_votes_zweit": 23678.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Graßelt, Niklas",
+      "winner_erststimme_share": 0.3426,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.3221,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.3426
+        ],
+        [
+          "spd",
+          0.1711
+        ],
+        [
+          "afd",
+          0.1633
+        ],
+        [
+          "gruene",
+          0.1223
+        ],
+        [
+          "linke_pds",
+          0.0997
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.3221
+        ],
+        [
+          "afd",
+          0.1653
+        ],
+        [
+          "spd",
+          0.1496
+        ],
+        [
+          "gruene",
+          0.1271
+        ],
+        [
+          "linke_pds",
+          0.1123
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 7626.0,
+        "spd": 3543.0,
+        "gruene": 3009.0,
+        "linke_pds": 2660.0,
+        "afd": 3915.0,
+        "fdp": 828.0,
+        "tierschutzpartei": 515.0,
+        "die_partei": 123.0,
+        "volt": 618.0,
+        "die_urbane": 17.0,
+        "dkp": 18.0,
+        "oedp": 38.0,
+        "sgp": 5.0,
+        "bsw": 707.0,
+        "pdf": 56.0
+      }
+    },
+    "1204": {
+      "gebiet_nr": "1204",
+      "eligible_voters": 31549.0,
+      "voters_count": 22783.0,
+      "turnout": 0.7221,
+      "valid_votes_zweit": 22474.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Klon, Tomasz",
+      "winner_erststimme_share": 0.2662,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.2595,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.2662
+        ],
+        [
+          "afd",
+          0.195
+        ],
+        [
+          "spd",
+          0.1883
+        ],
+        [
+          "linke_pds",
+          0.1339
+        ],
+        [
+          "gruene",
+          0.1099
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.2595
+        ],
+        [
+          "afd",
+          0.199
+        ],
+        [
+          "spd",
+          0.1533
+        ],
+        [
+          "linke_pds",
+          0.1469
+        ],
+        [
+          "gruene",
+          0.1121
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 5831.0,
+        "spd": 3446.0,
+        "gruene": 2519.0,
+        "linke_pds": 3301.0,
+        "afd": 4473.0,
+        "fdp": 665.0,
+        "tierschutzpartei": 634.0,
+        "die_partei": 147.0,
+        "volt": 404.0,
+        "die_urbane": 13.0,
+        "dkp": 10.0,
+        "oedp": 34.0,
+        "sgp": 5.0,
+        "bsw": 904.0,
+        "pdf": 88.0
+      }
+    },
+    "1205": {
+      "gebiet_nr": "1205",
+      "eligible_voters": 27604.0,
+      "voters_count": 16854.0,
+      "turnout": 0.6106,
+      "valid_votes_zweit": 16526.0,
+      "winner_erststimme": "afd",
+      "winner_erststimme_candidate": "Ubbelohde, Carsten",
+      "winner_erststimme_share": 0.2679,
+      "winner_zweitstimme": "afd",
+      "winner_zweitstimme_share": 0.2646,
+      "top5_erststimme": [
+        [
+          "afd",
+          0.2679
+        ],
+        [
+          "cdu_csu",
+          0.2392
+        ],
+        [
+          "linke_pds",
+          0.1894
+        ],
+        [
+          "spd",
+          0.1396
+        ],
+        [
+          "gruene",
+          0.0652
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "afd",
+          0.2646
+        ],
+        [
+          "cdu_csu",
+          0.2195
+        ],
+        [
+          "linke_pds",
+          0.1886
+        ],
+        [
+          "spd",
+          0.1308
+        ],
+        [
+          "gruene",
+          0.0614
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 3627.0,
+        "spd": 2162.0,
+        "gruene": 1014.0,
+        "linke_pds": 3116.0,
+        "afd": 4373.0,
+        "fdp": 393.0,
+        "tierschutzpartei": 491.0,
+        "die_partei": 100.0,
+        "volt": 189.0,
+        "die_urbane": 26.0,
+        "dkp": 7.0,
+        "oedp": 15.0,
+        "sgp": 9.0,
+        "bsw": 956.0,
+        "pdf": 48.0
+      }
+    },
+    "1206": {
+      "gebiet_nr": "1206",
+      "eligible_voters": 29204.0,
+      "voters_count": 24649.0,
+      "turnout": 0.844,
+      "valid_votes_zweit": 24464.0,
+      "winner_erststimme": "cdu_csu",
+      "winner_erststimme_candidate": "Gamp, Richard",
+      "winner_erststimme_share": 0.3667,
+      "winner_zweitstimme": "cdu_csu",
+      "winner_zweitstimme_share": 0.3681,
+      "top5_erststimme": [
+        [
+          "cdu_csu",
+          0.3667
+        ],
+        [
+          "gruene",
+          0.1836
+        ],
+        [
+          "spd",
+          0.1686
+        ],
+        [
+          "afd",
+          0.1123
+        ],
+        [
+          "linke_pds",
+          0.0715
+        ]
+      ],
+      "top5_zweitstimme": [
+        [
+          "cdu_csu",
+          0.3681
+        ],
+        [
+          "gruene",
+          0.1669
+        ],
+        [
+          "spd",
+          0.1459
+        ],
+        [
+          "afd",
+          0.116
+        ],
+        [
+          "linke_pds",
+          0.0938
+        ]
+      ],
+      "_zweit_counts_full": {
+        "cdu_csu": 9004.0,
+        "spd": 3570.0,
+        "gruene": 4084.0,
+        "linke_pds": 2295.0,
+        "afd": 2837.0,
+        "fdp": 1045.0,
+        "tierschutzpartei": 369.0,
+        "die_partei": 100.0,
+        "volt": 537.0,
+        "die_urbane": 8.0,
+        "dkp": 11.0,
+        "oedp": 25.0,
+        "sgp": 5.0,
+        "bsw": 532.0,
+        "pdf": 42.0
+      }
+    }
+  }
+}

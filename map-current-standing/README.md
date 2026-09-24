@@ -1,6 +1,6 @@
 # Germany's Current Standing — Rolling Election Composite
 
-An eighth, fully independent visualization alongside [`map`](../map/), [`map-municipality`](../map-municipality/),
+An eighth, fully independent visualization alongside [`map`](../map/), [`map-all-elections`](../map-all-elections/),
 [`map-trends`](../map-trends/), [`map-demographics`](../map-demographics/), [`map-timeseries`](../map-timeseries/),
 [`map-election-timeseries`](../map-election-timeseries/) and [`map-election-profile`](../map-election-profile/) -
 none of those are touched by this one.
@@ -12,7 +12,7 @@ and not one simultaneous vote.
 
 Run locally:
 ```
-python build_current_standing_data.py   # reads map-municipality/ output, which must already be built
+python build_current_standing_data.py   # reads map-all-elections/ output, which must already be built
 python -m http.server 8428 --directory map-current-standing
 ```
 (or use the `election-map-current-standing` entry in `.claude/launch.json`.)

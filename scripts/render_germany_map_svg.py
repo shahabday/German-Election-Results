@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 STATE_BOUNDARY = ROOT / "map-trends" / "data" / "prepared" / "state_outlines.geojson"
-FEDERAL_2025 = ROOT / "map-municipality" / "data" / "prepared" / "federal" / "2025.json"
+FEDERAL_2025 = ROOT / "map-all-elections" / "data" / "prepared" / "federal" / "2025.json"
 OUT_SVG = ROOT / "scripts" / "out" / "germany_map_2025.svg"
 
 STATE_SLUG_TO_CODE = {

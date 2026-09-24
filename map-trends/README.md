@@ -1,14 +1,14 @@
 # German Election Trends — Swing Map
 
-A companion visualization to [`map-municipality`](../map-municipality/), built on the
+A companion visualization to [`map-all-elections`](../map-all-elections/), built on the
 same election-type coverage (Bundestag, Europawahl, Landtag, Kommunalwahl) but focused
 on *change between consecutive elections* rather than a single snapshot. Fully separate
-app — no files in `map/` or `map-municipality/` are touched; this only *reads* from
-`map-municipality/data/prepared/` at build time.
+app — no files in `map/` or `map-all-elections/` are touched; this only *reads* from
+`map-all-elections/data/prepared/` at build time.
 
 Run locally:
 ```
-python build_trends_data.py   # from repo root or map-trends/, reads ../map-municipality/data/prepared
+python build_trends_data.py   # from repo root or map-trends/, reads ../map-all-elections/data/prepared
 python -m http.server 8422 --directory map-trends
 ```
 (or use the `election-map-trends` entry in `.claude/launch.json`.)
@@ -47,14 +47,14 @@ election; below that it's labeled **"new"** instead of a misleading multiplier.
 ## Data model and its limits
 
 `build_trends_data.py` reads pairs of already-prepared per-year files from
-`map-municipality/data/prepared/<type>/[<state>/]<year>.json` — each one a dict of
+`map-all-elections/data/prepared/<type>/[<state>/]<year>.json` — each one a dict of
 `ags -> {w: winner, s: winner share, b: top-5 [party, share] pairs, t: turnout}` — and
 for every consecutive pair of elections of the same type (and, for Landtag/Kommunalwahl,
 the same state) computes a swing record per municipality. Output lands in
 `map-trends/data/prepared/`, in the same `<type>/[<state>/]<year>.json` shape, where the
 year in the filename is the *later* election in the pair (e.g. `federal/2025.json` means
 "swing from 2021 to 2025"). `gemeinden.geojson` and `state_outlines.geojson` are copied
-in once so this app has no runtime dependency on `map-municipality/`.
+in once so this app has no runtime dependency on `map-all-elections/`.
 
 Two structural caveats, inherited from the underlying per-year files:
 
@@ -66,7 +66,7 @@ Two structural caveats, inherited from the underlying per-year files:
   shares), so there's no vote-weighted statewide swing here — the stats strip is a
   straight area count, not a population-weighted aggregate. A genuinely population-
   weighted rollup would need the raw per-area vote counts, which aren't currently kept
-  in `map-municipality`'s prepared format.
+  in `map-all-elections`'s prepared format.
 - **"At risk" is a linear one-step projection**, not a real forecast: it just asks "if
   the *same* pp swing happened again, would the gap close?" It's meant as a quick way to
   spot places worth a closer look, not a prediction.

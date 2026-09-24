@@ -1,6 +1,6 @@
 # Germany's Current Standing — Trends
 
-A ninth, fully independent visualization alongside [`map`](../map/), [`map-municipality`](../map-municipality/),
+A ninth, fully independent visualization alongside [`map`](../map/), [`map-all-elections`](../map-all-elections/),
 [`map-trends`](../map-trends/), [`map-demographics`](../map-demographics/), [`map-timeseries`](../map-timeseries/),
 [`map-election-timeseries`](../map-election-timeseries/), [`map-election-profile`](../map-election-profile/) and
 [`map-current-standing`](../map-current-standing/) - none of those are touched by this one.

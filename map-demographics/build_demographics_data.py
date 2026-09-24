@@ -3,7 +3,7 @@ Build the demographics/economics dataset: two independent resolutions, since the
 source families don't share one.
 
 1. Municipality (~10,800 Gemeinden, single snapshot): Zensus 2022 age structure,
-   migration background, housing. Reuses map-municipality's gemeinden.geojson boundary
+   migration background, housing. Reuses map-all-elections's gemeinden.geojson boundary
    exactly (same AGS keys) - no new boundary needed.
 2. County (~400 Kreise, multi-year 1995-2021 depending on metric): income (VGRdL wage
    and household income series) plus a curated subset of INKAR indicators. INKAR has
@@ -19,7 +19,7 @@ color) that only appears on the metrics glossary page (about/metrics.html, built
 scripts/build_metrics_glossary.py from this file's and map-society's manifests). The
 in-tool panel links out to the glossary anchor for the full version.
 
-This script only reads from processed/covariates/ and map-municipality/data/prepared/ -
+This script only reads from processed/covariates/ and map-all-elections/data/prepared/ -
 it never writes to either.
 
 Run from the repo root or map-demographics/:
@@ -32,7 +32,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 COVAR_DIR = ROOT / "processed" / "covariates"
-MUNI_SRC = ROOT / "map-municipality" / "data" / "prepared"
+MUNI_SRC = ROOT / "map-all-elections" / "data" / "prepared"
 OUT = Path(__file__).resolve().parent / "data" / "prepared"
 BOUNDARIES = Path(__file__).resolve().parent / "data" / "boundaries"
 

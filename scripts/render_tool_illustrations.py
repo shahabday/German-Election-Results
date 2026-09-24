@@ -234,13 +234,13 @@ def build_map_wkr():
 
 
 # =====================================================================
-# 2. map-municipality/ -> Bavaria at full municipality resolution
+# 2. map-all-elections/ -> Bavaria at full municipality resolution
 #    (zoomed-in detail shot to show the fine-grained ~10,900-area data)
 # =====================================================================
 
 def build_map_muni():
-    gem = load(ROOT / "map-municipality" / "data" / "prepared" / "gemeinden.geojson")
-    federal = load(ROOT / "map-municipality" / "data" / "prepared" / "federal" / "2025.json")
+    gem = load(ROOT / "map-all-elections" / "data" / "prepared" / "gemeinden.geojson")
+    federal = load(ROOT / "map-all-elections" / "data" / "prepared" / "federal" / "2025.json")
     # Landkreis Muenchen (32 municipalities) - a close-up detail shot that shows
     # the tool's fine-grained resolution without embedding all ~10,900 areas.
     subset = [f for f in gem["features"] if f["properties"]["ags"].startswith("09184")]
@@ -451,7 +451,7 @@ def build_trend_demo():
 def main():
     print("map/ -> illus-map-wkr")
     build_map_wkr()
-    print("map-municipality/ -> illus-map-muni")
+    print("map-all-elections/ -> illus-map-muni")
     build_map_muni()
     print("map-trends/ -> illus-map-swing")
     build_map_swing()
