@@ -196,6 +196,7 @@
           <a href="../index.html#demo-trend">Trend visualization</a>
           <a href="../index.html#demo-pyramid">Population pyramid</a>
           <a href="../index.html#demo-age-map">Population by age group</a>
+          <a href="../index.html#demo-correlation">Correlation explorer</a>
         </div>
       </div>
       <a class="nav-link" href="../index.html#stories">Stories</a>
@@ -213,6 +214,7 @@
     <a href="../index.html#demo-trend">Trend visualization</a>
     <a href="../index.html#demo-pyramid">Population pyramid</a>
     <a href="../index.html#demo-age-map">Population by age group</a>
+    <a href="../index.html#demo-correlation">Correlation explorer</a>
     <a href="../index.html#stories">Stories</a>
     <a href="../about/project.html">About</a>
   </div>
@@ -222,12 +224,16 @@
 
   <div id="panel">
     <h1>Germany: Population by Age Group</h1>
-    <div class="subtitle">Where does each age group live? County-level, 2011-2025.</div>
+    <div class="subtitle">Where does each age group live? Pick any age range and sex — county-level, 2011-2025.</div>
 
     <div class="row">
-      <div class="row-label">Age group</div>
+      <div class="row-label">Age range</div>
       <div id="bandLabel">—</div>
-      <input type="range" id="bandSlider" min="0" max="19" step="1" value="0">
+      <div style="display:flex; gap:8px; align-items:center;">
+        <select id="bandFromSelect" style="flex:1;"></select>
+        <span style="color:var(--text-dim); font-size:11px;">to</span>
+        <select id="bandToSelect" style="flex:1;"></select>
+      </div>
     </div>
 
     <div class="row" id="viewRow">
@@ -235,6 +241,15 @@
       <div class="toggle-group" id="viewToggle">
         <button data-view="share" class="active">% of county population</button>
         <button data-view="count">Number of people</button>
+      </div>
+    </div>
+
+    <div class="row" id="sexRow">
+      <div class="row-label">Sex</div>
+      <div class="toggle-group" id="sexToggle">
+        <button data-sex="all" class="active">All</button>
+        <button data-sex="m">Men</button>
+        <button data-sex="f">Women</button>
       </div>
     </div>
 
@@ -320,8 +335,10 @@
     manifest: null,
     countyBoundary: null,
     geoLayer: null,
-    bandIdx: 0,
+    bandFromIdx: 0,
+    bandToIdx: 0,
     view: "share", // "share" | "count"
+    sex: "all", // "all" | "m" | "f"
     year: null,
     data: {},
     renderToken: 0,
@@ -356,13 +373,41 @@
     return blend(RAMP_LOW, RAMP_HIGH, t);
   }
 
-  function currentBand() {
-    return state.manifest.bands[state.bandIdx];
+  function selectedBands() {
+    const lo = Math.min(state.bandFromIdx, state.bandToIdx);
+    const hi = Math.max(state.bandFromIdx, state.bandToIdx);
+    return state.manifest.bands.slice(lo, hi + 1);
+  }
+
+  function rangeLabel() {
+    const bands = selectedBands();
+    if (!bands.length) return "—";
+    if (bands.length === 1) return `Age ${bands[0].label}`;
+    const dash = String.fromCharCode(8211);
+    const first = bands[0].label.split(dash)[0] || bands[0].label;
+    const lastBand = bands[bands.length - 1];
+    const lastParts = lastBand.label.split(dash);
+    const last = lastParts.length > 1 ? lastParts[1] : lastBand.label;
+    return `Age ${first}${dash}${last}`;
   }
 
   function updateBandLabel() {
-    const band = currentBand();
-    document.getElementById("bandLabel").textContent = band ? `Age ${band.label}` : "—";
+    document.getElementById("bandLabel").textContent = rangeLabel();
+  }
+
+  function populateBandSelects() {
+    const bands = state.manifest.bands;
+    for (const sel of [document.getElementById("bandFromSelect"), document.getElementById("bandToSelect")]) {
+      sel.innerHTML = "";
+      bands.forEach((b, i) => {
+        const opt = document.createElement("option");
+        opt.value = String(i);
+        opt.textContent = b.label;
+        sel.appendChild(opt);
+      });
+    }
+    document.getElementById("bandFromSelect").value = String(state.bandFromIdx);
+    document.getElementById("bandToSelect").value = String(state.bandToIdx);
   }
 
   function populateYearSlider() {
@@ -377,9 +422,32 @@
     slider._years = years;
   }
 
-  function dataUrl() {
-    const band = currentBand();
-    return `${DATA_DIR}/age_${band.slug}/${state.year}.json`;
+  function dataUrls() {
+    return selectedBands().map((b) => `${DATA_DIR}/age_${b.slug}/${state.year}.json`);
+  }
+
+  function sumBandData(datasets) {
+    const out = {};
+    for (const data of datasets) {
+      for (const ags in data) {
+        const rec = data[ags];
+        const acc = out[ags] || { count: 0, count_m: 0, count_f: 0, share: 0, share_m: 0, share_f: 0 };
+        acc.count += rec.count || 0;
+        acc.count_m += rec.count_m || 0;
+        acc.count_f += rec.count_f || 0;
+        acc.share += rec.share || 0;
+        acc.share_m += rec.share_m || 0;
+        acc.share_f += rec.share_f || 0;
+        out[ags] = acc;
+      }
+    }
+    for (const ags in out) {
+      const acc = out[ags];
+      acc.share = Math.round(acc.share * 100) / 100;
+      acc.share_m = Math.round(acc.share_m * 100) / 100;
+      acc.share_f = Math.round(acc.share_f * 100) / 100;
+    }
+    return out;
   }
 
   function fmtValue(v) {
@@ -397,10 +465,10 @@
   function loadAndRender() {
     const token = ++state.renderToken;
     setLoading(true);
-    fetchJson(dataUrl())
-      .then((data) => {
+    Promise.all(dataUrls().map(fetchJson))
+      .then((datasets) => {
         if (token !== state.renderToken) return;
-        state.data = data;
+        state.data = sumBandData(datasets);
         render();
       })
       .catch((err) => {
@@ -415,20 +483,27 @@
   function valueFor(ags) {
     const rec = state.data[ags];
     if (!rec) return null;
-    return state.view === "share" ? rec.share : rec.count;
+    const countKey = state.sex === "all" ? "count" : `count_${state.sex}`;
+    const shareKey = state.sex === "all" ? "share" : `share_${state.sex}`;
+    return state.view === "share" ? rec[shareKey] : rec[countKey];
+  }
+
+  function sexLabel() {
+    return state.sex === "m" ? "men" : state.sex === "f" ? "women" : "people";
   }
 
   function tooltipHtml(name, ags) {
     const rec = state.data[ags];
-    const band = currentBand();
+    const band = { label: rangeLabel().replace("Age ", "") };
     let html = `<div class="tt-title">${name}</div>`;
     if (!rec) {
       html += `<div class="tt-row"><span>No data for this area</span></div>`;
       return html;
     }
     html += `<div class="tt-main">${fmtValue(valueFor(ags))}</div>`;
-    html += `<div class="tt-row"><span>Age ${band.label}, ${state.year}</span><span>${(rec.count || 0).toLocaleString()} people</span></div>`;
-    if (rec.share != null) html += `<div class="tt-row"><span>Share of county population</span><span>${rec.share}%</span></div>`;
+    html += `<div class="tt-row"><span>Age ${band.label}, ${state.year}</span><span>${(rec.count || 0).toLocaleString()} people total</span></div>`;
+    html += `<div class="tt-row"><span>&nbsp;&nbsp;of which men</span><span>${(rec.count_m || 0).toLocaleString()} (${rec.share_m != null ? rec.share_m + "%" : "—"})</span></div>`;
+    html += `<div class="tt-row"><span>&nbsp;&nbsp;of which women</span><span>${(rec.count_f || 0).toLocaleString()} (${rec.share_f != null ? rec.share_f + "%" : "—"})</span></div>`;
     return html;
   }
 
@@ -436,11 +511,13 @@
     const sorted = [...values].sort((a, b) => a - b);
     document.getElementById("statMin").textContent = sorted.length ? fmtValue(sorted[0]) : "—";
     document.getElementById("statMax").textContent = sorted.length ? fmtValue(sorted[sorted.length - 1]) : "—";
-    const total = Object.values(state.data).reduce((sum, r) => sum + (r.count || 0), 0);
+    const countKey = state.sex === "all" ? "count" : `count_${state.sex}`;
+    const total = Object.values(state.data).reduce((sum, r) => sum + (r[countKey] || 0), 0);
     document.getElementById("statTotal").textContent = total.toLocaleString();
 
-    const band = currentBand();
-    document.getElementById("legendTitle").textContent = `Age ${band.label} — ${state.view === "share" ? "% of county population" : "people"}`;
+    const band = { label: rangeLabel().replace("Age ", "") };
+    const unit = state.view === "share" ? `% of county population (${sexLabel()})` : sexLabel();
+    document.getElementById("legendTitle").textContent = `Age ${band.label} — ${unit}`;
     document.getElementById("legendGradient").style.background = `linear-gradient(to right, ${RAMP_LOW}, ${RAMP_HIGH})`;
     document.getElementById("legendLabels").innerHTML = `<span>${fmtValue(domain[0])}</span><span>${fmtValue(domain[1])}</span>`;
   }
@@ -472,12 +549,17 @@
     }).addTo(map);
 
     updateStatsAndLegend(values, domain);
-    const band = currentBand();
+    const band = { label: rangeLabel().replace("Age ", "") };
     document.getElementById("statusLine").textContent = `Age ${band.label} · ${state.year} · ${values.length} counties with data`;
   }
 
-  document.getElementById("bandSlider").addEventListener("input", (e) => {
-    state.bandIdx = parseInt(e.target.value, 10);
+  document.getElementById("bandFromSelect").addEventListener("change", (e) => {
+    state.bandFromIdx = parseInt(e.target.value, 10);
+    updateBandLabel();
+    loadAndRender();
+  });
+  document.getElementById("bandToSelect").addEventListener("change", (e) => {
+    state.bandToIdx = parseInt(e.target.value, 10);
     updateBandLabel();
     loadAndRender();
   });
@@ -486,6 +568,13 @@
     if (!btn) return;
     state.view = btn.dataset.view;
     document.querySelectorAll("#viewToggle button").forEach((b) => b.classList.toggle("active", b === btn));
+    render();
+  });
+  document.getElementById("sexToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    state.sex = btn.dataset.sex;
+    document.querySelectorAll("#sexToggle button").forEach((b) => b.classList.toggle("active", b === btn));
     render();
   });
   document.getElementById("yearSlider").addEventListener("input", (e) => {
@@ -504,7 +593,7 @@
     ]).then(([manifest, countyBoundary]) => {
       state.manifest = manifest;
       state.countyBoundary = countyBoundary;
-      document.getElementById("bandSlider").max = String(manifest.bands.length - 1);
+      populateBandSelects();
       updateBandLabel();
       populateYearSlider();
       loadAndRender();

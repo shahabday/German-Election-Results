@@ -63,6 +63,44 @@ Sources:
                                  and Bildungsauslaender (came from abroad for the degree) counted
                                  together; only ~240 of 490 counties have a university/college at
                                  all, the rest are genuinely 0, not missing data
+  - childcare_coverage_u3_2025.json  22543-03-01-4-B  Statistik der Kinder in
+                                 Kindertagesbetreuung, Betreuungsquote (KIND36) for children
+                                 under 3, KINTE5="Insgesamt" (all care types combined), single
+                                 Stichtag 01.03.2025 - the three single-year age bands (0-1,
+                                 1-2, 2-3) are simply averaged here since no combined "under 3"
+                                 rate is published directly
+  - hospital_beds_2024.json     23111-01-05-4-B  Krankenhausstatistik: Grunddaten, "aufgestellte
+                                 Betten im Jahresdurchschnitt" (GES017), summed across all 15
+                                 Fachabteilungen (departments) since no combined total is
+                                 separately selectable - Stichtag 31.12.2024; divided here by
+                                 population for beds per 1,000 residents
+  - pkw_bestand_2026.json       46251-01-03-4-B  Statistik des Kraftfahrzeug- und
+                                 Anhaengerbestandes, Personenkraftwagen (PKW001) "insgesamt",
+                                 Stichtag 01.01.2026; divided here by 2025 population (closest
+                                 available) for cars per 1,000 residents
+  - renewable_electricity_share_by_state.json  86251-Z-02  Anteil erneuerbarer Energien am
+                                 Bruttostromverbrauch - already a rate, computed by the
+                                 statistical offices themselves; STATE-LEVEL ONLY. Some states
+                                 exceed 100% in windy years (net electricity exporters), 2009-2023
+  - tourism_overnight_stays_per_capita_2024.json  AI012  Regionalatlas Deutschland, "Uebernachtungen
+                                 je EW" - overnight stays per resident, already computed by
+                                 Destatis, single year (2024)
+  - new_housing_completions_2024.json  31121-01-02-4  Statistik der Baufertigstellungen,
+                                 "Wohnungen" (WOHN01) completed that year, all building sizes
+                                 combined (Insgesamt), Jahressumme 2024; divided here by
+                                 population for completions per 1,000 residents
+  - building_land_sales_2025.json  61511-01-03-4-B  Statistik der Kaufwerte fuer Bauland,
+                                 Veraeusserungsfaelle von Bauland (BAU001, transaction count)
+                                 and Durchschnittlicher Kaufwert je qm (BAU004, average price
+                                 per square meter), Jahressumme 2025. NOTE: this is sales of
+                                 UNDEVELOPED building land/plots, not existing houses or
+                                 apartments - Germany has no free, uniform annual source for
+                                 actual home-resale counts or prices (those live with each
+                                 region's own Gutachterausschuss); this is the closest
+                                 available free, county-level, annual proxy for real-estate
+                                 transaction activity. transaction count divided here by
+                                 population for sales per 1,000 residents; price per sqm used
+                                 as published.
 
 marriage_rate, divorce_rate and welfare_rate are computed here (count /
 population * 1000 or *100); the education shares, sector shares, religion_pct,
@@ -203,6 +241,14 @@ def main():
     gini_raw = load("gini_income_inequality_by_state.json")
     naturalization_rate = load("naturalization_rate_2011_2025.json")
     students_raw = load("students_by_county_ws2023_24.json")
+    childcare_raw = load("childcare_coverage_u3_2025.json")
+    hospital_beds_raw = load("hospital_beds_2024.json")
+    pkw_raw = load("pkw_bestand_2026.json")
+    health_personnel_by_state = load("health_personnel_density_by_state.json")
+    renewable_by_state = load("renewable_electricity_share_by_state.json")
+    tourism_raw = load("tourism_overnight_stays_per_capita_2024.json")
+    housing_completions_raw = load("new_housing_completions_2024.json")
+    building_land_raw = load("building_land_sales_2025.json")
     share_primary, share_secondary, share_tertiary = load_bonus_sector_shares()
 
     marriage_rate = rate_per_1000(marriages, population)
@@ -266,6 +312,48 @@ def main():
         foreign = counts.get("foreign")
         if total and foreign is not None and total > 0:
             foreign_student_share[ags] = {"2023": round(foreign / total * 100, 1)}
+
+    childcare_coverage_u3 = {}
+    for ags, vals in childcare_raw.items():
+        rate = vals.get("rate")
+        if rate is not None:
+            childcare_coverage_u3[ags] = {"2025": rate}
+
+    hospital_beds_per_1000 = {}
+    for ags, beds in hospital_beds_raw.items():
+        pop = population.get(ags, {}).get("2024")
+        if beds is not None and pop:
+            hospital_beds_per_1000[ags] = {"2024": round(beds / pop * 1000, 2)}
+
+    car_ownership_per_1000 = {}
+    for ags, cars in pkw_raw.items():
+        pop = population.get(ags, {}).get("2025")
+        if cars is not None and pop:
+            car_ownership_per_1000[ags] = {"2025": round(cars / pop * 1000, 1)}
+
+    health_personnel_density = broadcast_state_metric(health_personnel_by_state, county_to_state)
+    renewable_electricity_share = broadcast_state_metric(renewable_by_state, county_to_state)
+
+    tourism_intensity = {}
+    for ags, val in tourism_raw.items():
+        tourism_intensity[ags] = {"2024": val}
+
+    new_housing_rate = {}
+    for ags, count in housing_completions_raw.items():
+        pop = population.get(ags, {}).get("2024")
+        if count is not None and pop:
+            new_housing_rate[ags] = {"2024": round(count / pop * 1000, 2)}
+
+    building_land_sales_rate = {}
+    building_land_price_per_sqm = {}
+    for ags, vals in building_land_raw.items():
+        sales = vals.get("sales")
+        pop = population.get(ags, {}).get("2025")
+        if sales is not None and pop:
+            building_land_sales_rate[ags] = {"2025": round(sales / pop * 1000, 3)}
+        price = vals.get("avg_value_per_sqm")
+        if price is not None:
+            building_land_price_per_sqm[ags] = {"2025": price}
 
     METRICS = [
         ("marriage_rate", "Marriage rate", "per 1,000 residents", "Family & Marriage",
@@ -348,6 +436,42 @@ def main():
          "Share of enrolled students who are not German citizens.",
          "Share of all students enrolled at a university/college in the county who hold a non-German citizenship, winter semester 2023/24 (a single snapshot, not a time series). Only around half of Germany's counties have a higher-education institution at all - the other half genuinely show 0%, not missing data, since there's no student population to measure. Where a county does have a university, this is a strong signal of that institution's international draw (technical universities and business schools tend to run higher than regional teacher-training colleges) - it says more about the specific institution than about the county's foreign population generally, since students are transient residents.",
          "regionalstatistik.de, table 21311-01-01-4 (Statistik der Studierenden), WS 2023/24", foreign_student_share),
+        ("childcare_coverage_u3", "Childcare coverage (under 3)", "% of children under 3", "Family & Marriage",
+         "Share of children under 3 in formal daycare (Kindertagesbetreuung).",
+         "Share of children under 3 years old in formal daycare - either a Kindertageseinrichtung (daycare center) or Kindertagespflege (registered childminder) - as of 01.03.2025. Simple average of the three published single-year age bands (0-1, 1-2, 2-3), since Destatis doesn't publish one combined \"under 3\" rate directly; the true population-weighted rate would differ slightly. About 90 of Germany's 490 counties are missing at least one age band's figure (small-county suppression) and are left out here rather than estimated. This directly answers whether local supply of daycare slots is keeping up with demand - it's a supply/uptake rate, not a measure of the under-3 population's size (see the age-group map tool for that).",
+         "regionalstatistik.de, table 22543-03-01-4-B (Statistik der Kinder in Kindertagesbetreuung), Stichtag 01.03.2025", childcare_coverage_u3),
+        ("hospital_beds_rate", "Hospital beds", "per 1,000 residents", "Health & Demographics",
+         "Hospital beds (aufgestellte Betten) per 1,000 residents.",
+         "Hospital beds physically set up and staffed on average that year (aufgestellte Betten im Jahresdurchschnitt), summed across all medical departments and all hospitals located in the county, per 1,000 residents, as of 31.12.2024. This counts beds by hospital LOCATION, not by patients' home county - a county with a major regional hospital will show a high rate partly because it treats patients from neighboring counties too, not because its own residents are unusually sick. About 80 of 490 counties have no hospital at all and are left out (0 beds, not missing data, but excluded here since dividing by population would be misleading for a true zero versus a data gap).",
+         "regionalstatistik.de, table 23111-01-05-4-B (Krankenhausstatistik: Grunddaten), Stichtag 31.12.2024; divided by population from table 12411-01-01-4", hospital_beds_per_1000),
+        ("health_personnel_density", "Health personnel density", "per 1,000 residents", "Health & Demographics",
+         "Health sector employees per 1,000 residents, across all care settings.",
+         "People employed anywhere in the health sector (Gesundheitspersonal) - doctors, nurses, pharmacists, therapists, administrators, everyone counted in the Gesundheitspersonalrechnung - per 1,000 residents. Much broader than just doctors or hospital staff: it includes outpatient practices, pharmacies, elder care, ambulance services and public health administration. STATE-LEVEL ONLY - this accounting isn't broken out below Bundesland level. Every state has risen steadily since 2008 as the health sector has grown faster than the population nationwide, so compare states to each other within a year rather than reading a rising line as something unique to one state.",
+         "regionalstatistik.de, table 88121-Z-03 (Gesundheitspersonalrechnung der Laender), Geschlecht + Art der Einrichtung = Insgesamt", health_personnel_density),
+        ("car_ownership_rate", "Car ownership", "cars per 1,000 residents", "Economic Structure",
+         "Registered passenger cars (Pkw) per 1,000 residents.",
+         "Registered passenger cars (Personenkraftwagen), commercial and private together, per 1,000 residents, as of 01.01.2026 (divided by 2025 population, the closest available). This is vehicle STOCK, not usage - a county can have a high rate because commuting without a car is impractical there (weak public transit, longer distances), or simply because company-fleet cars are registered at a local business address rather than where their drivers actually live, which inflates the rate in counties with big employers or leasing companies.",
+         "regionalstatistik.de, table 46251-01-03-4-B (Statistik des Kraftfahrzeug- und Anhaengerbestandes), Stichtag 01.01.2026; divided by population from table 12411-01-01-4", car_ownership_per_1000),
+        ("renewable_electricity_share", "Renewable electricity share", "% of gross electricity consumption", "Economic Structure",
+         "Renewable share of gross electricity consumption - can exceed 100% in net-exporting states.",
+         "Renewable energy's share of gross electricity consumption (Anteil erneuerbarer Energien am Bruttostromverbrauch), already computed by the statistical offices. STATE-LEVEL ONLY. Values above 100% are real, not errors - a windy, sparsely populated state like Schleswig-Holstein can generate far more renewable electricity than it consumes and export the surplus, pushing its own ratio past 100%, while a dense consuming state like Hamburg or Berlin sits in the single digits because it has little land for wind or solar and imports most of its power. So this measures local GENERATION capacity relative to local demand, not how \"green\" a resident's own electricity use is.",
+         "regionalstatistik.de, table 86251-Z-02 (Anteil erneuerbarer Energien am Bruttostromverbrauch), 2009-2023", renewable_electricity_share),
+        ("tourism_intensity", "Tourism intensity", "overnight stays per resident", "Economic Structure",
+         "Hotel/guesthouse overnight stays per resident that year.",
+         "Overnight stays (Gaesteuebernachtungen, in establishments with 10+ beds) divided by resident population, already computed by Destatis as part of the Regionalatlas. A value of 1.0 means the county recorded as many tourist overnight stays that year as it has residents; well-known destinations run far higher - the highest county here is well above 50. Purely a volume measure: it doesn't distinguish a few very busy resort towns within a large rural county from evenly-spread tourism, and doesn't capture day-trippers who don't stay overnight at all.",
+         "Regionalatlas Deutschland (regionalstatistik.de), table AI012, \"Uebernachtungen je EW\", 2024", tourism_intensity),
+        ("new_housing_rate", "New housing construction", "completions per 1,000 residents", "Economic Structure",
+         "Newly completed dwellings (Baufertigstellungen) per 1,000 residents that year.",
+         "Dwellings (Wohnungen) newly completed in residential buildings that year (Statistik der Baufertigstellungen), all building sizes combined, per 1,000 residents, 2024. This measures completions, not permits or construction starts, so it lags the actual building decision by the construction period (often 1-2+ years for larger projects) - a county mid-way through a construction boom can still show a low rate here if nothing has finished yet. It also says nothing about affordability or who the new housing is for.",
+         "regionalstatistik.de, table 31121-01-02-4 (Statistik der Baufertigstellungen), Jahressumme 2024; divided by population from table 12411-01-01-4", new_housing_rate),
+        ("building_land_sales_rate", "Building land sales", "transactions per 1,000 residents", "Economic Structure",
+         "Undeveloped building-land (plot) sales per 1,000 residents that year.",
+         "Number of undeveloped building-land transactions (Baulandverkaeufe - vacant plots sold for future construction, not existing houses or apartments) per 1,000 residents, 2025. This is the closest free, uniform, county-level annual proxy available for real-estate transaction activity in Germany - actual home/apartment resale counts and prices are tracked regionally by each area's own Gutachterausschuss (expert appraisal committee) and aren't published as one free national dataset. A high rate here signals an active land market (new subdivisions, greenfield development), not necessarily a hot existing-home resale market.",
+         "regionalstatistik.de, table 61511-01-03-4-B (Statistik der Kaufwerte fuer Bauland), Jahressumme 2025; divided by population from table 12411-01-01-4", building_land_sales_rate),
+        ("building_land_price_per_sqm", "Building land price", "EUR per square meter", "Economic Structure",
+         "Average purchase price per square meter of building land sold that year.",
+         "Average price paid per square meter for undeveloped building land (Baulandpreis) that year, 2025 - a companion to the sales-rate metric above, from the same source. Reflects land value, not home/construction cost, so it's driven heavily by local zoning scarcity and proximity to a city center; the highest values by far are in city-state cores (Berlin, Munich) rather than any particular region generally.",
+         "regionalstatistik.de, table 61511-01-03-4-B (Statistik der Kaufwerte fuer Bauland), Jahressumme 2025", building_land_price_per_sqm),
     ]
 
     all_years = set()

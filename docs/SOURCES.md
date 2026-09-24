@@ -77,3 +77,31 @@ GitHub-hosted mirrors of that same official data. Two things I could not get thi
 
 `scripts/fetch_remaining.py` has the exact URLs for both, to run from a machine with
 normal internet access.
+
+## Third source: regionalstatistik.de + smaller German sources, pulled for the map-society / map-population-pyramid tools
+
+Regionalstatistik.de's GENESIS web GUI (https://www.regionalstatistik.de/genesis/online),
+fetched by hand table-by-table (registration is required for its web SERVICE/API as of
+May 2025, but not for the ordinary browser table-builder), plus a few smaller
+non-GENESIS sources for indicators GENESIS doesn't carry (church membership, sports club
+membership, life satisfaction, volunteering - see each file's row below).
+
+These were originally pulled as JSON for two specific map tools and lived only inside
+`map-society/data/raw/` and `map-population-pyramid/data/raw/`. `scripts/export_raw_to_csv.py`
+exports plain CSV copies of every one of those files to `processed/society/` and
+`processed/population_age/`, next to this project's other `processed/` tables, so they're
+usable independent of those two tools. Each folder has its own `CODEBOOK.csv` (one row per
+output file: geography, years, columns, unit, exact GENESIS table code or document). Every
+CSV is keyed by `ags` (5-digit county code, join against `processed/crosswalks/county_crosswalks_1990_2021.csv`
+or `map-society/data/prepared/counties.geojson` for names) or `state` (German state name,
+spelled exactly as in `map-society/data/prepared/counties.geojson`'s `state` property).
+
+Re-run `python scripts/export_raw_to_csv.py` from the repo root after any new pull into
+either tool's `data/raw/` to refresh these exports.
+
+A handful of source files aren't JSON and are copied into `processed/society/originals/`
+unchanged rather than re-parsed: the BKA's original crime-statistics workbooks (`pks_*.xlsx/.csv`,
+behind `crime_haeufigkeitszahl.csv`), the EKD/fowid church-membership workbooks (behind
+`church_membership_by_state.csv`), and two PDFs whose one relevant table was hand-transcribed
+(DOSB's sports-membership report, behind `sports_club_members_by_state.csv`; the 5th
+Freiwilligensurvey's Laenderbericht, behind `volunteering_rate_by_state.csv`).

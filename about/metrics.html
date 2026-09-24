@@ -165,7 +165,7 @@
 
   <div class="toc">
     <div class="toc-title">Jump to</div>
-    <ul><li><a href="#demographics">Demographics &amp; Economy Map</a> <span class="toc-count">(48 metrics)</span></li><li><a href="#society">Society &amp; Culture Map</a> <span class="toc-count">(20 metrics)</span></li></ul>
+    <ul><li><a href="#demographics">Demographics &amp; Economy Map</a> <span class="toc-count">(50 metrics)</span></li><li><a href="#society">Society &amp; Culture Map</a> <span class="toc-count">(29 metrics)</span></li></ul>
   </div>
 
   
@@ -666,8 +666,32 @@
         <div class="m-meta"><b>Category:</b> Labor market</div>
         <div class="m-meta"><b>Years covered:</b> 1998–2020 (23 years with data)</div>
         <div class="m-meta"><b>Source:</b> INKAR (BBSR), via processed/covariates/county_inkar_additional.csv, column &quot;Arbeitslosenquote_inkar&quot;</div>
-        <p class="m-full">Share of the civilian labor force registered as unemployed. The standard headline labor-market number, but it doesn&#x27;t distinguish short-term frictional unemployment from entrenched long-term joblessness - the Society &amp; Culture map&#x27;s welfare-receipt metric captures a related but distinct dimension of that.</p>
+        <p class="m-full">Share of the civilian labor force registered as unemployed. The standard headline labor-market number, but it doesn&#x27;t distinguish short-term frictional unemployment from entrenched long-term joblessness - the two metrics right below break out exactly those two distinctions.</p>
         <a class="m-anchor-link" href="#m-demographics-unemployment_rate">#m-demographics-unemployment_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-youth_unemployment_rate">
+        <div class="m-head">
+          <h3>Youth unemployment rate (under 25)</h3>
+          <span class="m-unit">%</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Labor market</div>
+        <div class="m-meta"><b>Years covered:</b> 2008–2022 (15 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;youth_unemployment_rate&quot;</div>
+        <p class="m-full">Unemployment rate among residents under 25, as opposed to the civilian labor force overall above. Runs both higher and more volatile than the headline rate almost everywhere, since younger workers are the first let go in a downturn and the last hired in a recovery - so a county&#x27;s YEAR-OVER-YEAR swing here is usually more informative than its level in any single year. Coverage is sparser than the headline rate (missing in roughly half of county-years).</p>
+        <a class="m-anchor-link" href="#m-demographics-youth_unemployment_rate">#m-demographics-youth_unemployment_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-demographics-share_longterm_unemployed">
+        <div class="m-head">
+          <h3>Long-term unemployed</h3>
+          <span class="m-unit">% of all unemployed</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Labor market</div>
+        <div class="m-meta"><b>Years covered:</b> 1995–2022 (28 years with data)</div>
+        <div class="m-meta"><b>Source:</b> INKAR/Zensus-derived, via processed/covariates/county_covariates_bonus.csv, column &quot;share_longterm_unemployed&quot;</div>
+        <p class="m-full">Share of the county&#x27;s unemployed who have been out of work for more than 12 months - the entrenched-joblessness component the headline unemployment rate mixes in with short-term frictional unemployment (someone between jobs for a few weeks). Two counties with the same overall unemployment rate can look very different here: one mostly short spells (a healthy, fluid labor market), the other mostly long spells (structural joblessness that a rate alone hides).</p>
+        <a class="m-anchor-link" href="#m-demographics-share_longterm_unemployed">#m-demographics-share_longterm_unemployed</a>
       </div>
 
       <div class="metric-card" id="m-demographics-industry_share">
@@ -871,6 +895,78 @@
         <p class="m-full">Total municipal tax revenue capacity per resident (Steuereinnahmekraft) - the sum of property tax (Grundsteuer A + B), net business tax (Gewerbesteuer, after the state-bound Gewerbesteuerumlage is deducted), plus the municipality&#x27;s share of national income tax and VAT revenue, added up across every municipality in the county and divided by county population. This is what actually funds local government services (schools, roads, day care), distinct from resident income or GDP - a county can have modest household incomes but strong tax capacity if it hosts a lot of taxable business activity (Gewerbesteuer is levied on businesses, not residents), or vice versa for a wealthy commuter-belt county with little local industry.</p>
         <a class="m-anchor-link" href="#m-society-tax_revenue_capacity">#m-society-tax_revenue_capacity</a>
       </div>
+
+      <div class="metric-card" id="m-society-car_ownership_rate">
+        <div class="m-head">
+          <h3>Car ownership</h3>
+          <span class="m-unit">cars per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Economic Structure</div>
+        <div class="m-meta"><b>Years covered:</b> 2025 only</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 46251-01-03-4-B (Statistik des Kraftfahrzeug- und Anhaengerbestandes), Stichtag 01.01.2026; divided by population from table 12411-01-01-4</div>
+        <p class="m-full">Registered passenger cars (Personenkraftwagen), commercial and private together, per 1,000 residents, as of 01.01.2026 (divided by 2025 population, the closest available). This is vehicle STOCK, not usage - a county can have a high rate because commuting without a car is impractical there (weak public transit, longer distances), or simply because company-fleet cars are registered at a local business address rather than where their drivers actually live, which inflates the rate in counties with big employers or leasing companies.</p>
+        <a class="m-anchor-link" href="#m-society-car_ownership_rate">#m-society-car_ownership_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-society-renewable_electricity_share">
+        <div class="m-head">
+          <h3>Renewable electricity share</h3>
+          <span class="m-unit">% of gross electricity consumption</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Economic Structure</div>
+        <div class="m-meta"><b>Years covered:</b> 2009–2023 (15 years with data)</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 86251-Z-02 (Anteil erneuerbarer Energien am Bruttostromverbrauch), 2009-2023</div>
+        <p class="m-full">Renewable energy&#x27;s share of gross electricity consumption (Anteil erneuerbarer Energien am Bruttostromverbrauch), already computed by the statistical offices. STATE-LEVEL ONLY. Values above 100% are real, not errors - a windy, sparsely populated state like Schleswig-Holstein can generate far more renewable electricity than it consumes and export the surplus, pushing its own ratio past 100%, while a dense consuming state like Hamburg or Berlin sits in the single digits because it has little land for wind or solar and imports most of its power. So this measures local GENERATION capacity relative to local demand, not how &quot;green&quot; a resident&#x27;s own electricity use is.</p>
+        <a class="m-anchor-link" href="#m-society-renewable_electricity_share">#m-society-renewable_electricity_share</a>
+      </div>
+
+      <div class="metric-card" id="m-society-tourism_intensity">
+        <div class="m-head">
+          <h3>Tourism intensity</h3>
+          <span class="m-unit">overnight stays per resident</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Economic Structure</div>
+        <div class="m-meta"><b>Years covered:</b> 2024 only</div>
+        <div class="m-meta"><b>Source:</b> Regionalatlas Deutschland (regionalstatistik.de), table AI012, &quot;Uebernachtungen je EW&quot;, 2024</div>
+        <p class="m-full">Overnight stays (Gaesteuebernachtungen, in establishments with 10+ beds) divided by resident population, already computed by Destatis as part of the Regionalatlas. A value of 1.0 means the county recorded as many tourist overnight stays that year as it has residents; well-known destinations run far higher - the highest county here is well above 50. Purely a volume measure: it doesn&#x27;t distinguish a few very busy resort towns within a large rural county from evenly-spread tourism, and doesn&#x27;t capture day-trippers who don&#x27;t stay overnight at all.</p>
+        <a class="m-anchor-link" href="#m-society-tourism_intensity">#m-society-tourism_intensity</a>
+      </div>
+
+      <div class="metric-card" id="m-society-new_housing_rate">
+        <div class="m-head">
+          <h3>New housing construction</h3>
+          <span class="m-unit">completions per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Economic Structure</div>
+        <div class="m-meta"><b>Years covered:</b> 2024 only</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 31121-01-02-4 (Statistik der Baufertigstellungen), Jahressumme 2024; divided by population from table 12411-01-01-4</div>
+        <p class="m-full">Dwellings (Wohnungen) newly completed in residential buildings that year (Statistik der Baufertigstellungen), all building sizes combined, per 1,000 residents, 2024. This measures completions, not permits or construction starts, so it lags the actual building decision by the construction period (often 1-2+ years for larger projects) - a county mid-way through a construction boom can still show a low rate here if nothing has finished yet. It also says nothing about affordability or who the new housing is for.</p>
+        <a class="m-anchor-link" href="#m-society-new_housing_rate">#m-society-new_housing_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-society-building_land_sales_rate">
+        <div class="m-head">
+          <h3>Building land sales</h3>
+          <span class="m-unit">transactions per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Economic Structure</div>
+        <div class="m-meta"><b>Years covered:</b> 2025 only</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 61511-01-03-4-B (Statistik der Kaufwerte fuer Bauland), Jahressumme 2025; divided by population from table 12411-01-01-4</div>
+        <p class="m-full">Number of undeveloped building-land transactions (Baulandverkaeufe - vacant plots sold for future construction, not existing houses or apartments) per 1,000 residents, 2025. This is the closest free, uniform, county-level annual proxy available for real-estate transaction activity in Germany - actual home/apartment resale counts and prices are tracked regionally by each area&#x27;s own Gutachterausschuss (expert appraisal committee) and aren&#x27;t published as one free national dataset. A high rate here signals an active land market (new subdivisions, greenfield development), not necessarily a hot existing-home resale market.</p>
+        <a class="m-anchor-link" href="#m-society-building_land_sales_rate">#m-society-building_land_sales_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-society-building_land_price_per_sqm">
+        <div class="m-head">
+          <h3>Building land price</h3>
+          <span class="m-unit">EUR per square meter</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Economic Structure</div>
+        <div class="m-meta"><b>Years covered:</b> 2025 only</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 61511-01-03-4-B (Statistik der Kaufwerte fuer Bauland), Jahressumme 2025</div>
+        <p class="m-full">Average price paid per square meter for undeveloped building land (Baulandpreis) that year, 2025 - a companion to the sales-rate metric above, from the same source. Reflects land value, not home/construction cost, so it&#x27;s driven heavily by local zoning scarcity and proximity to a city center; the highest values by far are in city-state cores (Berlin, Munich) rather than any particular region generally.</p>
+        <a class="m-anchor-link" href="#m-society-building_land_price_per_sqm">#m-society-building_land_price_per_sqm</a>
+      </div>
       </div>
       <h4 class="category-title">Education</h4>
       <div class="metric-grid">
@@ -923,6 +1019,18 @@
         <p class="m-full">Divorces finalized per 1,000 residents that year (Statistik rechtskraeftiger Urteile in Ehesachen). A single year&#x27;s jump doesn&#x27;t always mean more marriages are breaking down - court processing backlogs can shift when a divorce is finalized relative to when it was filed, so the multi-year trend is more reliable than any one year.</p>
         <a class="m-anchor-link" href="#m-society-divorce_rate">#m-society-divorce_rate</a>
       </div>
+
+      <div class="metric-card" id="m-society-childcare_coverage_u3">
+        <div class="m-head">
+          <h3>Childcare coverage (under 3)</h3>
+          <span class="m-unit">% of children under 3</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Family &amp; Marriage</div>
+        <div class="m-meta"><b>Years covered:</b> 2025 only</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 22543-03-01-4-B (Statistik der Kinder in Kindertagesbetreuung), Stichtag 01.03.2025</div>
+        <p class="m-full">Share of children under 3 years old in formal daycare - either a Kindertageseinrichtung (daycare center) or Kindertagespflege (registered childminder) - as of 01.03.2025. Simple average of the three published single-year age bands (0-1, 1-2, 2-3), since Destatis doesn&#x27;t publish one combined &quot;under 3&quot; rate directly; the true population-weighted rate would differ slightly. About 90 of Germany&#x27;s 490 counties are missing at least one age band&#x27;s figure (small-county suppression) and are left out here rather than estimated. This directly answers whether local supply of daycare slots is keeping up with demand - it&#x27;s a supply/uptake rate, not a measure of the under-3 population&#x27;s size (see the age-group map tool for that).</p>
+        <a class="m-anchor-link" href="#m-society-childcare_coverage_u3">#m-society-childcare_coverage_u3</a>
+      </div>
       </div>
       <h4 class="category-title">Health &amp; Demographics</h4>
       <div class="metric-grid">
@@ -936,6 +1044,30 @@
         <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 12613-06-01-4-B (Statistik der Sterbefaelle)</div>
         <p class="m-full">Period life expectancy at birth (Lebenserwartung), unweighted average of the separately published male and female figures (male: 76.1-80.3 years, female: 82.4-84.5 years across states in 2023 - the roughly 5-6 year gender gap itself is larger than the gap between any two states). STATE-LEVEL ONLY, and only ONE year exists (2023) - Destatis publishes this from a rolling multi-year period life table, not an annual survey, so a new value only appears every few years. The state gaps track a mix of local healthcare access, industrial history (former mining/heavy-industry regions in the East and Saarland skew lower), and average income - not a good place to look for year-to-year change given only one year is available.</p>
         <a class="m-anchor-link" href="#m-society-life_expectancy">#m-society-life_expectancy</a>
+      </div>
+
+      <div class="metric-card" id="m-society-hospital_beds_rate">
+        <div class="m-head">
+          <h3>Hospital beds</h3>
+          <span class="m-unit">per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Health &amp; Demographics</div>
+        <div class="m-meta"><b>Years covered:</b> 2024 only</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 23111-01-05-4-B (Krankenhausstatistik: Grunddaten), Stichtag 31.12.2024; divided by population from table 12411-01-01-4</div>
+        <p class="m-full">Hospital beds physically set up and staffed on average that year (aufgestellte Betten im Jahresdurchschnitt), summed across all medical departments and all hospitals located in the county, per 1,000 residents, as of 31.12.2024. This counts beds by hospital LOCATION, not by patients&#x27; home county - a county with a major regional hospital will show a high rate partly because it treats patients from neighboring counties too, not because its own residents are unusually sick. About 80 of 490 counties have no hospital at all and are left out (0 beds, not missing data, but excluded here since dividing by population would be misleading for a true zero versus a data gap).</p>
+        <a class="m-anchor-link" href="#m-society-hospital_beds_rate">#m-society-hospital_beds_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-society-health_personnel_density">
+        <div class="m-head">
+          <h3>Health personnel density</h3>
+          <span class="m-unit">per 1,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Health &amp; Demographics</div>
+        <div class="m-meta"><b>Years covered:</b> 2008–2024 (4 years with data)</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 88121-Z-03 (Gesundheitspersonalrechnung der Laender), Geschlecht + Art der Einrichtung = Insgesamt</div>
+        <p class="m-full">People employed anywhere in the health sector (Gesundheitspersonal) - doctors, nurses, pharmacists, therapists, administrators, everyone counted in the Gesundheitspersonalrechnung - per 1,000 residents. Much broader than just doctors or hospital staff: it includes outpatient practices, pharmacies, elder care, ambulance services and public health administration. STATE-LEVEL ONLY - this accounting isn&#x27;t broken out below Bundesland level. Every state has risen steadily since 2008 as the health sector has grown faster than the population nationwide, so compare states to each other within a year rather than reading a rising line as something unique to one state.</p>
+        <a class="m-anchor-link" href="#m-society-health_personnel_density">#m-society-health_personnel_density</a>
       </div>
       </div>
       <h4 class="category-title">Income &amp; Economy</h4>

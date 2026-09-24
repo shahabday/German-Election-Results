@@ -1,0 +1,29 @@
+output_file,geography,years,columns,unit,source,notes
+marriages.csv,county,2018-2025,"ags,year,marriages",count,"regionalstatistik.de, table 12611-01-02-4",
+divorces.csv,county,2018-2024,"ags,year,divorces",count,"regionalstatistik.de, table 12631-01-02-4",
+population.csv,county,2018-2025,"ags,year,population",residents,"regionalstatistik.de, table 12411-01-01-4",
+edu_abitur.csv,county,2006-2024,"ags,year,pct_abitur",% of school leavers,"Regionalatlas Deutschland, table AI003-2",
+edu_no_hauptschulabschluss.csv,county,2006-2024,"ags,year,pct_no_hauptschulabschluss",% of school leavers,"Regionalatlas Deutschland, table AI003-2",
+crime_haeufigkeitszahl.csv,county,2020-2024,"ags,year,hz","cases per 100,000 residents","BKA Polizeiliche Kriminalstatistik, T01 Grundtabelle ""Kreise""","HZ = Haeufigkeitszahl, already a rate as published by the BKA"
+welfare_bedarfsgemeinschaften_persons.csv,county,2018-2024 (biennial: 2018/20/22/24),"ags,year,persons",count of people,"regionalstatistik.de, table 22811-02-02-4","Persons in Bedarfsgemeinschaften (SGB II basic income support, Buergergeld/Hartz IV)"
+business_registrations_rate.csv,county,2008-2025,"ags,year,registrations_per_10k","new registrations per 10,000 residents","Regionalatlas Deutschland, table AI004-1",
+naturalization_rate.csv,county,2011-2025 (partial coverage),"ags,year,rate_pct",% of eligible foreign residents naturalized,"regionalstatistik.de, table 12511-04-01-4",Einbuergerungsquote (BEV008Q)
+tax_revenue_capacity_total_eur.csv,county,2022-2024,"ags,year,total_eur","EUR (total, not per resident)","regionalstatistik.de, table 71231-01-03-4 (Realsteuervergleich)","Steuereinnahmekraft - property tax + net business tax + municipal income/VAT shares, summed across the county"
+church_membership_by_state.csv,state,2001-2022,"state,year,pct",% of state population,"fowid.de, ""Bundeslaender: Kirchenmitglieder"" (EKD + Katholische Kirche)",
+sports_club_members_by_state.csv,state,2017-2025,"state,year,members",count of memberships (not unique people),"DOSB Bestandserhebung 2025, p.17",
+life_satisfaction_by_state.csv,state,"2019, 2021, 2024, 2025 (survey years only)","state,year,score",0-10 scale,"SKL Gluecksatlas 2025, Tabelle 1",
+volunteering_rate_by_state.csv,state,2019 only,"state,year,pct",% of population 14+,"5. Deutscher Freiwilligensurvey 2019, Laenderbericht, p.137/148",
+life_expectancy_by_state.csv,state,2023 only,"state,year,m,f",years (life expectancy at birth),"regionalstatistik.de, table 12613-06-01-4-B",m/f = male/female period life expectancy at birth
+income_inequality_by_state.csv,state,2021-2025,"state,year,gini,s80s20",gini = 0-100 index; s80s20 = ratio,"regionalstatistik.de, table 12241-02-01 (EU-SILC)",
+students_by_county.csv,county,WS 2023/24 only,"ags,year,total,german,foreign,male,female",count of enrolled students,"regionalstatistik.de, table 21311-01-01-4",
+childcare_coverage_under3.csv,county,2025 (Stichtag 01.03.),"ags,year,rate,count",rate = % of children under 3; count = children in care,"regionalstatistik.de, table 22543-03-01-4-B","rate is the simple average of the three published single-year age bands (0-1,1-2,2-3), KINTE5=Insgesamt"
+hospital_beds.csv,county,2024 (Stichtag 31.12.),"ags,year,beds","count, summed across all 15 Fachabteilungen","regionalstatistik.de, table 23111-01-05-4-B",aufgestellte Betten im Jahresdurchschnitt
+car_ownership.csv,county,2026 (Stichtag 01.01.),"ags,year,cars",count of registered passenger cars,"regionalstatistik.de, table 46251-01-03-4-B",Personenkraftwagen insgesamt (commercial + private)
+renewable_electricity_share_by_state.csv,state,2009-2023,"state,year,pct",% of gross electricity consumption (can exceed 100 in net-exporting states),"regionalstatistik.de, table 86251-Z-02",
+health_personnel_density_by_state.csv,state,"2008, 2012, 2018, 2024","state,year,per_1000","health-sector employees per 1,000 residents","regionalstatistik.de, table 88121-Z-03",Geschlecht + Art der Einrichtung = Insgesamt
+tourism_overnight_stays_per_capita.csv,county,2024,"ags,year,stays_per_resident",overnight stays per resident,"Regionalatlas Deutschland, table AI012 (""Uebernachtungen je EW"")",
+new_housing_completions.csv,county,2024,"ags,year,dwellings",count of newly completed dwellings,"regionalstatistik.de, table 31121-01-02-4 (WOHN01, Insgesamt)",
+originals/pks_2020.xlsx ... pks_2024.csv,county,2020-2024,"(BKA original workbook, multiple sheets)",-,BKA Polizeiliche Kriminalstatistik (bka.de),Source workbooks behind crime_haeufigkeitszahl.csv - open directly in Excel
+"originals/ekd_2025.xlsx, fowid_kirchenmitglieder.xlsx",state,2001-2022,(original workbooks),-,fowid.de / EKD,Source behind church_membership_by_state.csv
+originals/dosb_2025.pdf,state,2025,"(PDF, p.17 table hand-extracted)",-,DOSB Bestandserhebung 2025,Source document behind sports_club_members_by_state.csv
+originals/freiwilligensurvey_laenderbericht.pdf,state,2019,"(PDF, p.137/148 tables hand-extracted)",-,"5. Deutscher Freiwilligensurvey 2019, Laenderbericht",Source document behind volunteering_rate_by_state.csv

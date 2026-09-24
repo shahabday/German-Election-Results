@@ -66,21 +66,25 @@ def main():
             total = 0
             for label, sexes in ages.items():
                 slug = band_slug(label)
-                m, fem = sexes.get("m"), sexes.get("f")
-                count = (m or 0) + (fem or 0)
-                band_totals[slug][ags] = count
-                total += count
+                m, fem = sexes.get("m") or 0, sexes.get("f") or 0
+                band_totals[slug][ags] = (m, fem)
+                total += m + fem
             county_totals[ags] = total
 
         for slug in bands:
             out_dir = OUT / f"age_{slug}"
             out_dir.mkdir(parents=True, exist_ok=True)
             record = {}
-            for ags, count in band_totals[slug].items():
+            for ags, (m, fem) in band_totals[slug].items():
                 total = county_totals.get(ags, 0)
+                count = m + fem
                 record[ags] = {
                     "count": count,
+                    "count_m": m,
+                    "count_f": fem,
                     "share": round(count / total * 100, 2) if total else None,
+                    "share_m": round(m / total * 100, 2) if total else None,
+                    "share_f": round(fem / total * 100, 2) if total else None,
                 }
             with open(out_dir / f"{year}.json", "w", encoding="utf-8") as f:
                 json.dump(record, f, ensure_ascii=False, separators=(",", ":"))

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Germany: Correlation Explorer</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e8eaed;
+    --text-dim: #9aa0ab;
+    --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  a { color: inherit; }
+
+  #app { min-height: calc(100vh - 84px); width: 100%; display: flex; flex-direction: column; align-items: center; padding: 24px 16px 40px; }
+
+  header.page-head { max-width: 980px; width: 100%; margin-bottom: 18px; }
+  header.page-head h1 { font-size: 22px; margin: 0 0 4px; font-weight: 700; }
+  header.page-head p { font-size: 13px; color: var(--text-dim); margin: 0; line-height: 1.5; max-width: 780px; }
+
+  #controls {
+    max-width: 980px; width: 100%; display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 18px;
+  }
+  .ctrl { display: flex; flex-direction: column; gap: 5px; flex: 1 1 260px; min-width: 220px; }
+  .ctrl label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); }
+  select.var-select {
+    background: #1e222b; color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 6px; padding: 7px 10px; font-size: 13px; width: 100%;
+  }
+  #swapBtn {
+    flex: 0 0 auto; padding: 8px 12px; font-size: 16px; background: #1e222b;
+    border: 1px solid var(--panel-border); border-radius: 6px; color: var(--text); cursor: pointer;
+    align-self: center;
+  }
+  #swapBtn:hover { background: #262b36; border-color: var(--accent); }
+
+  #statsBar { display: flex; gap: 8px; flex-wrap: wrap; }
+  .stat { background: #1e222b; border: 1px solid var(--panel-border); border-radius: 6px; padding: 6px 12px; text-align: center; min-width: 84px; }
+  .stat .n { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.03em; }
+
+  #chartWrap {
+    max-width: 980px; width: 100%; background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 10px; padding: 16px; position: relative;
+  }
+  #chartTitle { font-size: 14px; font-weight: 600; text-align: center; margin-bottom: 2px; }
+  #chartSubtitle { font-size: 11px; color: var(--text-dim); text-align: center; margin-bottom: 10px; }
+  svg#scatter { width: 100%; height: auto; display: block; }
+  .axis-label { fill: var(--text-dim); font-size: 10px; }
+  .axis-title { fill: var(--text-dim); font-size: 11px; text-anchor: middle; }
+  .grid-line { stroke: #262a34; stroke-width: 1; }
+  .reg-line { stroke: #e2794a; stroke-width: 1.6; stroke-dasharray: 5 4; }
+  .pt { stroke: rgba(0,0,0,0.35); stroke-width: 0.6; cursor: pointer; opacity: 0.85; }
+  .pt:hover { opacity: 1; stroke: #fff; stroke-width: 1.2; }
+
+  #legendWrap { display: flex; flex-wrap: wrap; gap: 6px 12px; justify-content: center; margin-top: 12px; font-size: 10.5px; color: var(--text-dim); }
+  .legend-item { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+  .legend-swatch { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
+
+  #tooltip {
+    position: fixed; z-index: 3000; background: rgba(15,17,21,0.97); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    pointer-events: none; display: none; white-space: nowrap;
+  }
+  #tooltip .tt-name { font-weight: 700; margin-bottom: 3px; }
+  #tooltip .tt-row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-dim); }
+
+  #noteLine {
+    max-width: 980px; width: 100%; font-size: 10.5px; color: var(--text-dim); margin-top: 14px;
+    line-height: 1.5; border-top: 1px solid var(--panel-border); padding-top: 10px;
+  }
+  #varDescs { max-width: 980px; width: 100%; display: flex; flex-direction: column; gap: 4px; margin-top: 14px; font-size: 11.5px; color: var(--text-dim); }
+  #varDescs b { color: var(--text); }
+  #statusLine { font-size: 11px; color: var(--text-dim); margin-top: 6px; text-align: center; }
+
+  /* ---- top nav (shared across the site) ---- */
+  .topnav {
+    position: relative; z-index: 2000; height: 54px; flex-shrink: 0;
+    background: rgba(15, 17, 21, 0.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--panel-border);
+  }
+  .topnav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 54px;
+    display: flex; align-items: center; gap: 22px;
+  }
+  .topnav .brand { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+  .topnav .nav-links { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .topnav .nav-link { white-space: nowrap; font-size: 13px; color: var(--text-dim); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
+  .topnav .nav-link:hover { color: var(--text); background: #1e222b; }
+  .dropdown { position: relative; }
+  .dropdown-toggle {
+    font: inherit; font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer;
+    padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .dropdown-toggle:hover, .dropdown:focus-within .dropdown-toggle { color: var(--text); background: #1e222b; }
+  .dropdown-caret { font-size: 9px; transition: transform 0.15s; }
+  .dropdown:hover .dropdown-caret, .dropdown:focus-within .dropdown-caret { transform: rotate(180deg); }
+  .dropdown-menu {
+    position: fixed; top: 0; left: 0; min-width: 170px;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5); padding: 6px; display: flex; flex-direction: column; gap: 2px;
+    z-index: 2500; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.12s;
+  }
+  .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+  .dropdown-menu a { font-size: 12.5px; color: var(--text-dim); text-decoration: none; padding: 7px 9px; border-radius: 6px; }
+  .dropdown-menu a:hover { color: var(--text); background: #20242e; }
+
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 4px;
+    width: 30px; height: 30px; background: none; border: none; cursor: pointer; padding: 0; margin-left: auto; flex-shrink: 0;
+  }
+  .nav-toggle span { display: block; width: 100%; height: 2px; background: var(--text-dim); border-radius: 2px; transition: transform 0.15s, opacity 0.15s; }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 2100;
+    flex-direction: column; padding: 6px 16px 16px; background: var(--bg); border-bottom: 1px solid var(--panel-border);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.5); max-height: calc(100vh - 54px); overflow-y: auto;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 14px; color: var(--text-dim); text-decoration: none; padding: 10px 6px; border-radius: 6px; }
+  .mobile-menu a:hover { color: var(--text); background: #1e222b; }
+  .mobile-menu .mobile-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); opacity: 0.65; margin: 10px 6px 0; }
+
+  @media (max-width: 760px) {
+    .topnav .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+  }
+
+  #siteFooter {
+    height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(15,17,21,0.96); border-top: 1px solid var(--panel-border);
+    font-size: 10.5px; color: var(--text-dim); gap: 4px; padding: 0 12px; text-align: center;
+  }
+  #siteFooter a { color: var(--text-dim); text-decoration: none; }
+  #siteFooter a:hover { color: var(--text); text-decoration: underline; }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html">Germany in Maps</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Home</a>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#political-map">Map visualizations</a>
+          <a href="../index.html#political-trend">Trend visualizations</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#demo-map">Map visualization</a>
+          <a href="../index.html#demo-trend">Trend visualization</a>
+          <a href="../index.html#demo-pyramid">Population pyramid</a>
+          <a href="../index.html#demo-age-map">Population by age group</a>
+          <a href="../index.html#demo-correlation">Correlation explorer</a>
+        </div>
+      </div>
+      <a class="nav-link" href="../index.html#stories">Stories</a>
+      <a class="nav-link" href="../about/project.html">About</a>
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <div class="mobile-group-title">Political</div>
+    <a href="../index.html#political-map">Map visualizations</a>
+    <a href="../index.html#political-trend">Trend visualizations</a>
+    <div class="mobile-group-title">Demographics &amp; Economy</div>
+    <a href="../index.html#demo-map">Map visualization</a>
+    <a href="../index.html#demo-trend">Trend visualization</a>
+    <a href="../index.html#demo-pyramid">Population pyramid</a>
+    <a href="../index.html#demo-age-map">Population by age group</a>
+    <a href="../index.html#demo-correlation">Correlation explorer</a>
+    <a href="../index.html#stories">Stories</a>
+    <a href="../about/project.html">About</a>
+  </div>
+</nav>
+
+<div id="app">
+  <header class="page-head">
+    <h1>Correlation Explorer</h1>
+    <p>Pick any two of the ~29 county-level metrics from across this project — economy, health, family, migration, demographics — and see how they relate across all 402 counties. Each point is one county; the dashed line is the least-squares fit, and r is the Pearson correlation coefficient. Correlation is not causation - many of these pairs move together because both track something else (income, urban density, East/West history), not because one causes the other.</p>
+  </header>
+
+  <div id="controls">
+    <div class="ctrl">
+      <label for="xSelect">X axis</label>
+      <select id="xSelect" class="var-select"></select>
+    </div>
+    <button id="swapBtn" type="button" title="Swap axes">⇄</button>
+    <div class="ctrl">
+      <label for="ySelect">Y axis</label>
+      <select id="ySelect" class="var-select"></select>
+    </div>
+    <div id="statsBar">
+      <div class="stat"><div class="n" id="statN">—</div><div class="l">Counties</div></div>
+      <div class="stat"><div class="n" id="statR">—</div><div class="l">Pearson r</div></div>
+      <div class="stat"><div class="n" id="statR2">—</div><div class="l">R²</div></div>
+    </div>
+  </div>
+
+  <div id="chartWrap">
+    <div id="chartTitle">—</div>
+    <div id="chartSubtitle">—</div>
+    <svg id="scatter" viewBox="0 0 820 560" preserveAspectRatio="xMidYMid meet"></svg>
+    <div id="legendWrap"></div>
+    <div id="statusLine"></div>
+  </div>
+
+  <div id="varDescs"></div>
+
+  <div id="noteLine">
+    Each variable uses its own most recent available year (shown in the axis title) — since coverage ranges from a single 2019 survey to 2025, the two axes of a given chart are not always the same reference year. Points are colored by state; several variables (church membership, sports club membership, life satisfaction, volunteering, life expectancy, tax capacity's underlying Gini/S80-S20, health personnel density, renewable electricity share) are only published at STATE level and broadcast to every county in that state, so they form tight horizontal or vertical bands of identical values rather than county-by-county variation — that's expected, not a bug. Data combines every metric already built for the Society &amp; Culture map plus two age-group shares (under 15, 65+) computed from the population-by-age-group tool.
+  </div>
+
+  <div id="tooltip"></div>
+</div>
+
+<footer id="siteFooter">
+  Made with ❤️ by @shahabday ·
+  <a href="mailto:shahabdaiani@gmail.com">shahabdaiani@gmail.com</a> ·
+  <a href="https://instagram.com/shahabday" target="_blank" rel="noopener">@shahabday</a> ·
+  <a href="https://shahabwrites.com" target="_blank" rel="noopener">shahabwrites.com</a>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  const NS = "http://www.w3.org/2000/svg";
+  const W = 820, H = 560;
+  const MARGIN = { top: 16, right: 24, bottom: 50, left: 68 };
+  const CHART_W = W - MARGIN.left - MARGIN.right;
+  const CHART_H = H - MARGIN.top - MARGIN.bottom;
+
+  const state = {
+    data: null,
+    varByKey: {},
+    x: "childcare_coverage_u3",
+    y: "age_under15_share",
+  };
+
+  const STATE_COLORS = {};
+
+  function colorForState(name) {
+    if (STATE_COLORS[name]) return STATE_COLORS[name];
+    const keys = Object.keys(STATE_COLORS);
+    const hue = Math.round((keys.length * 137.508) % 360); // golden-angle spread
+    const color = `hsl(${hue}, 62%, 58%)`;
+    STATE_COLORS[name] = color;
+    return color;
+  }
+
+  function fetchJson(url) {
+    return fetch(url, { cache: "no-cache" }).then((r) => {
+      if (!r.ok) throw new Error(`${url}: ${r.status}`);
+      return r.json();
+    });
+  }
+
+  function fmtNum(n, digits) {
+    if (n === null || n === undefined || isNaN(n)) return "—";
+    return n.toLocaleString(undefined, { maximumFractionDigits: digits === undefined ? 2 : digits });
+  }
+
+  function populateSelects() {
+    const byCategory = {};
+    for (const v of state.data.variables) {
+      (byCategory[v.category] = byCategory[v.category] || []).push(v);
+    }
+    for (const sel of [document.getElementById("xSelect"), document.getElementById("ySelect")]) {
+      sel.innerHTML = "";
+      for (const category in byCategory) {
+        const group = document.createElement("optgroup");
+        group.label = category;
+        for (const v of byCategory[category]) {
+          const opt = document.createElement("option");
+          opt.value = v.key;
+          opt.textContent = v.label;
+          group.appendChild(opt);
+        }
+        sel.appendChild(group);
+      }
+    }
+    document.getElementById("xSelect").value = state.x;
+    document.getElementById("ySelect").value = state.y;
+  }
+
+  function svgEl(tag, attrs) {
+    const el = document.createElementNS(NS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  function niceTicks(min, max, count) {
+    if (min === max) { min -= 1; max += 1; }
+    const span = max - min;
+    const step0 = span / count;
+    const mag = Math.pow(10, Math.floor(Math.log10(step0)));
+    const norm = step0 / mag;
+    let step;
+    if (norm < 1.5) step = 1 * mag;
+    else if (norm < 3) step = 2 * mag;
+    else if (norm < 7) step = 5 * mag;
+    else step = 10 * mag;
+    const start = Math.ceil(min / step) * step;
+    const ticks = [];
+    for (let v = start; v <= max + 1e-9; v += step) ticks.push(Math.round(v * 1e6) / 1e6);
+    return ticks;
+  }
+
+  function pearsonAndFit(pts) {
+    const n = pts.length;
+    if (n < 2) return null;
+    let sx = 0, sy = 0;
+    for (const [x, y] of pts) { sx += x; sy += y; }
+    const mx = sx / n, my = sy / n;
+    let sxx = 0, syy = 0, sxy = 0;
+    for (const [x, y] of pts) {
+      const dx = x - mx, dy = y - my;
+      sxx += dx * dx; syy += dy * dy; sxy += dx * dy;
+    }
+    if (sxx === 0 || syy === 0) return { r: null, slope: null, intercept: null };
+    const r = sxy / Math.sqrt(sxx * syy);
+    const slope = sxy / sxx;
+    const intercept = my - slope * mx;
+    return { r, slope, intercept };
+  }
+
+  function render() {
+    const xVar = state.varByKey[state.x];
+    const yVar = state.varByKey[state.y];
+    const svg = document.getElementById("scatter");
+    svg.innerHTML = "";
+
+    const pts = [];
+    for (const ags in state.data.counties) {
+      const rec = state.data.counties[ags];
+      const xv = rec[state.x], yv = rec[state.y];
+      if (xv === undefined || yv === undefined) continue;
+      pts.push({ ags, name: rec.name, stateName: rec.state, x: xv, y: yv });
+    }
+
+    document.getElementById("statN").textContent = pts.length;
+    document.getElementById("chartTitle").textContent = `${yVar.label} vs. ${xVar.label}`;
+    document.getElementById("chartSubtitle").textContent =
+      `${xVar.label} (${xVar.year}) on X · ${yVar.label} (${yVar.year}) on Y · ${pts.length} counties with both values`;
+
+    if (pts.length < 2) {
+      document.getElementById("statusLine").textContent = "Not enough overlapping data for these two variables.";
+      document.getElementById("statR").textContent = "—";
+      document.getElementById("statR2").textContent = "—";
+      return;
+    }
+    document.getElementById("statusLine").textContent = "";
+
+    const fit = pearsonAndFit(pts.map((p) => [p.x, p.y]));
+    document.getElementById("statR").textContent = fit.r === null ? "—" : fmtNum(fit.r, 3);
+    document.getElementById("statR2").textContent = fit.r === null ? "—" : fmtNum(fit.r * fit.r, 3);
+
+    let xMin = Math.min(...pts.map((p) => p.x));
+    let xMax = Math.max(...pts.map((p) => p.x));
+    let yMin = Math.min(...pts.map((p) => p.y));
+    let yMax = Math.max(...pts.map((p) => p.y));
+    const xPad = (xMax - xMin) * 0.06 || 1;
+    const yPad = (yMax - yMin) * 0.08 || 1;
+    xMin -= xPad; xMax += xPad; yMin -= yPad; yMax += yPad;
+
+    const px = (v) => MARGIN.left + ((v - xMin) / (xMax - xMin)) * CHART_W;
+    const py = (v) => MARGIN.top + CHART_H - ((v - yMin) / (yMax - yMin)) * CHART_H;
+
+    const g = svgEl("g", {});
+    svg.appendChild(g);
+
+    const xTicks = niceTicks(xMin, xMax, 6);
+    const yTicks = niceTicks(yMin, yMax, 6);
+    for (const t of xTicks) {
+      g.appendChild(svgEl("line", { class: "grid-line", x1: px(t), x2: px(t), y1: MARGIN.top, y2: MARGIN.top + CHART_H }));
+      const lbl = svgEl("text", { class: "axis-label", x: px(t), y: MARGIN.top + CHART_H + 16, "text-anchor": "middle" });
+      lbl.textContent = fmtNum(t, 1);
+      g.appendChild(lbl);
+    }
+    for (const t of yTicks) {
+      g.appendChild(svgEl("line", { class: "grid-line", x1: MARGIN.left, x2: MARGIN.left + CHART_W, y1: py(t), y2: py(t) }));
+      const lbl = svgEl("text", { class: "axis-label", x: MARGIN.left - 8, y: py(t) + 3, "text-anchor": "end" });
+      lbl.textContent = fmtNum(t, 1);
+      g.appendChild(lbl);
+    }
+
+    const xTitle = svgEl("text", { class: "axis-title", x: MARGIN.left + CHART_W / 2, y: H - 10 });
+    xTitle.textContent = `${xVar.label} (${xVar.unit})`;
+    g.appendChild(xTitle);
+    const yTitle = svgEl("text", { class: "axis-title", x: -(MARGIN.top + CHART_H / 2), y: 16, transform: "rotate(-90)" });
+    yTitle.textContent = `${yVar.label} (${yVar.unit})`;
+    g.appendChild(yTitle);
+
+    if (fit.slope !== null) {
+      const x1 = xMin, x2 = xMax;
+      const y1 = fit.slope * x1 + fit.intercept;
+      const y2 = fit.slope * x2 + fit.intercept;
+      g.appendChild(svgEl("line", { class: "reg-line", x1: px(x1), y1: py(y1), x2: px(x2), y2: py(y2) }));
+    }
+
+    const seenStates = new Set();
+    for (const p of pts) seenStates.add(p.stateName);
+    for (const s of seenStates) colorForState(s);
+
+    const tooltip = document.getElementById("tooltip");
+    for (const p of pts) {
+      const circle = svgEl("circle", {
+        class: "pt", cx: px(p.x), cy: py(p.y), r: 4.2, fill: colorForState(p.stateName),
+      });
+      circle.addEventListener("mousemove", (e) => {
+        tooltip.style.display = "block";
+        tooltip.style.left = e.clientX + 14 + "px";
+        tooltip.style.top = e.clientY + 14 + "px";
+        tooltip.innerHTML = `<div class="tt-name">${p.name}</div>` +
+          `<div class="tt-row"><span>${xVar.label}</span><span>${fmtNum(p.x, 2)}</span></div>` +
+          `<div class="tt-row"><span>${yVar.label}</span><span>${fmtNum(p.y, 2)}</span></div>` +
+          `<div class="tt-row"><span>${p.stateName}</span></div>`;
+      });
+      circle.addEventListener("mouseleave", () => { tooltip.style.display = "none"; });
+      g.appendChild(circle);
+    }
+
+    const legend = document.getElementById("legendWrap");
+    legend.innerHTML = "";
+    [...seenStates].sort().forEach((s) => {
+      const item = document.createElement("span");
+      item.className = "legend-item";
+      item.innerHTML = `<span class="legend-swatch" style="background:${colorForState(s)};"></span>${s}`;
+      legend.appendChild(item);
+    });
+
+    const descs = document.getElementById("varDescs");
+    descs.innerHTML =
+      `<div><b>${xVar.label}</b> (X, ${xVar.year}): ${xVar.description} <a href="../about/metrics.html#m-society-${xVar.key}" style="color:var(--accent);">source →</a></div>` +
+      `<div><b>${yVar.label}</b> (Y, ${yVar.year}): ${yVar.description} <a href="../about/metrics.html#m-society-${yVar.key}" style="color:var(--accent);">source →</a></div>`;
+  }
+
+  document.getElementById("xSelect").addEventListener("change", (e) => { state.x = e.target.value; render(); });
+  document.getElementById("ySelect").addEventListener("change", (e) => { state.y = e.target.value; render(); });
+  document.getElementById("swapBtn").addEventListener("click", () => {
+    const tmp = state.x; state.x = state.y; state.y = tmp;
+    document.getElementById("xSelect").value = state.x;
+    document.getElementById("ySelect").value = state.y;
+    render();
+  });
+
+  function init() {
+    fetchJson("data/prepared/correlation_data.json").then((data) => {
+      state.data = data;
+      for (const v of data.variables) state.varByKey[v.key] = v;
+      populateSelects();
+      render();
+    }).catch((err) => {
+      document.getElementById("statusLine").textContent = `Failed to load: ${err.message}`;
+    });
+  }
+
+  init();
+})();
+</script>
+
+<script>
+document.querySelectorAll(".dropdown").forEach((dd) => {
+  const toggle = dd.querySelector(".dropdown-toggle");
+  const menu = dd.querySelector(".dropdown-menu");
+  if (!toggle || !menu) return;
+  const position = () => {
+    const r = toggle.getBoundingClientRect();
+    menu.style.left = Math.round(r.left) + "px";
+    menu.style.top = Math.round(r.bottom + 4) + "px";
+  };
+  dd.addEventListener("mouseenter", position);
+  toggle.addEventListener("focus", position);
+  window.addEventListener("resize", position);
+  window.addEventListener("scroll", position, true);
+});
+
+document.querySelectorAll(".topnav").forEach((nav) => {
+  const toggle = nav.querySelector(".nav-toggle");
+  const menu = nav.querySelector(".mobile-menu");
+  if (!toggle || !menu) return;
+  toggle.addEventListener("click", () => {
+    const open = menu.classList.toggle("open");
+    toggle.classList.toggle("open", open);
+  });
+  menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+    menu.classList.remove("open");
+    toggle.classList.remove("open");
+  }));
+});
+</script>
+</body>
+</html>

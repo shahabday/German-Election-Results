@@ -1,1 +1,5 @@
-.claude
+# Raw boundary source files — only used by the Python build scripts, not read at runtime.
+# Excluding these trims ~26MB from the deployed/pushed repo with zero functional loss.
+map/data/boundaries/
+map-municipality/data/boundaries/
+map-demographics/data/boundaries/

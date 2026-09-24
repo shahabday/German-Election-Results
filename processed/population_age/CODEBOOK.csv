@@ -1,0 +1,3 @@
+output_file,geography,years,columns,unit,source,notes
+population_by_age_sex_county_<year>.csv (6 files: 2011/14/17/20/23/25),county,"2011, 2014, 2017, 2020, 2023, 2025 (Stichtag 31.12.)","ags,year,age_band,sex,count",count of residents,"regionalstatistik.de, table 12411-09-01-4","20 five-year age bands (0-4 ... 95+); long format, one row per county x band x sex"
+population_by_age_sex_state.csv,state,"2011, 2014, 2017, 2020, 2023, 2025 (Stichtag 31.12.)","year,state,sex,age_band,count",count of residents,"regionalstatistik.de, table 12411-04-02-4-B","single-year-of-age bands (not 5-year), long format"
