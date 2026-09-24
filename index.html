@@ -354,6 +354,14 @@
         <h2 class="step-headline">A few threads worth following</h2>
         <p class="step-body">Scroll-driven pieces built from the same real data behind every tool on this site.</p>
         <div class="card-grid">
+          <a class="mini-card" href="story/germany-is-not-one.html">
+            <div class="mc-title">Germany is Not One</div>
+            <div class="mc-desc">Thirteen animated, scrubbable maps on what's converged since 1990, and what hasn't.</div>
+          </a>
+          <a class="mini-card" href="story/germany-is-not-one-economy.html">
+            <div class="mc-title">Germany is Not One: The Economy</div>
+            <div class="mc-desc">Eight animated maps on income, jobs, rent and wealth — East vs. West, year by year.</div>
+          </a>
           <a class="mini-card" href="story/bundestag-explained.html">
             <div class="mc-title">How to Read a Bundestag Map</div>
             <div class="mc-desc">A primer on the map language this whole site speaks.</div>
@@ -365,10 +373,6 @@
           <a class="mini-card" href="story/east-germany-opposition.html">
             <div class="mc-title">The East: One Region, One Opposition</div>
             <div class="mc-desc">Five states, averaged, and the handover from Die Linke to the AfD.</div>
-          </a>
-          <a class="mini-card" href="story/income-and-the-vote.html">
-            <div class="mc-title">Income and the Vote</div>
-            <div class="mc-desc">Group states by average income instead of geography.</div>
           </a>
         </div>
       </div>
@@ -575,7 +579,12 @@
   // few px toward/away from its resting position as it fades - outgoing text
   // continues drifting up as it disappears, incoming text settles in from
   // just below, so the two are never pixel-for-pixel on top of each other.
-  const CARD_DRIFT_PX = 32;
+  // On narrow screens the card goes full-width (no max-width), so its
+  // longer-wrapping paragraphs are taller and a fixed drift/curve tuned for
+  // desktop's narrower box isn't enough separation during a crossfade - both
+  // get a bigger push on mobile.
+  function isMobileWidth() { return window.innerWidth <= 760; }
+  function cardDrift() { return isMobileWidth() ? 58 : 32; }
 
   // A steeper-than-linear falloff (rather than a flat 1-|norm| ramp) keeps a
   // card near full intensity closer to its own center and dims it faster on
@@ -583,7 +592,7 @@
   // shorter and dimmer - less double-exposure - while the fade is still
   // continuous and still driven directly by scroll position, not a timer.
   function fadeCurve(norm) {
-    return Math.pow(Math.max(0, 1 - Math.abs(norm)), 1.8);
+    return Math.pow(Math.max(0, 1 - Math.abs(norm)), isMobileWidth() ? 2.4 : 1.8);
   }
 
   function updateScrollState() {
@@ -598,7 +607,7 @@
       const card = cardEls[i];
       if (card) {
         card.style.opacity = v;
-        card.style.transform = `translateY(${(norm * CARD_DRIFT_PX).toFixed(1)}px)`;
+        card.style.transform = `translateY(${(norm * cardDrift()).toFixed(1)}px)`;
         card.classList.toggle("active-card", v > 0.5);
       }
       if (v > bestVis) { bestVis = v; bestIndex = i; }

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Germany is Not One: The Economy — A Germany in Maps story</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel-border: #2a2e38;
+    --text: #e8eaed; --text-dim: #9aa0ab; --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  a { color: inherit; }
+
+  /* ---- top nav (shared across the site) ---- */
+  .topnav {
+    position: relative; z-index: 2000; height: 54px; flex-shrink: 0;
+    background: rgba(15, 17, 21, 0.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--panel-border);
+  }
+  .topnav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 54px;
+    display: flex; align-items: center; gap: 22px;
+  }
+  .topnav .brand { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+  .topnav .nav-links { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .topnav .nav-link { white-space: nowrap; font-size: 13px; color: var(--text-dim); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
+  .topnav .nav-link:hover { color: var(--text); background: #1e222b; }
+  .dropdown { position: relative; }
+  .dropdown-toggle {
+    font: inherit; font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer;
+    padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .dropdown-toggle:hover, .dropdown:focus-within .dropdown-toggle { color: var(--text); background: #1e222b; }
+  .dropdown-caret { font-size: 9px; transition: transform 0.15s; }
+  .dropdown:hover .dropdown-caret, .dropdown:focus-within .dropdown-caret { transform: rotate(180deg); }
+  .dropdown-menu {
+    position: fixed; top: 0; left: 0; min-width: 170px;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5); padding: 6px; display: flex; flex-direction: column; gap: 2px;
+    z-index: 2500; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.12s;
+  }
+  .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+  .dropdown-menu a { font-size: 12.5px; color: var(--text-dim); text-decoration: none; padding: 7px 9px; border-radius: 6px; }
+  .dropdown-menu a:hover { color: var(--text); background: #20242e; }
+
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 4px;
+    width: 30px; height: 30px; background: none; border: none; cursor: pointer; padding: 0; margin-left: auto; flex-shrink: 0;
+  }
+  .nav-toggle span { display: block; width: 100%; height: 2px; background: var(--text-dim); border-radius: 2px; transition: transform 0.15s, opacity 0.15s; }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 2100;
+    flex-direction: column; padding: 6px 16px 16px; background: var(--bg); border-bottom: 1px solid var(--panel-border);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.5); max-height: calc(100vh - 54px); overflow-y: auto;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 14px; color: var(--text-dim); text-decoration: none; padding: 10px 6px; border-radius: 6px; }
+  .mobile-menu a:hover { color: var(--text); background: #1e222b; }
+  .mobile-menu .mobile-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); opacity: 0.65; margin: 10px 6px 0; }
+
+  @media (max-width: 760px) {
+    .topnav .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+  }
+
+  /* ---- story engine ---- */
+  #storyRoot { position: relative; }
+
+  #stage {
+    position: sticky; top: 54px; height: calc(100vh - 54px); width: 100%;
+    overflow: hidden; background: #0b0d11; z-index: 1;
+  }
+  #map { position: absolute; inset: 0; background: #0b0d11; }
+  #map .leaflet-container { background: #0b0d11; }
+
+  #stageVeil {
+    position: absolute; inset: 0; pointer-events: none; z-index: 400;
+    background: linear-gradient(90deg, rgba(11,13,17,0.90) 0%, rgba(11,13,17,0.60) 34%, rgba(11,13,17,0.05) 64%);
+  }
+  @media (max-width: 760px) { #stageVeil { background: rgba(11,13,17,0.76); } }
+
+  #yearBadge {
+    position: absolute; right: 26px; top: 26px; z-index: 401; pointer-events: none;
+    text-align: right; opacity: 0; transition: opacity 0.2s linear;
+  }
+  #yearBadge.show { opacity: 1; }
+  #yearBadge .yb-metric {
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim);
+    margin-bottom: 2px;
+  }
+  #yearBadge .yb-year {
+    font-size: 56px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;
+    color: rgba(232,234,237,0.92); text-shadow: 0 2px 18px rgba(0,0,0,0.6);
+  }
+  @media (max-width: 760px) { #yearBadge .yb-year { font-size: 38px; } }
+
+  #scaleLegend {
+    position: absolute; right: 22px; bottom: 22px; z-index: 401; pointer-events: none;
+    font-size: 11px; color: var(--text-dim); background: rgba(15,17,21,0.78); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 10px 14px; opacity: 0; transition: opacity 0.2s linear; width: 220px;
+  }
+  #scaleLegend.show { opacity: 1; }
+  #scaleLegend .sl-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 7px; }
+  #scaleLegend .sl-bar { height: 9px; border-radius: 5px; background: linear-gradient(90deg, #1b2838 0%, #f2b84b 100%); }
+  #scaleLegend .sl-labels { display: flex; justify-content: space-between; margin-top: 5px; font-variant-numeric: tabular-nums; }
+  #scaleLegend .sl-nodata { margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--panel-border); display: flex; align-items: center; gap: 6px; }
+  #scaleLegend .sl-nodata .sw { width: 9px; height: 9px; border-radius: 2px; background: #2b2e36; flex-shrink: 0; }
+  @media (max-width: 760px) { #scaleLegend { display: none; } }
+
+  #progressDots {
+    position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 500;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  #progressDots button {
+    width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--text-dim); background: transparent;
+    padding: 0; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  #progressDots button.active { background: var(--accent); border-color: var(--accent); transform: scale(1.3); }
+  @media (max-width: 760px) { #progressDots { display: none; } }
+
+  #steps { position: relative; z-index: 2; margin-top: calc(-100vh + 54px); pointer-events: none; }
+  #steps .hero, #steps .step { pointer-events: none; }
+  #steps a, #steps button { pointer-events: auto; }
+
+  .hero {
+    min-height: calc(100vh - 54px); display: flex; flex-direction: column; align-items: flex-start;
+    justify-content: center; padding: 40px 8vw; max-width: 920px;
+  }
+  .hero-spacer { min-height: 70vh; }
+  .hero .kicker { font-size: 12.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(36px, 6.6vw, 72px); font-weight: 800; line-height: 1.05; margin: 0 0 18px; }
+  .hero p.sub { font-size: clamp(15px, 2vw, 19px); color: var(--text-dim); line-height: 1.65; max-width: 640px; margin: 0 0 30px; }
+  .hero .scroll-hint { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
+  .hero .scroll-hint .arrow { animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  .step { min-height: 100vh; }
+  .step-card {
+    position: fixed; top: 94px; left: 8vw; max-width: 460px; z-index: 402;
+    opacity: 0; pointer-events: none; transition: opacity 0.1s linear, transform 0.1s linear;
+    max-height: calc(100vh - 130px); overflow-y: auto;
+  }
+  .step-card a { pointer-events: none !important; }
+  .step-card.active-card a { pointer-events: auto !important; }
+  @media (max-width: 760px) { .step-card { left: 6vw; right: 6vw; max-width: none; top: 78px; } }
+
+  .step-eyebrow { font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+  .step-headline { font-size: clamp(23px, 3.2vw, 36px); font-weight: 800; line-height: 1.15; margin: 0 0 16px; }
+  .step-body { font-size: 15px; color: var(--text-dim); line-height: 1.75; margin: 0; }
+  .step-body strong { color: var(--text); }
+
+  .closing-cta { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+  .closing-cta a {
+    font-size: 12.5px; font-weight: 600; text-decoration: none; padding: 9px 15px; border-radius: 6px;
+    border: 1px solid var(--panel-border); color: var(--text); background: rgba(23,26,33,0.7);
+  }
+  .closing-cta a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .closing-cta a:hover { filter: brightness(1.12); }
+
+  .final-list { display: flex; flex-direction: column; gap: 6px; margin: 18px 0 24px; max-width: 480px; }
+  .final-list a {
+    display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--text);
+    font-size: 13.5px; padding: 9px 13px; border-radius: 7px; background: rgba(23,26,33,0.6);
+    border: 1px solid var(--panel-border);
+  }
+  .final-list a:hover { border-color: var(--accent); }
+  .final-list a span.arrow { color: var(--text-dim); }
+
+  footer.site-footer {
+    position: relative; z-index: 3; margin-top: 0; padding: 26px 8vw 40px; border-top: 1px solid var(--panel-border);
+    font-size: 11.5px; color: var(--text-dim); line-height: 1.7; background: var(--bg);
+  }
+  footer.site-footer a { color: var(--text-dim); }
+  footer.site-footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html">Germany in Maps</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../tools.html">Home</a>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../tools.html#political-map">Map visualizations</a>
+          <a href="../tools.html#political-trend">Trend visualizations</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../tools.html#demo-map">Map visualization</a>
+          <a href="../tools.html#demo-trend">Trend visualization</a>
+        </div>
+      </div>
+      <a class="nav-link current" href="../tools.html#stories">Stories</a>
+      <a class="nav-link" href="../about/project.html">About</a>
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu">
+    <a href="../tools.html">Home</a>
+    <div class="mobile-group-title">Political</div>
+    <a href="../tools.html#political-map">Map visualizations</a>
+    <a href="../tools.html#political-trend">Trend visualizations</a>
+    <div class="mobile-group-title">Demographics &amp; Economy</div>
+    <a href="../tools.html#demo-map">Map visualization</a>
+    <a href="../tools.html#demo-trend">Trend visualization</a>
+    <a href="../tools.html#stories">Stories</a>
+    <a href="../about/project.html">About</a>
+  </div>
+</nav>
+
+<div id="progressDots"></div>
+
+<div id="storyRoot">
+  <div id="stage">
+    <div id="map"></div>
+    <div id="stageVeil"></div>
+    <div id="yearBadge">
+      <div class="yb-metric" id="ybMetric"></div>
+      <div class="yb-year" id="ybYear"></div>
+    </div>
+    <div id="scaleLegend">
+      <div class="sl-title" id="slTitle"></div>
+      <div class="sl-bar"></div>
+      <div class="sl-labels"><span id="slMin"></span><span id="slMax"></span></div>
+      <div class="sl-nodata"><span class="sw"></span><span>No data</span></div>
+    </div>
+  </div>
+
+  <div id="steps">
+    <section class="hero">
+      <div class="kicker">A Germany in Maps story</div>
+      <h1>Germany is Not One: The Economy</h1>
+      <p class="sub">Thirty-five years after reunification, the East caught up on some measures and fell further behind on others. Eight economic indicators, animated year by year, on what money in Germany actually looks like depending on where you live.</p>
+      <div class="scroll-hint"><span class="arrow">↓</span> Scroll to begin</div>
+    </section>
+
+    <div class="hero-spacer"></div>
+
+    <section class="step" data-step="0">
+      <div class="step-card">
+        <div class="step-eyebrow">Income</div>
+        <h2 class="step-headline">Germany got richer. The gap narrowed, but never closed.</h2>
+        <p class="step-body">Average household income per resident has almost doubled everywhere since 2001, from €13,547 to €22,113 in the East, from €16,792 to €24,649 in the West. As a ratio, East German incomes climbed from 81% of the West's to 90% by 2021. But in real terms the gap is still about €2,500 a year, smaller than two decades ago, but not gone.</p>
+        <div class="closing-cta">
+          <a class="primary" href="../map-demographics/?metric=hh_income">Open the demographics map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="1">
+      <div class="step-card">
+        <div class="step-eyebrow">Economic output</div>
+        <h2 class="step-headline">Wealth is produced in a handful of cities, and it isn't evenly spread</h2>
+        <p class="step-body">GDP per capita has less to do with where people live than where they work. Wolfsburg (Volkswagen), Ingolstadt (Audi) and Munich top the ranking at well over €100,000 per resident, several times the national county median. Measured this way the East trails further behind than on almost any other metric here: 74% of the Western average in 2020, and the absolute gap has actually widened since 2000, from about €8,900 to €10,350.</p>
+        <div class="closing-cta">
+          <a class="primary" href="../map-demographics/?metric=gdp_percap">Open the demographics map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="2">
+      <div class="step-card">
+        <div class="step-eyebrow">Poverty</div>
+        <h2 class="step-headline">A household in the East is still a third more likely to be low-income</h2>
+        <p class="step-body">The share of households living on less than 60% of the median income has fallen everywhere since 2013, from 39.6% to 32.1% in the East, from 29.7% to 24.5% in the West. The relative gap has barely moved: East German households are still roughly 30% more likely to fall into this bracket than Western ones, in 2013 and in 2021 alike.</p>
+        <div class="closing-cta">
+          <a class="primary" href="../map-demographics/?metric=share_low_income_hh">Open the demographics map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="3">
+      <div class="step-card">
+        <div class="step-eyebrow">Labor market</div>
+        <h2 class="step-headline">The one gap that actually closed</h2>
+        <p class="step-body">In 1998 East German unemployment ran more than double the Western rate: 18.1% against 9.0%. By 2020 it was 6.7% against 5.2%, still higher, but within a point and a half for the first time since reunification. Of every metric in this story, unemployment shows the clearest, steadiest convergence.</p>
+        <div class="closing-cta">
+          <a class="primary" href="../map-demographics/?metric=unemployment_rate">Open the demographics map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="4">
+      <div class="step-card">
+        <div class="step-eyebrow">Migration &amp; the workforce</div>
+        <h2 class="step-headline">The workforce that never arrived in the East</h2>
+        <p class="step-body">Foreign nationals made up just 1.6% of the East's population in 1995, against 8.8% in the West, and the gap has barely closed since: 5.1% versus 12.5% by 2020. In an economy short of workers almost everywhere, the East has drawn a much smaller share of the migration that's filled gaps in the Western labor market. Berlin is the exception, climbing from 12.3% to 19.6% over the same period.</p>
+        <div class="closing-cta">
+          <a class="primary" href="../map-demographics/?metric=foreign_share">Open the demographics map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="5">
+      <div class="step-card">
+        <div class="step-eyebrow">Cost of living</div>
+        <h2 class="step-headline">Rent is where the gap is still widening, not closing</h2>
+        <p class="step-body">Average asking rent has risen everywhere since 2010, but faster in the West: from €3.27/m² to €6.01 there, from €2.54 to €3.86 in the East. The ratio between them has widened, not narrowed, East rents now sit at 64% of Western levels, down from 78% in 2010. The most expensive places in the country aren't a region, they're a cluster: Munich and its wealthy commuter belt, plus Frankfurt and Stuttgart.</p>
+        <div class="closing-cta">
+          <a class="primary" href="../map-demographics/?metric=rent_price">Open the demographics map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="6">
+      <div class="step-card">
+        <div class="step-eyebrow">Housing</div>
+        <h2 class="step-headline">The real housing squeeze isn't East vs West, it's big city vs everywhere else</h2>
+        <p class="step-body">Living space per resident has grown everywhere since 2011, East and West alike, and the gap between them has narrowed to about three square meters. The tightest squeeze in the country runs through its biggest cities regardless of which Germany they're in: Frankfurt, Stuttgart, Berlin and Freiburg in the West, Rostock and Dresden in the East, all under 40 m² per resident while the national county average is nearly 50.</p>
+        <div class="closing-cta">
+          <a class="primary" href="../map-demographics/?metric=living_space_per_capita">Open the demographics map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="7">
+      <div class="step-card">
+        <div class="step-eyebrow">Inequality</div>
+        <h2 class="step-headline">The poorer half of the country is also the more equal half</h2>
+        <p class="step-body">By the Gini coefficient, Western states have run consistently more unequal than Eastern ones every year since 2021, an average of about 30 against 26. It's a genuine twist on the rest of this story: the East is poorer on almost every measure here, but its income is also more evenly spread. Inequality in Germany tracks with wealth and big cities, not with the East-West divide itself.</p>
+        <div class="closing-cta">
+          <a class="primary" href="../map-demographics/">Open the demographics map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="8">
+      <div class="step-card" style="max-width:560px;">
+        <div class="step-eyebrow">Germany is Not One: The Economy</div>
+        <h2 class="step-headline">The country got richer. Whether that closed the divide depends which number you look at.</h2>
+        <p class="step-body">Unemployment converged sharply. Income narrowed the gap by a third. But GDP per capita and rent are drifting further apart, not closer, and inequality runs in the opposite direction from the poverty gap entirely. There's no single answer to "did the East catch up", only eight different ones. Explore every metric here yourself, county by county, year by year.</p>
+        <div class="final-list">
+          <a href="../map-demographics/">Demographics &amp; Economy Map <span class="arrow">→</span></a>
+          <a href="../map-society/">Society &amp; Culture Map <span class="arrow">→</span></a>
+          <a href="germany-is-not-one.html">Germany is Not One <span class="arrow">→</span></a>
+          <a href="east-germany-opposition.html">The East: One Region, One Opposition <span class="arrow">→</span></a>
+        </div>
+        <div class="closing-cta">
+          <a class="primary" href="../index.html">Back to Germany in Maps →</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<footer class="site-footer">
+  Made with ❤️ by @shahabday<br>
+  Email: <a href="mailto:shahabdaiani@gmail.com">shahabdaiani@gmail.com</a> · Instagram: <a href="https://instagram.com/shahabday" target="_blank" rel="noopener">@shahabday</a> · Website: <a href="https://shahabwrites.com" target="_blank" rel="noopener">shahabwrites.com</a>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const DATA_DIR = "data/germany-is-not-one-economy";
+  const NO_DATA_COLOR = "#2b2e36";
+
+  const METRIC_INFO = {
+    income: { label: "Household income per capita", unit: "€/year" },
+    gdp_per_capita: { label: "GDP per capita", unit: "€" },
+    low_income_hh: { label: "Low-income households", unit: "% of households" },
+    unemployment_rate: { label: "Unemployment rate", unit: "%" },
+    foreign_share: { label: "Foreign national share", unit: "%" },
+    rent_price: { label: "Rent price", unit: "€/m²" },
+    living_space_per_capita: { label: "Living space per capita", unit: "m²" },
+    gini: { label: "Income inequality (Gini)", unit: "0–100 scale" },
+  };
+
+  // One step per metric, in the same order as the .step sections below; the
+  // closing step (last index) has no metric - the map just stays on whatever
+  // it last showed, dimmed by the veil.
+  const STEP_METRICS = [
+    "income", "gdp_per_capita", "low_income_hh", "unemployment_rate", "foreign_share",
+    "rent_price", "living_space_per_capita", "gini", null,
+  ];
+
+  // Same sequential ramp map-society and map-demographics use for their own
+  // level choropleths (dark/desaturated = low, warm gold = high), so this
+  // story's maps read as visually "the same language" as the tools it links
+  // to, not a different palette.
+  const RAMP_LOW = [27, 40, 56];   // #1b2838
+  const RAMP_HIGH = [242, 184, 75]; // #f2b84b
+  function rampColor(t) {
+    t = Math.max(0, Math.min(1, t));
+    const r = Math.round(RAMP_LOW[0] + (RAMP_HIGH[0] - RAMP_LOW[0]) * t);
+    const g = Math.round(RAMP_LOW[1] + (RAMP_HIGH[1] - RAMP_LOW[1]) * t);
+    const b = Math.round(RAMP_LOW[2] + (RAMP_HIGH[2] - RAMP_LOW[2]) * t);
+    return `rgb(${r},${g},${b})`;
+  }
+
+  const map = L.map("map", { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, touchZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false });
+  map.setView([51.15, 10.45], 6);
+
+  let countyLayer = null;
+  let METRICS = null; // loaded from metrics.json
+
+  function rawValueFor(metricKey, year, feature) {
+    const m = METRICS[metricKey];
+    const yearData = m.data[year];
+    if (!yearData) return null;
+    const key = m.resolution === "state" ? feature.properties.state : feature.properties.county;
+    const v = yearData[key];
+    return v == null ? null : v;
+  }
+
+  function styleFor(metricKey, year, feature) {
+    const m = METRICS[metricKey];
+    const v = rawValueFor(metricKey, year, feature);
+    if (v == null) return { stroke: false, fillColor: NO_DATA_COLOR, fillOpacity: 0.35 };
+    const t = (v - m.domain[0]) / (m.domain[1] - m.domain[0] || 1);
+    return { stroke: false, fillColor: rampColor(t), fillOpacity: 0.88 };
+  }
+
+  function renderYear(metricKey, year) {
+    if (!countyLayer) return;
+    countyLayer.eachLayer((lyr) => lyr.setStyle(styleFor(metricKey, year, lyr.feature)));
+    document.getElementById("ybYear").textContent = year;
+  }
+
+  function renderLegend(metricKey) {
+    const m = METRICS[metricKey];
+    const info = METRIC_INFO[metricKey];
+    document.getElementById("ybMetric").textContent = info.label;
+    document.getElementById("slTitle").textContent = info.label + " (" + info.unit + ")";
+    document.getElementById("slMin").textContent = fmtMetricValue(m.domain[0]);
+    document.getElementById("slMax").textContent = fmtMetricValue(m.domain[1]);
+  }
+
+  function fmtMetricValue(v) {
+    return Math.abs(v) >= 100 ? Math.round(v).toLocaleString() : (Math.round(v * 10) / 10).toString();
+  }
+
+  // ---------- year scrubbing ----------
+  // No timer: the year is a direct function of scroll position within a
+  // step's own screen-height, exactly like the card fade. norm runs +1 (the
+  // step hasn't arrived yet, approaching from below) through 0 (centered) to
+  // -1 (fully scrolled past, above the viewport) over that one step's two
+  // screen-heights of scroll distance, so mapping it to [0,1] and picking a
+  // year index from it gives the reader direct control over both direction
+  // and speed - scroll down, years move forward; scroll up, they move back;
+  // scroll fast, they jump ahead fast.
+  let lastRenderedKey = null;
+  let lastRenderedYear = null;
+
+  function renderMetricAtNorm(metricKey, norm) {
+    const m = METRICS[metricKey];
+    if (!m) return;
+    if (metricKey !== lastRenderedKey) {
+      renderLegend(metricKey);
+      lastRenderedKey = metricKey;
+      lastRenderedYear = null;
+    }
+    // Synced to the same FADE_END window the card's own visibility uses (see
+    // edgeSigned below): the year is clamped at its first/last value for as
+    // long as the card is still fully faded out, so "the text appears" and
+    // "we're at the first year" land together, and likewise at the end.
+    const t = Math.max(0, Math.min(1, (FADE_END - norm) / (2 * FADE_END)));
+    const idx = Math.round(t * (m.years.length - 1));
+    const year = m.years[idx];
+    if (year === lastRenderedYear) return;
+    lastRenderedYear = year;
+    renderYear(metricKey, year);
+  }
+
+  // ---------- scroll-driven text + activation engine (same design as the
+  // home page's story engine: continuous opacity tied directly to scroll
+  // position, no timers for the text itself) ----------
+  const yearBadge = document.getElementById("yearBadge");
+  const scaleLegend = document.getElementById("scaleLegend");
+  const dotsWrap = document.getElementById("progressDots");
+  const stepEls = Array.from(document.querySelectorAll(".step"));
+  const cardEls = stepEls.map((el) => el.querySelector(".step-card"));
+
+  stepEls.forEach((_, i) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.setAttribute("aria-label", "Go to step " + (i + 1));
+    dot.addEventListener("click", () => stepEls[i].scrollIntoView({ behavior: "smooth", block: "center" }));
+    dotsWrap.appendChild(dot);
+  });
+  const dotEls = Array.from(dotsWrap.children);
+
+  // On narrow screens the card goes full-width (no max-width), so its
+  // longer-wrapping paragraphs are taller and a fixed drift tuned for
+  // desktop's narrower box isn't enough separation during a fade - it gets a
+  // bigger push on mobile.
+  function isMobileWidth() { return window.innerWidth <= 760; }
+  function cardDrift() { return isMobileWidth() ? 58 : 32; }
+
+  // The card's text is meant to hold still while the reader scrubs through a
+  // metric's years: it fades in once as the step arrives, stays fully
+  // visible and motionless for the whole scrubbing range in the middle, then
+  // fades out once as the step leaves - not a continuous fade tied to every
+  // pixel of scroll. PLATEAU is the |norm| range that counts as "fully
+  // arrived, hold still"; between PLATEAU and FADE_END, opacity/position
+  // ramp linearly; beyond FADE_END the card is simply gone (norm still runs
+  // out to +-1, matching the step's full scroll-trigger height, but nothing
+  // is shown out there - the neighboring step already owns that territory).
+  // FADE_END <= 0.5 keeps two neighbors' plateaus from ever both being fully
+  // opaque at once: their centers are exactly 1 apart, so at the midpoint
+  // between them each is at |norm|=0.5, right at (or past) FADE_END.
+  const PLATEAU = 0.3;
+  const FADE_END = 0.5;
+  function edgeSigned(norm) {
+    const a = Math.abs(norm);
+    if (a <= PLATEAU) return 0;
+    if (a >= FADE_END) return Math.sign(norm);
+    const t = (a - PLATEAU) / (FADE_END - PLATEAU);
+    return Math.sign(norm) * t;
+  }
+  function stepSignedOffset(el, viewportH) {
+    const rect = el.getBoundingClientRect();
+    const center = rect.top + rect.height / 2;
+    return center - viewportH / 2;
+  }
+
+  function updateScrollState() {
+    const viewportH = window.innerHeight;
+
+    let bestIndex = -1;
+    let bestVis = 0;
+    let bestNorm = 0;
+    stepEls.forEach((el, i) => {
+      const signed = stepSignedOffset(el, viewportH);
+      const norm = Math.max(-1, Math.min(1, signed / viewportH));
+      const edge = edgeSigned(norm);
+      const v = 1 - Math.abs(edge);
+      const card = cardEls[i];
+      if (card) {
+        card.style.opacity = v;
+        card.style.transform = `translateY(${(edge * cardDrift()).toFixed(1)}px)`;
+        card.classList.toggle("active-card", v > 0.5);
+      }
+      if (v > bestVis) { bestVis = v; bestIndex = i; bestNorm = norm; }
+    });
+    dotEls.forEach((d, i) => d.classList.toggle("active", i === bestIndex && bestVis > 0.1));
+
+    if (!METRICS) return;
+
+    const metricKey = bestVis > 0.12 ? STEP_METRICS[bestIndex] : null;
+    if (metricKey) {
+      yearBadge.classList.add("show");
+      scaleLegend.classList.add("show");
+      renderMetricAtNorm(metricKey, bestNorm);
+    } else {
+      yearBadge.classList.remove("show");
+      scaleLegend.classList.remove("show");
+    }
+  }
+
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { updateScrollState(); ticking = false; });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+
+  updateScrollState();
+
+  Promise.all([
+    fetch(`${DATA_DIR}/counties.geojson`).then((r) => r.json()),
+    fetch(`${DATA_DIR}/metrics.json`).then((r) => r.json()),
+  ]).then(([countyGeo, metrics]) => {
+    METRICS = metrics;
+    countyLayer = L.geoJSON(countyGeo, {
+      renderer: L.canvas({ padding: 0.3 }),
+      interactive: false,
+      style: () => ({ stroke: false, fillColor: NO_DATA_COLOR, fillOpacity: 0.35 }),
+    }).addTo(map);
+    map.fitBounds(countyLayer.getBounds(), { paddingTopLeft: [40, 40], paddingBottomRight: [40, 40] });
+    updateScrollState();
+  });
+
+  document.querySelectorAll(".dropdown").forEach((dd) => {
+    const toggle = dd.querySelector(".dropdown-toggle");
+    const menu = dd.querySelector(".dropdown-menu");
+    if (!toggle || !menu) return;
+    const position = () => {
+      const r = toggle.getBoundingClientRect();
+      menu.style.left = Math.round(r.left) + "px";
+      menu.style.top = Math.round(r.bottom + 4) + "px";
+    };
+    dd.addEventListener("mouseenter", position);
+    toggle.addEventListener("focus", position);
+    window.addEventListener("resize", position);
+    window.addEventListener("scroll", position, true);
+  });
+
+  document.querySelectorAll(".topnav").forEach((nav) => {
+    const toggle = nav.querySelector(".nav-toggle");
+    const menu = nav.querySelector(".mobile-menu");
+    if (!toggle || !menu) return;
+    toggle.addEventListener("click", () => {
+      const open = menu.classList.toggle("open");
+      toggle.classList.toggle("open", open);
+    });
+    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+      menu.classList.remove("open");
+      toggle.classList.remove("open");
+    }));
+  });
+})();
+</script>
+</body>
+</html>

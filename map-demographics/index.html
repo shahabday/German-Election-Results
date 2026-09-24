@@ -742,6 +742,21 @@
       state.manifest = manifest;
       state.muniBoundary = muniBoundary;
       state.countyBoundary = countyBoundary;
+      // Lets other pages (e.g. the "Germany is Not One" story) link straight
+      // into a given metric, e.g. ?metric=foreign_share - a county-only metric
+      // also needs the scope switched, since municipality and county metrics
+      // are two separate lists. populateMetricSelect() falls back to the
+      // first metric in the resolved scope if this isn't a real key there.
+      const requestedMetric = new URLSearchParams(window.location.search).get("metric");
+      if (requestedMetric) {
+        const inCounty = manifest.county.metrics.some((m) => m.key === requestedMetric);
+        const inMuni = manifest.municipality.metrics.some((m) => m.key === requestedMetric);
+        if (inCounty && !inMuni) {
+          state.scope = "county";
+          document.querySelectorAll("#scopeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.scope === "county"));
+        }
+        state.metric = requestedMetric;
+      }
       updateRowVisibility();
       populateMetricSelect();
       populateYearSlider();

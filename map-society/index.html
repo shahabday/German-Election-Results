@@ -713,6 +713,11 @@
       state.manifest = manifest;
       state.countyBoundary = countyBoundary;
       updateRowVisibility();
+      // Lets other pages (e.g. the "Germany is Not One" story) link straight
+      // into a given metric, e.g. ?metric=religion_pct. populateMetricSelect()
+      // already falls back to the first metric if this isn't a real key.
+      const requestedMetric = new URLSearchParams(window.location.search).get("metric");
+      if (requestedMetric) state.metric = requestedMetric;
       populateMetricSelect();
       populateYearSlider();
       fitDefault();
