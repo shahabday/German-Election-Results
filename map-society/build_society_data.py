@@ -34,6 +34,35 @@ Sources:
   - volunteering_by_state.json  5. Deutscher Freiwilligensurvey 2019, Laenderbericht p.137/148
                                  (Engagementquote, % who volunteer, state-level, single year -
                                  the survey only runs every 5 years)
+  - business_registrations_2008_2025.json  AI004-1  Regionalatlas: Gewerbeanmeldungen
+                                 je 10.000 Einwohner (already a rate, computed by Destatis)
+  - life_expectancy_by_state.json  12613-06-01-4-B  Statistik der Sterbefaelle, Lebenserwartung
+                                 nach Alter und Geschlecht (period life table), Bundeslaender,
+                                 age 0 (at birth), male + female separately - state-level,
+                                 single year (2023) only
+  - tax_revenue_capacity_2022_2024.json  71231-01-03-4  Realsteuervergleich, Steuereinnahmekraft
+                                 (STNW15) - total municipal tax revenue capacity (Grundsteuer A/B,
+                                 Gewerbesteuer netto, plus the municipal shares of income and VAT
+                                 revenue) summed across all municipalities in the county, in EUR;
+                                 divided here by population to get EUR per resident
+  - gini_income_inequality_by_state.json  12241-02-01  Einkommen und Lebensbedingungen (EU-SILC):
+                                 Gini-Index des verfuegbaren Aequivalenzeinkommens and the S80/S20
+                                 income-quintile ratio - state-level (the source table also has
+                                 Regierungsbezirk-level rows, but every state already has its own
+                                 direct row, so no aggregation was needed), 2021-2025 only (EU-SILC
+                                 sub-sample, not run before 2021)
+  - naturalization_rate_2011_2025.json  12511-04-01-4  Einbuergerungsstatistiken,
+                                 Einbuergerungsquote (BEV008Q) - naturalizations that year as a
+                                 share of the "Einbuergerungspotential" (foreign residents who have
+                                 met the minimum residency requirement), already computed as a
+                                 rate by Destatis
+  - students_by_county_ws2023_24.json  21311-01-01-4  Statistik der Studierenden, students by
+                                 sex and nationality, winter semester 2023/24 only (single
+                                 snapshot, not a time series) - "foreign" here means non-German
+                                 citizenship, both Bildungsinlaender (grew up/schooled in Germany)
+                                 and Bildungsauslaender (came from abroad for the degree) counted
+                                 together; only ~240 of 490 counties have a university/college at
+                                 all, the rest are genuinely 0, not missing data
 
 marriage_rate, divorce_rate and welfare_rate are computed here (count /
 population * 1000 or *100); the education shares, sector shares, religion_pct,
@@ -168,6 +197,12 @@ def main():
     bedarfsgemeinschaften = load("bedarfsgemeinschaften_persons_2018_2024.json")
     happiness_by_state = load("happiness_by_state.json")
     volunteering_by_state = load("volunteering_by_state.json")
+    business_formation_rate = load("business_registrations_2008_2025.json")
+    life_expectancy_raw = load("life_expectancy_by_state.json")
+    tax_revenue_raw = load("tax_revenue_capacity_2022_2024.json")
+    gini_raw = load("gini_income_inequality_by_state.json")
+    naturalization_rate = load("naturalization_rate_2011_2025.json")
+    students_raw = load("students_by_county_ws2023_24.json")
     share_primary, share_secondary, share_tertiary = load_bonus_sector_shares()
 
     marriage_rate = rate_per_1000(marriages, population)
@@ -193,6 +228,44 @@ def main():
     sports_rate = broadcast_state_metric(sports_rate_by_state, county_to_state)
     happiness = broadcast_state_metric(happiness_by_state, county_to_state)
     volunteering = broadcast_state_metric(volunteering_by_state, county_to_state)
+
+    life_expectancy_by_state = {}
+    for state, years in life_expectancy_raw.items():
+        life_expectancy_by_state[state] = {}
+        for year, mf in years.items():
+            life_expectancy_by_state[state][year] = round((mf["m"] + mf["f"]) / 2, 1)
+    life_expectancy = broadcast_state_metric(life_expectancy_by_state, county_to_state)
+
+    tax_revenue_capacity = {}
+    for ags, years in tax_revenue_raw.items():
+        pop_years = population.get(ags, {})
+        tax_revenue_capacity[ags] = {}
+        for year, total_eur in years.items():
+            pop = pop_years.get(year)
+            if total_eur is None or pop is None or pop == 0:
+                tax_revenue_capacity[ags][year] = None
+            else:
+                tax_revenue_capacity[ags][year] = round(total_eur / pop, 0)
+
+    gini_by_state = {}
+    s80s20_by_state = {}
+    for state, years in gini_raw.items():
+        gini_by_state[state] = {}
+        s80s20_by_state[state] = {}
+        for year, vals in years.items():
+            if vals.get("gini") is not None:
+                gini_by_state[state][year] = vals["gini"]
+            if vals.get("s80s20") is not None:
+                s80s20_by_state[state][year] = vals["s80s20"]
+    gini_index = broadcast_state_metric(gini_by_state, county_to_state)
+    income_quintile_ratio = broadcast_state_metric(s80s20_by_state, county_to_state)
+
+    foreign_student_share = {}
+    for ags, counts in students_raw.items():
+        total = counts.get("total")
+        foreign = counts.get("foreign")
+        if total and foreign is not None and total > 0:
+            foreign_student_share[ags] = {"2023": round(foreign / total * 100, 1)}
 
     METRICS = [
         ("marriage_rate", "Marriage rate", "per 1,000 residents", "Family & Marriage",
@@ -247,6 +320,34 @@ def main():
          "Share of the population who do formal volunteer work.",
          "Share of the population aged 14+ who do some form of formal volunteer work (Engagementquote, 5. Deutscher Freiwilligensurvey). STATE-LEVEL ONLY, and only ONE year exists (2019) - the survey runs just once every 5 years and the next wave isn't in this dataset. The regional pattern tracks the same West/East and rural/urban associational-culture divide seen in sports club membership above - worth comparing the two side by side.",
          "5. Deutscher Freiwilligensurvey 2019, Laenderbericht (stmas.bayern.de), p.137/148", volunteering),
+        ("business_formation_rate", "New business registrations", "per 10,000 residents", "Economic Structure",
+         "New business registrations (Gewerbeanmeldungen) per 10,000 residents that year.",
+         "New trade/business registrations (Gewerbeanmeldungen - covers most businesses except the liberal professions and agriculture) per 10,000 residents that year, already computed as a rate by Destatis. Counts registrations, not surviving businesses, so it's a signal of entrepreneurial activity and churn rather than net business growth - a county can have a high rate while also having a high closure (Gewerbeabmeldungen) rate. Covers 2008-2025, so it also captures the 2008-09 financial crisis dip and the COVID-era swings.",
+         "Regionalatlas Deutschland (regionalstatistik.de), table AI004-1", business_formation_rate),
+        ("life_expectancy", "Life expectancy at birth", "years", "Health & Demographics",
+         "Average life expectancy at birth, male and female averaged.",
+         "Period life expectancy at birth (Lebenserwartung), unweighted average of the separately published male and female figures (male: 76.1-80.3 years, female: 82.4-84.5 years across states in 2023 - the roughly 5-6 year gender gap itself is larger than the gap between any two states). STATE-LEVEL ONLY, and only ONE year exists (2023) - Destatis publishes this from a rolling multi-year period life table, not an annual survey, so a new value only appears every few years. The state gaps track a mix of local healthcare access, industrial history (former mining/heavy-industry regions in the East and Saarland skew lower), and average income - not a good place to look for year-to-year change given only one year is available.",
+         "regionalstatistik.de, table 12613-06-01-4-B (Statistik der Sterbefaelle)", life_expectancy),
+        ("tax_revenue_capacity", "Tax revenue capacity", "EUR per resident", "Economic Structure",
+         "Total municipal tax revenue capacity per resident.",
+         "Total municipal tax revenue capacity per resident (Steuereinnahmekraft) - the sum of property tax (Grundsteuer A + B), net business tax (Gewerbesteuer, after the state-bound Gewerbesteuerumlage is deducted), plus the municipality's share of national income tax and VAT revenue, added up across every municipality in the county and divided by county population. This is what actually funds local government services (schools, roads, day care), distinct from resident income or GDP - a county can have modest household incomes but strong tax capacity if it hosts a lot of taxable business activity (Gewerbesteuer is levied on businesses, not residents), or vice versa for a wealthy commuter-belt county with little local industry.",
+         "regionalstatistik.de, table 71231-01-03-4 (Realsteuervergleich), \"Steuereinnahmekraft\"; divided by population from table 12411-01-01-4", tax_revenue_capacity),
+        ("gini_index", "Income inequality (Gini)", "Gini index (0-100)", "Income & Economy",
+         "Gini index of disposable equivalised income - higher means more unequal.",
+         "Gini index of disposable (post-tax, post-transfer) equivalised household income, on a 0-100 scale where 0 would be perfectly equal (everyone has the same income) and 100 would be maximally unequal (one household has all of it). Real German states run roughly 23-36. STATE-LEVEL ONLY, and only from 2021 onward - this comes from the EU-SILC survey sub-sample (Einkommen und Lebensbedingungen), which is too small a sample to break out below state level reliably, and the German sub-sample wasn't run this way before 2021. City-states (Hamburg, Berlin, Bremen) and states with a big high-income metro tend to sit higher, since a Gini index is driven by the gap between top and bottom earners, not by the overall income level (compare against tax revenue capacity above, which tracks the level).",
+         "regionalstatistik.de, table 12241-02-01 (Einkommen und Lebensbedingungen / EU-SILC), \"Gini-Index des verfuegbaren Aequivalenzeinkommens\"", gini_index),
+        ("income_quintile_ratio", "Income quintile ratio (S80/S20)", "ratio", "Income & Economy",
+         "How many times more the richest fifth earns than the poorest fifth.",
+         "The S80/S20 ratio: total income held by the richest 20% of households divided by total income held by the poorest 20%, from the same EU-SILC survey as the Gini index above. A value of 4.5 means the top fifth collectively earns 4.5 times what the bottom fifth does. It moves in the same direction as the Gini index (they're both inequality measures from the same source) but is more intuitive to read directly - \"the top fifth earns 5x the bottom fifth\" is a more concrete statement than a Gini score. STATE-LEVEL ONLY, 2021 onward, same survey-size caveat as the Gini index.",
+         "regionalstatistik.de, table 12241-02-01 (Einkommen und Lebensbedingungen / EU-SILC), \"Einkommensquintilverhaeltnis S80/S20\"", income_quintile_ratio),
+        ("naturalization_rate", "Naturalization rate", "% of eligible foreign residents", "Migration & Diversity",
+         "Share of eligible foreign residents naturalized as German citizens that year.",
+         "Naturalizations that year (Einbuergerungen) as a share of the county's \"Einbuergerungspotential\" - foreign residents who have already met the minimum residency requirement to apply, not all foreign residents. So this measures how many of the people who COULD naturalize actually did that year, not overall citizenship uptake among immigrants generally. A county can score high here even with a small foreign population if its existing eligible residents are naturalizing at a high rate, and low even with a large foreign population if most of it is recent arrivals not yet eligible.",
+         "regionalstatistik.de, table 12511-04-01-4 (Einbuergerungsstatistiken), \"Einbuergerungsquote\" (BEV008Q)", naturalization_rate),
+        ("foreign_student_share", "International students", "% of enrolled students", "Migration & Diversity",
+         "Share of enrolled students who are not German citizens.",
+         "Share of all students enrolled at a university/college in the county who hold a non-German citizenship, winter semester 2023/24 (a single snapshot, not a time series). Only around half of Germany's counties have a higher-education institution at all - the other half genuinely show 0%, not missing data, since there's no student population to measure. Where a county does have a university, this is a strong signal of that institution's international draw (technical universities and business schools tend to run higher than regional teacher-training colleges) - it says more about the specific institution than about the county's foreign population generally, since students are transient residents.",
+         "regionalstatistik.de, table 21311-01-01-4 (Statistik der Studierenden), WS 2023/24", foreign_student_share),
     ]
 
     all_years = set()

@@ -165,7 +165,7 @@
 
   <div class="toc">
     <div class="toc-title">Jump to</div>
-    <ul><li><a href="#demographics">Demographics &amp; Economy Map</a> <span class="toc-count">(48 metrics)</span></li><li><a href="#society">Society &amp; Culture Map</a> <span class="toc-count">(13 metrics)</span></li></ul>
+    <ul><li><a href="#demographics">Demographics &amp; Economy Map</a> <span class="toc-count">(48 metrics)</span></li><li><a href="#society">Society &amp; Culture Map</a> <span class="toc-count">(20 metrics)</span></li></ul>
   </div>
 
   
@@ -847,6 +847,30 @@
         <p class="m-full">Share of the county&#x27;s economic output (gross value added) from the tertiary sector - services (INKAR indicator, reused from this project&#x27;s map-demographics data pull). Services is now the largest sector almost everywhere in Germany, so the more informative read is usually which OTHER sector is unusually large in a given county, not how large tertiary itself is.</p>
         <a class="m-anchor-link" href="#m-society-share_tertiary_sector">#m-society-share_tertiary_sector</a>
       </div>
+
+      <div class="metric-card" id="m-society-business_formation_rate">
+        <div class="m-head">
+          <h3>New business registrations</h3>
+          <span class="m-unit">per 10,000 residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Economic Structure</div>
+        <div class="m-meta"><b>Years covered:</b> 2008–2025 (18 years with data)</div>
+        <div class="m-meta"><b>Source:</b> Regionalatlas Deutschland (regionalstatistik.de), table AI004-1</div>
+        <p class="m-full">New trade/business registrations (Gewerbeanmeldungen - covers most businesses except the liberal professions and agriculture) per 10,000 residents that year, already computed as a rate by Destatis. Counts registrations, not surviving businesses, so it&#x27;s a signal of entrepreneurial activity and churn rather than net business growth - a county can have a high rate while also having a high closure (Gewerbeabmeldungen) rate. Covers 2008-2025, so it also captures the 2008-09 financial crisis dip and the COVID-era swings.</p>
+        <a class="m-anchor-link" href="#m-society-business_formation_rate">#m-society-business_formation_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-society-tax_revenue_capacity">
+        <div class="m-head">
+          <h3>Tax revenue capacity</h3>
+          <span class="m-unit">EUR per resident</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Economic Structure</div>
+        <div class="m-meta"><b>Years covered:</b> 2022–2024 (3 years with data)</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 71231-01-03-4 (Realsteuervergleich), &quot;Steuereinnahmekraft&quot;; divided by population from table 12411-01-01-4</div>
+        <p class="m-full">Total municipal tax revenue capacity per resident (Steuereinnahmekraft) - the sum of property tax (Grundsteuer A + B), net business tax (Gewerbesteuer, after the state-bound Gewerbesteuerumlage is deducted), plus the municipality&#x27;s share of national income tax and VAT revenue, added up across every municipality in the county and divided by county population. This is what actually funds local government services (schools, roads, day care), distinct from resident income or GDP - a county can have modest household incomes but strong tax capacity if it hosts a lot of taxable business activity (Gewerbesteuer is levied on businesses, not residents), or vice versa for a wealthy commuter-belt county with little local industry.</p>
+        <a class="m-anchor-link" href="#m-society-tax_revenue_capacity">#m-society-tax_revenue_capacity</a>
+      </div>
       </div>
       <h4 class="category-title">Education</h4>
       <div class="metric-grid">
@@ -900,6 +924,46 @@
         <a class="m-anchor-link" href="#m-society-divorce_rate">#m-society-divorce_rate</a>
       </div>
       </div>
+      <h4 class="category-title">Health &amp; Demographics</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-society-life_expectancy">
+        <div class="m-head">
+          <h3>Life expectancy at birth</h3>
+          <span class="m-unit">years</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Health &amp; Demographics</div>
+        <div class="m-meta"><b>Years covered:</b> 2023 only</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 12613-06-01-4-B (Statistik der Sterbefaelle)</div>
+        <p class="m-full">Period life expectancy at birth (Lebenserwartung), unweighted average of the separately published male and female figures (male: 76.1-80.3 years, female: 82.4-84.5 years across states in 2023 - the roughly 5-6 year gender gap itself is larger than the gap between any two states). STATE-LEVEL ONLY, and only ONE year exists (2023) - Destatis publishes this from a rolling multi-year period life table, not an annual survey, so a new value only appears every few years. The state gaps track a mix of local healthcare access, industrial history (former mining/heavy-industry regions in the East and Saarland skew lower), and average income - not a good place to look for year-to-year change given only one year is available.</p>
+        <a class="m-anchor-link" href="#m-society-life_expectancy">#m-society-life_expectancy</a>
+      </div>
+      </div>
+      <h4 class="category-title">Income &amp; Economy</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-society-gini_index">
+        <div class="m-head">
+          <h3>Income inequality (Gini)</h3>
+          <span class="m-unit">Gini index (0-100)</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Income &amp; Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2021–2025 (5 years with data)</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 12241-02-01 (Einkommen und Lebensbedingungen / EU-SILC), &quot;Gini-Index des verfuegbaren Aequivalenzeinkommens&quot;</div>
+        <p class="m-full">Gini index of disposable (post-tax, post-transfer) equivalised household income, on a 0-100 scale where 0 would be perfectly equal (everyone has the same income) and 100 would be maximally unequal (one household has all of it). Real German states run roughly 23-36. STATE-LEVEL ONLY, and only from 2021 onward - this comes from the EU-SILC survey sub-sample (Einkommen und Lebensbedingungen), which is too small a sample to break out below state level reliably, and the German sub-sample wasn&#x27;t run this way before 2021. City-states (Hamburg, Berlin, Bremen) and states with a big high-income metro tend to sit higher, since a Gini index is driven by the gap between top and bottom earners, not by the overall income level (compare against tax revenue capacity above, which tracks the level).</p>
+        <a class="m-anchor-link" href="#m-society-gini_index">#m-society-gini_index</a>
+      </div>
+
+      <div class="metric-card" id="m-society-income_quintile_ratio">
+        <div class="m-head">
+          <h3>Income quintile ratio (S80/S20)</h3>
+          <span class="m-unit">ratio</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Income &amp; Economy</div>
+        <div class="m-meta"><b>Years covered:</b> 2021–2025 (5 years with data)</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 12241-02-01 (Einkommen und Lebensbedingungen / EU-SILC), &quot;Einkommensquintilverhaeltnis S80/S20&quot;</div>
+        <p class="m-full">The S80/S20 ratio: total income held by the richest 20% of households divided by total income held by the poorest 20%, from the same EU-SILC survey as the Gini index above. A value of 4.5 means the top fifth collectively earns 4.5 times what the bottom fifth does. It moves in the same direction as the Gini index (they&#x27;re both inequality measures from the same source) but is more intuitive to read directly - &quot;the top fifth earns 5x the bottom fifth&quot; is a more concrete statement than a Gini score. STATE-LEVEL ONLY, 2021 onward, same survey-size caveat as the Gini index.</p>
+        <a class="m-anchor-link" href="#m-society-income_quintile_ratio">#m-society-income_quintile_ratio</a>
+      </div>
+      </div>
       <h4 class="category-title">Labor &amp; Welfare</h4>
       <div class="metric-grid">
       <div class="metric-card" id="m-society-welfare_rate">
@@ -912,6 +976,32 @@
         <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 22811-02-02-4</div>
         <p class="m-full">Share of the county&#x27;s population receiving basic income support under SGB II (Buergergeld/Hartz IV - Personen in Bedarfsgemeinschaften), computed here from regionalstatistik.de person counts divided by county population. This is a structural indicator, not a cyclical one - in counties where it&#x27;s persistently high, it reflects the underlying local job market over years, not a recent news-cycle event.</p>
         <a class="m-anchor-link" href="#m-society-welfare_rate">#m-society-welfare_rate</a>
+      </div>
+      </div>
+      <h4 class="category-title">Migration &amp; Diversity</h4>
+      <div class="metric-grid">
+      <div class="metric-card" id="m-society-naturalization_rate">
+        <div class="m-head">
+          <h3>Naturalization rate</h3>
+          <span class="m-unit">% of eligible foreign residents</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Migration &amp; Diversity</div>
+        <div class="m-meta"><b>Years covered:</b> 2011–2024 (14 years with data)</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 12511-04-01-4 (Einbuergerungsstatistiken), &quot;Einbuergerungsquote&quot; (BEV008Q)</div>
+        <p class="m-full">Naturalizations that year (Einbuergerungen) as a share of the county&#x27;s &quot;Einbuergerungspotential&quot; - foreign residents who have already met the minimum residency requirement to apply, not all foreign residents. So this measures how many of the people who COULD naturalize actually did that year, not overall citizenship uptake among immigrants generally. A county can score high here even with a small foreign population if its existing eligible residents are naturalizing at a high rate, and low even with a large foreign population if most of it is recent arrivals not yet eligible.</p>
+        <a class="m-anchor-link" href="#m-society-naturalization_rate">#m-society-naturalization_rate</a>
+      </div>
+
+      <div class="metric-card" id="m-society-foreign_student_share">
+        <div class="m-head">
+          <h3>International students</h3>
+          <span class="m-unit">% of enrolled students</span>
+        </div>
+        <div class="m-meta"><b>Category:</b> Migration &amp; Diversity</div>
+        <div class="m-meta"><b>Years covered:</b> 2023 only</div>
+        <div class="m-meta"><b>Source:</b> regionalstatistik.de, table 21311-01-01-4 (Statistik der Studierenden), WS 2023/24</div>
+        <p class="m-full">Share of all students enrolled at a university/college in the county who hold a non-German citizenship, winter semester 2023/24 (a single snapshot, not a time series). Only around half of Germany&#x27;s counties have a higher-education institution at all - the other half genuinely show 0%, not missing data, since there&#x27;s no student population to measure. Where a county does have a university, this is a strong signal of that institution&#x27;s international draw (technical universities and business schools tend to run higher than regional teacher-training colleges) - it says more about the specific institution than about the county&#x27;s foreign population generally, since students are transient residents.</p>
+        <a class="m-anchor-link" href="#m-society-foreign_student_share">#m-society-foreign_student_share</a>
       </div>
       </div>
       <h4 class="category-title">Religion &amp; Community</h4>

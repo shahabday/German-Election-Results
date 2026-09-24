@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Germany: Population by Age Group</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e8eaed;
+    --text-dim: #9aa0ab;
+    --accent: #4a90e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  #app { position: relative; height: calc(100vh - 84px); width: 100vw; }
+  #map { position: absolute; inset: 0; background: #0b0d11; }
+
+  #panel {
+    position: absolute; top: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 14px 16px; width: 320px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    max-height: calc(100vh - 32px); overflow-y: auto;
+  }
+  #panel h1 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+  #panel .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
+
+  .row { margin-bottom: 12px; }
+  .row:last-child { margin-bottom: 0; }
+  .row-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+
+  .toggle-group { display: flex; border: 1px solid var(--panel-border); border-radius: 6px; overflow: hidden; }
+  .toggle-group button {
+    flex: 1 1 auto; background: transparent; color: var(--text-dim); border: none; padding: 7px 4px;
+    font-size: 12px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .toggle-group button.active { background: var(--accent); color: #fff; }
+  .toggle-group button:not(.active):hover { background: #20242e; color: var(--text); }
+
+  select { width: 100%; background: #1e222b; color: var(--text); border: 1px solid var(--panel-border); border-radius: 6px; padding: 7px 8px; font-size: 12.5px; }
+
+  #bandSlider { width: 100%; accent-color: var(--accent); margin-top: 4px; }
+  #bandLabel { font-size: 20px; font-weight: 700; text-align: center; margin: 2px 0 6px; }
+  #bandRange { font-size: 11px; color: var(--text-dim); text-align: center; margin-bottom: 4px; }
+
+  #yearSlider { width: 100%; accent-color: var(--accent); }
+  #yearLabel { font-size: 16px; font-weight: 700; text-align: center; margin: 2px 0 6px; }
+
+  .play-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
+    padding: 7px 10px; font-size: 12px; font-weight: 600; background: #1e222b;
+    border: 1px solid var(--panel-border); border-radius: 6px; color: var(--text); cursor: pointer; margin-top: 8px;
+  }
+  .play-btn:hover { background: #262b36; border-color: var(--accent); }
+  .play-btn.playing { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  #statsBar { display: flex; gap: 6px; margin-top: 4px; }
+  .stat { flex: 1; background: #1e222b; border: 1px solid var(--panel-border); border-radius: 6px; padding: 6px 4px; text-align: center; }
+  .stat .n { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.03em; }
+
+  #statusLine { font-size: 11px; color: var(--text-dim); margin-top: 10px; min-height: 14px; }
+  #noteLine { font-size: 10.5px; color: var(--text-dim); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--panel-border); }
+
+  #legend {
+    position: absolute; bottom: 16px; left: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+    padding: 10px 14px; font-size: 11px; max-width: 240px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  #legend .legend-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); margin-bottom: 6px; }
+  .legend-gradient { height: 12px; border-radius: 3px; margin-bottom: 4px; }
+  .legend-scale-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+  .leaflet-tooltip.age-tooltip {
+    background: rgba(15, 17, 21, 0.97); color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.5); max-width: 260px;
+  }
+  .age-tooltip .tt-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .age-tooltip .tt-main { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .age-tooltip .tt-row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 2px; color: var(--text-dim); font-size: 11px; }
+  .age-tooltip .tt-row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+
+  #loading {
+    position: absolute; top: 16px; right: 16px; z-index: 1000;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    padding: 6px 12px; font-size: 11px; color: var(--text-dim); display: none;
+  }
+  #loading.active { display: block; }
+
+  #credit {
+    position: absolute; bottom: 8px; right: 8px; z-index: 999;
+    font-size: 10px; color: var(--text-dim); background: rgba(15,17,21,0.7);
+    padding: 3px 8px; border-radius: 6px;
+  }
+
+  #panelHeaderRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  #panelHeaderRow h1 { margin: 0; }
+  #panelToggle {
+    display: none; flex: 0 0 auto; width: 26px; height: 26px; align-items: center; justify-content: center;
+    background: #1e222b; border: 1px solid var(--panel-border); border-radius: 6px; color: var(--text-dim);
+    font-size: 12px; cursor: pointer; padding: 0;
+  }
+  @media (max-width: 760px) {
+    #panel { width: calc(100vw - 32px); max-width: 360px; }
+    #panelToggle { display: flex; }
+    #panelBody { max-height: 0; overflow: hidden; }
+    #panel.expanded #panelBody { max-height: calc(100vh - 160px); overflow-y: auto; }
+    #legend { max-width: 190px; padding: 8px 10px; font-size: 10px; }
+  }
+
+  /* ---- top nav (shared across the site) ---- */
+  .topnav {
+    position: relative; z-index: 2000; height: 54px; flex-shrink: 0;
+    background: rgba(15, 17, 21, 0.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--panel-border);
+  }
+  .topnav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 54px;
+    display: flex; align-items: center; gap: 22px;
+  }
+  .topnav .brand { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+  .topnav .nav-links { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .topnav .nav-link { white-space: nowrap; font-size: 13px; color: var(--text-dim); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
+  .topnav .nav-link:hover { color: var(--text); background: #1e222b; }
+  .dropdown { position: relative; }
+  .dropdown-toggle {
+    font: inherit; font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer;
+    padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .dropdown-toggle:hover, .dropdown:focus-within .dropdown-toggle { color: var(--text); background: #1e222b; }
+  .dropdown-caret { font-size: 9px; transition: transform 0.15s; }
+  .dropdown:hover .dropdown-caret, .dropdown:focus-within .dropdown-caret { transform: rotate(180deg); }
+  .dropdown-menu {
+    position: fixed; top: 0; left: 0; min-width: 170px;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5); padding: 6px; display: flex; flex-direction: column; gap: 2px;
+    z-index: 2500; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.12s;
+  }
+  .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+  .dropdown-menu a { font-size: 12.5px; color: var(--text-dim); text-decoration: none; padding: 7px 9px; border-radius: 6px; }
+  .dropdown-menu a:hover { color: var(--text); background: #20242e; }
+
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 4px;
+    width: 30px; height: 30px; background: none; border: none; cursor: pointer; padding: 0; margin-left: auto; flex-shrink: 0;
+  }
+  .nav-toggle span { display: block; width: 100%; height: 2px; background: var(--text-dim); border-radius: 2px; transition: transform 0.15s, opacity 0.15s; }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 2100;
+    flex-direction: column; padding: 6px 16px 16px; background: var(--bg); border-bottom: 1px solid var(--panel-border);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.5); max-height: calc(100vh - 54px); overflow-y: auto;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 14px; color: var(--text-dim); text-decoration: none; padding: 10px 6px; border-radius: 6px; }
+  .mobile-menu a:hover { color: var(--text); background: #1e222b; }
+  .mobile-menu .mobile-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); opacity: 0.65; margin: 10px 6px 0; }
+
+  @media (max-width: 760px) {
+    .topnav .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+  }
+
+  #siteFooter {
+    height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(15,17,21,0.96); border-top: 1px solid var(--panel-border);
+    font-size: 10.5px; color: var(--text-dim); gap: 4px; padding: 0 12px; text-align: center;
+  }
+  #siteFooter a { color: var(--text-dim); text-decoration: none; }
+  #siteFooter a:hover { color: var(--text); text-decoration: underline; }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html">Germany in Maps</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Home</a>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#political-map">Map visualizations</a>
+          <a href="../index.html#political-trend">Trend visualizations</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#demo-map">Map visualization</a>
+          <a href="../index.html#demo-trend">Trend visualization</a>
+          <a href="../index.html#demo-pyramid">Population pyramid</a>
+          <a href="../index.html#demo-age-map">Population by age group</a>
+        </div>
+      </div>
+      <a class="nav-link" href="../index.html#stories">Stories</a>
+      <a class="nav-link" href="../about/project.html">About</a>
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <div class="mobile-group-title">Political</div>
+    <a href="../index.html#political-map">Map visualizations</a>
+    <a href="../index.html#political-trend">Trend visualizations</a>
+    <div class="mobile-group-title">Demographics &amp; Economy</div>
+    <a href="../index.html#demo-map">Map visualization</a>
+    <a href="../index.html#demo-trend">Trend visualization</a>
+    <a href="../index.html#demo-pyramid">Population pyramid</a>
+    <a href="../index.html#demo-age-map">Population by age group</a>
+    <a href="../index.html#stories">Stories</a>
+    <a href="../about/project.html">About</a>
+  </div>
+</nav>
+<div id="app">
+  <div id="map"></div>
+
+  <div id="panel">
+    <h1>Germany: Population by Age Group</h1>
+    <div class="subtitle">Where does each age group live? County-level, 2011-2025.</div>
+
+    <div class="row">
+      <div class="row-label">Age group</div>
+      <div id="bandLabel">—</div>
+      <input type="range" id="bandSlider" min="0" max="19" step="1" value="0">
+    </div>
+
+    <div class="row" id="viewRow">
+      <div class="row-label">Show as</div>
+      <div class="toggle-group" id="viewToggle">
+        <button data-view="share" class="active">% of county population</button>
+        <button data-view="count">Number of people</button>
+      </div>
+    </div>
+
+    <div class="row" id="yearRow">
+      <div id="yearLabel">—</div>
+      <input type="range" id="yearSlider" min="0" max="5" step="1" value="5">
+      <button id="playBtn" class="play-btn" type="button">▶ Play</button>
+    </div>
+
+    <div class="row" id="statsBar">
+      <div class="stat"><div class="n" id="statTotal">—</div><div class="l">Total in group</div></div>
+      <div class="stat"><div class="n" id="statMin">—</div><div class="l">Min</div></div>
+      <div class="stat"><div class="n" id="statMax">—</div><div class="l">Max</div></div>
+    </div>
+
+    <div id="statusLine"></div>
+    <div id="noteLine"></div>
+  </div>
+
+  <script>
+  (function () {
+    var panel = document.getElementById("panel");
+    if (!panel) return;
+    var h1 = panel.querySelector("h1");
+    if (!h1) return;
+    var subtitle = panel.querySelector(".subtitle");
+    var headerRow = document.createElement("div");
+    headerRow.id = "panelHeaderRow";
+    var toggle = document.createElement("button");
+    toggle.id = "panelToggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-label", "Toggle controls");
+    toggle.textContent = "▾";
+    panel.insertBefore(headerRow, h1);
+    headerRow.appendChild(h1);
+    headerRow.appendChild(toggle);
+    var body = document.createElement("div");
+    body.id = "panelBody";
+    Array.prototype.slice.call(panel.children).forEach(function (el) {
+      if (el === headerRow || el === subtitle) return;
+      body.appendChild(el);
+    });
+    panel.appendChild(body);
+    toggle.addEventListener("click", function () {
+      var expanded = panel.classList.toggle("expanded");
+      toggle.textContent = expanded ? "▴" : "▾";
+    });
+  })();
+  </script>
+
+  <div id="legend">
+    <div class="legend-title" id="legendTitle">Legend</div>
+    <div class="legend-gradient" id="legendGradient"></div>
+    <div class="legend-scale-labels" id="legendLabels"></div>
+  </div>
+
+  <div id="loading">Loading…</div>
+  <div id="credit">Source: regionalstatistik.de, table 12411-09-01-4 · Boundaries: m-ad/geofeatures-ags-germany</div>
+</div>
+<footer id="siteFooter">
+  Made with ❤️ by @shahabday ·
+  <a href="mailto:shahabdaiani@gmail.com">shahabdaiani@gmail.com</a> ·
+  <a href="https://instagram.com/shahabday" target="_blank" rel="noopener">@shahabday</a> ·
+  <a href="https://shahabwrites.com" target="_blank" rel="noopener">shahabwrites.com</a>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const DATA_DIR = "data/prepared";
+
+  const map = L.map("map", { zoomControl: false, attributionControl: false })
+    .setView([51.15, 10.45], 6);
+  L.control.zoom({ position: "topright" }).addTo(map);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nomatter/{z}/{x}/{y}{r}.png", {
+    maxZoom: 19,
+    subdomains: "abcd",
+  }).addTo(map);
+
+  const state = {
+    manifest: null,
+    countyBoundary: null,
+    geoLayer: null,
+    bandIdx: 0,
+    view: "share", // "share" | "count"
+    year: null,
+    data: {},
+    renderToken: 0,
+  };
+
+  function fetchJson(url) {
+    return fetch(url, { cache: "no-cache" }).then((r) => {
+      if (!r.ok) throw new Error(`${url}: ${r.status}`);
+      return r.json();
+    });
+  }
+  function setLoading(on) {
+    document.getElementById("loading").classList.toggle("active", on);
+  }
+
+  function hexToRgb(hex) {
+    const h = hex.replace("#", "");
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+  }
+  function rgbToHex([r, g, b]) {
+    return "#" + [r, g, b].map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join("");
+  }
+  function blend(hexA, hexB, t) {
+    const a = hexToRgb(hexA), b = hexToRgb(hexB);
+    return rgbToHex(a.map((v, i) => v + (b[i] - v) * t));
+  }
+  const RAMP_LOW = "#1b2838";
+  const RAMP_HIGH = "#f2b84b";
+  function colorForValue(v, lo, hi) {
+    if (v == null || hi <= lo) return "#20242e";
+    const t = Math.max(0, Math.min((v - lo) / (hi - lo), 1));
+    return blend(RAMP_LOW, RAMP_HIGH, t);
+  }
+
+  function currentBand() {
+    return state.manifest.bands[state.bandIdx];
+  }
+
+  function updateBandLabel() {
+    const band = currentBand();
+    document.getElementById("bandLabel").textContent = band ? `Age ${band.label}` : "—";
+  }
+
+  function populateYearSlider() {
+    const years = state.manifest.years;
+    const slider = document.getElementById("yearSlider");
+    slider.max = String(years.length - 1);
+    let idx = years.indexOf(state.year);
+    if (idx < 0) idx = years.length - 1;
+    slider.value = String(idx);
+    state.year = years[idx];
+    document.getElementById("yearLabel").textContent = state.year;
+    slider._years = years;
+  }
+
+  function dataUrl() {
+    const band = currentBand();
+    return `${DATA_DIR}/age_${band.slug}/${state.year}.json`;
+  }
+
+  function fmtValue(v) {
+    if (v == null) return "—";
+    return state.view === "share" ? `${(Math.round(v * 10) / 10).toLocaleString()}%` : Math.round(v).toLocaleString();
+  }
+
+  function computeDomain(values) {
+    if (!values.length) return [0, 1];
+    const sorted = [...values].sort((a, b) => a - b);
+    const pct = (p) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.round(p * (sorted.length - 1))))];
+    return [pct(0.05), pct(0.95)];
+  }
+
+  function loadAndRender() {
+    const token = ++state.renderToken;
+    setLoading(true);
+    fetchJson(dataUrl())
+      .then((data) => {
+        if (token !== state.renderToken) return;
+        state.data = data;
+        render();
+      })
+      .catch((err) => {
+        if (token !== state.renderToken) return;
+        document.getElementById("statusLine").textContent = `Failed to load: ${err.message}`;
+      })
+      .finally(() => {
+        if (token === state.renderToken) setLoading(false);
+      });
+  }
+
+  function valueFor(ags) {
+    const rec = state.data[ags];
+    if (!rec) return null;
+    return state.view === "share" ? rec.share : rec.count;
+  }
+
+  function tooltipHtml(name, ags) {
+    const rec = state.data[ags];
+    const band = currentBand();
+    let html = `<div class="tt-title">${name}</div>`;
+    if (!rec) {
+      html += `<div class="tt-row"><span>No data for this area</span></div>`;
+      return html;
+    }
+    html += `<div class="tt-main">${fmtValue(valueFor(ags))}</div>`;
+    html += `<div class="tt-row"><span>Age ${band.label}, ${state.year}</span><span>${(rec.count || 0).toLocaleString()} people</span></div>`;
+    if (rec.share != null) html += `<div class="tt-row"><span>Share of county population</span><span>${rec.share}%</span></div>`;
+    return html;
+  }
+
+  function updateStatsAndLegend(values, domain) {
+    const sorted = [...values].sort((a, b) => a - b);
+    document.getElementById("statMin").textContent = sorted.length ? fmtValue(sorted[0]) : "—";
+    document.getElementById("statMax").textContent = sorted.length ? fmtValue(sorted[sorted.length - 1]) : "—";
+    const total = Object.values(state.data).reduce((sum, r) => sum + (r.count || 0), 0);
+    document.getElementById("statTotal").textContent = total.toLocaleString();
+
+    const band = currentBand();
+    document.getElementById("legendTitle").textContent = `Age ${band.label} — ${state.view === "share" ? "% of county population" : "people"}`;
+    document.getElementById("legendGradient").style.background = `linear-gradient(to right, ${RAMP_LOW}, ${RAMP_HIGH})`;
+    document.getElementById("legendLabels").innerHTML = `<span>${fmtValue(domain[0])}</span><span>${fmtValue(domain[1])}</span>`;
+  }
+
+  function render() {
+    const areaKeys = Object.keys(state.data);
+    const values = areaKeys.map((k) => valueFor(k)).filter((v) => v != null);
+    const domain = computeDomain(values);
+
+    if (state.geoLayer) { map.removeLayer(state.geoLayer); state.geoLayer = null; }
+    state.geoLayer = L.geoJSON(state.countyBoundary, {
+      style: (f) => {
+        const ags = f.properties.county;
+        const v = valueFor(ags);
+        return {
+          color: "#3a3f4b", weight: 0.4,
+          fillColor: colorForValue(v, domain[0], domain[1]),
+          fillOpacity: v == null ? 0.15 : 0.88,
+        };
+      },
+      onEachFeature: (f, layer) => {
+        const ags = f.properties.county;
+        layer.bindTooltip(tooltipHtml(f.properties.name, ags), {
+          className: "age-tooltip", sticky: true, direction: "top",
+        });
+        layer.on("mouseover", () => layer.setStyle({ weight: 1.6, color: "#ffffff" }));
+        layer.on("mouseout", () => state.geoLayer.resetStyle(layer));
+      },
+    }).addTo(map);
+
+    updateStatsAndLegend(values, domain);
+    const band = currentBand();
+    document.getElementById("statusLine").textContent = `Age ${band.label} · ${state.year} · ${values.length} counties with data`;
+  }
+
+  document.getElementById("bandSlider").addEventListener("input", (e) => {
+    state.bandIdx = parseInt(e.target.value, 10);
+    updateBandLabel();
+    loadAndRender();
+  });
+  document.getElementById("viewToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    state.view = btn.dataset.view;
+    document.querySelectorAll("#viewToggle button").forEach((b) => b.classList.toggle("active", b === btn));
+    render();
+  });
+  document.getElementById("yearSlider").addEventListener("input", (e) => {
+    const years = e.target._years || [];
+    const idx = parseInt(e.target.value, 10);
+    state.year = years[idx];
+    document.getElementById("yearLabel").textContent = state.year;
+    loadAndRender();
+  });
+
+  function init() {
+    setLoading(true);
+    Promise.all([
+      fetchJson(`${DATA_DIR}/age_map_manifest.json`),
+      fetchJson(`${DATA_DIR}/counties.geojson`),
+    ]).then(([manifest, countyBoundary]) => {
+      state.manifest = manifest;
+      state.countyBoundary = countyBoundary;
+      document.getElementById("bandSlider").max = String(manifest.bands.length - 1);
+      updateBandLabel();
+      populateYearSlider();
+      loadAndRender();
+    }).catch((err) => {
+      document.getElementById("statusLine").textContent = `Failed to load: ${err.message}`;
+    }).finally(() => setLoading(false));
+  }
+
+  init();
+})();
+</script>
+
+<script>
+document.querySelectorAll(".dropdown").forEach((dd) => {
+  const toggle = dd.querySelector(".dropdown-toggle");
+  const menu = dd.querySelector(".dropdown-menu");
+  if (!toggle || !menu) return;
+  const position = () => {
+    const r = toggle.getBoundingClientRect();
+    menu.style.left = Math.round(r.left) + "px";
+    menu.style.top = Math.round(r.bottom + 4) + "px";
+  };
+  dd.addEventListener("mouseenter", position);
+  toggle.addEventListener("focus", position);
+  window.addEventListener("resize", position);
+  window.addEventListener("scroll", position, true);
+});
+
+document.querySelectorAll(".topnav").forEach((nav) => {
+  const toggle = nav.querySelector(".nav-toggle");
+  const menu = nav.querySelector(".mobile-menu");
+  if (!toggle || !menu) return;
+  toggle.addEventListener("click", () => {
+    const open = menu.classList.toggle("open");
+    toggle.classList.toggle("open", open);
+    window.dispatchEvent(new Event("resize"));
+  });
+  menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+    menu.classList.remove("open");
+    toggle.classList.remove("open");
+  }));
+});
+
+requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+</script>
+
+<script>
+(function () {
+  const slider = document.getElementById("yearSlider");
+  const btn = document.getElementById("playBtn");
+  if (!slider || !btn) return;
+  let timer = null;
+  function stop() {
+    clearInterval(timer);
+    timer = null;
+    btn.classList.remove("playing");
+    btn.textContent = "▶ Play";
+  }
+  function step() {
+    const max = Number(slider.max);
+    const v = Number(slider.value);
+    if (v >= max) { stop(); return; }
+    slider.value = v + 1;
+    slider.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  btn.addEventListener("click", () => {
+    if (timer) { stop(); return; }
+    if (Number(slider.value) >= Number(slider.max)) {
+      slider.value = slider.min;
+      slider.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    timer = setInterval(step, 1100);
+    btn.classList.add("playing");
+    btn.textContent = "⏸ Pause";
+  });
+})();
+</script>
+</body>
+</html>

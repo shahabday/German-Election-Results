@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Germany: Population Pyramid</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #2a2e38;
+    --text: #e8eaed;
+    --text-dim: #9aa0ab;
+    --accent: #4a90e2;
+    --male: #4a90e2;
+    --female: #e2794a;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  a { color: inherit; }
+
+  #app { min-height: calc(100vh - 84px); width: 100%; display: flex; flex-direction: column; align-items: center; padding: 24px 16px 40px; }
+
+  header.page-head { max-width: 900px; width: 100%; margin-bottom: 18px; }
+  header.page-head h1 { font-size: 22px; margin: 0 0 4px; font-weight: 700; }
+  header.page-head p { font-size: 13px; color: var(--text-dim); margin: 0; line-height: 1.5; max-width: 720px; }
+
+  #controls {
+    max-width: 900px; width: 100%; display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 18px;
+  }
+  .ctrl { display: flex; flex-direction: column; gap: 5px; }
+  .ctrl label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); }
+  select#regionSelect {
+    background: #1e222b; color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 6px; padding: 7px 10px; font-size: 13px; min-width: 220px;
+  }
+  #miniMapWrap { display: flex; flex-direction: column; gap: 5px; }
+  #miniMap { width: 110px; height: 150px; background: #0b0d11; border: 1px solid var(--panel-border); border-radius: 6px; }
+  #miniMap path {
+    fill: #2a2e38; stroke: var(--bg); stroke-width: 0.6; cursor: pointer; transition: fill 0.15s;
+  }
+  #miniMap path:hover { fill: #3a4155; }
+  #miniMap path.selected { fill: var(--accent); }
+  #miniMap .de-hit { fill: transparent; cursor: pointer; }
+  .ctrl.year-ctrl { flex: 1 1 260px; min-width: 220px; }
+  #yearLabel { font-size: 18px; font-weight: 700; text-align: center; }
+  #yearSlider { width: 100%; accent-color: var(--accent); }
+  .play-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 7px 14px; font-size: 12px; font-weight: 600; background: #1e222b;
+    border: 1px solid var(--panel-border); border-radius: 6px; color: var(--text); cursor: pointer;
+  }
+  .play-btn:hover { background: #262b36; border-color: var(--accent); }
+  .play-btn.playing { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  #statsBar { display: flex; gap: 8px; }
+  .stat { background: #1e222b; border: 1px solid var(--panel-border); border-radius: 6px; padding: 6px 12px; text-align: center; min-width: 84px; }
+  .stat .n { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.03em; }
+
+  #chartWrap {
+    max-width: 900px; width: 100%; background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 10px; padding: 16px; position: relative;
+  }
+  #chartTitle { font-size: 14px; font-weight: 600; text-align: center; margin-bottom: 2px; }
+  #chartSubtitle { font-size: 11px; color: var(--text-dim); text-align: center; margin-bottom: 10px; }
+  svg#pyramid { width: 100%; height: auto; display: block; }
+  .bar-m { fill: var(--male); }
+  .bar-f { fill: var(--female); }
+  .bar-m, .bar-f { transition: width 0.5s ease, x 0.5s ease; cursor: default; }
+  .axis-label { fill: var(--text-dim); font-size: 10px; }
+  .age-label { fill: var(--text-dim); font-size: 10px; text-anchor: middle; dominant-baseline: middle; }
+  .legend-row { display: flex; justify-content: center; gap: 24px; margin-top: 10px; font-size: 12px; }
+  .legend-swatch { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+  #tooltip {
+    position: fixed; z-index: 3000; background: rgba(15,17,21,0.97); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    pointer-events: none; display: none; white-space: nowrap;
+  }
+  #tooltip .tt-age { font-weight: 700; margin-bottom: 3px; }
+  #tooltip .tt-row { display: flex; justify-content: space-between; gap: 12px; }
+
+  #noteLine {
+    max-width: 900px; width: 100%; font-size: 10.5px; color: var(--text-dim); margin-top: 14px;
+    line-height: 1.5; border-top: 1px solid var(--panel-border); padding-top: 10px;
+  }
+  #statusLine { font-size: 11px; color: var(--text-dim); margin-top: 6px; text-align: center; }
+
+  /* ---- top nav (shared across the site) ---- */
+  .topnav {
+    position: relative; z-index: 2000; height: 54px; flex-shrink: 0;
+    background: rgba(15, 17, 21, 0.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--panel-border);
+  }
+  .topnav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 54px;
+    display: flex; align-items: center; gap: 22px;
+  }
+  .topnav .brand { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+  .topnav .nav-links { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .topnav .nav-link { white-space: nowrap; font-size: 13px; color: var(--text-dim); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
+  .topnav .nav-link:hover { color: var(--text); background: #1e222b; }
+  .dropdown { position: relative; }
+  .dropdown-toggle {
+    font: inherit; font-size: 13px; color: var(--text-dim); background: none; border: none; cursor: pointer;
+    padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .dropdown-toggle:hover, .dropdown:focus-within .dropdown-toggle { color: var(--text); background: #1e222b; }
+  .dropdown-caret { font-size: 9px; transition: transform 0.15s; }
+  .dropdown:hover .dropdown-caret, .dropdown:focus-within .dropdown-caret { transform: rotate(180deg); }
+  .dropdown-menu {
+    position: fixed; top: 0; left: 0; min-width: 170px;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5); padding: 6px; display: flex; flex-direction: column; gap: 2px;
+    z-index: 2500; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.12s;
+  }
+  .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+  .dropdown-menu a { font-size: 12.5px; color: var(--text-dim); text-decoration: none; padding: 7px 9px; border-radius: 6px; }
+  .dropdown-menu a:hover { color: var(--text); background: #20242e; }
+
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 4px;
+    width: 30px; height: 30px; background: none; border: none; cursor: pointer; padding: 0; margin-left: auto; flex-shrink: 0;
+  }
+  .nav-toggle span { display: block; width: 100%; height: 2px; background: var(--text-dim); border-radius: 2px; transition: transform 0.15s, opacity 0.15s; }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 2100;
+    flex-direction: column; padding: 6px 16px 16px; background: var(--bg); border-bottom: 1px solid var(--panel-border);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.5); max-height: calc(100vh - 54px); overflow-y: auto;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 14px; color: var(--text-dim); text-decoration: none; padding: 10px 6px; border-radius: 6px; }
+  .mobile-menu a:hover { color: var(--text); background: #1e222b; }
+  .mobile-menu .mobile-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); opacity: 0.65; margin: 10px 6px 0; }
+
+  @media (max-width: 760px) {
+    .topnav .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+    .age-label { font-size: 8px; }
+  }
+
+  #siteFooter {
+    height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(15,17,21,0.96); border-top: 1px solid var(--panel-border);
+    font-size: 10.5px; color: var(--text-dim); gap: 4px; padding: 0 12px; text-align: center;
+  }
+  #siteFooter a { color: var(--text-dim); text-decoration: none; }
+  #siteFooter a:hover { color: var(--text); text-decoration: underline; }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html">Germany in Maps</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Home</a>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#political-map">Map visualizations</a>
+          <a href="../index.html#political-trend">Trend visualizations</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
+        <div class="dropdown-menu">
+          <a href="../index.html#demo-map">Map visualization</a>
+          <a href="../index.html#demo-trend">Trend visualization</a>
+          <a href="../index.html#demo-pyramid">Population pyramid</a>
+          <a href="../index.html#demo-age-map">Population by age group</a>
+        </div>
+      </div>
+      <a class="nav-link" href="../index.html#stories">Stories</a>
+      <a class="nav-link" href="../about/project.html">About</a>
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu">
+    <a href="../index.html">Home</a>
+    <div class="mobile-group-title">Political</div>
+    <a href="../index.html#political-map">Map visualizations</a>
+    <a href="../index.html#political-trend">Trend visualizations</a>
+    <div class="mobile-group-title">Demographics &amp; Economy</div>
+    <a href="../index.html#demo-map">Map visualization</a>
+    <a href="../index.html#demo-trend">Trend visualization</a>
+    <a href="../index.html#demo-pyramid">Population pyramid</a>
+    <a href="../index.html#demo-age-map">Population by age group</a>
+    <a href="../index.html#stories">Stories</a>
+    <a href="../about/project.html">About</a>
+  </div>
+</nav>
+
+<div id="app">
+  <header class="page-head">
+    <h1>Population Pyramid</h1>
+    <p>How old is Germany, and how has that changed? Each bar is a 5-year age band; blue (left) is men, orange (right) is women. Pick a state or all of Germany, then scrub the year slider or hit play to watch the population age.</p>
+  </header>
+
+  <div id="controls">
+    <div class="ctrl">
+      <label for="regionSelect">Region</label>
+      <select id="regionSelect"></select>
+    </div>
+    <div id="miniMapWrap">
+      <label style="font-size:11px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-dim);">Or click a state</label>
+      <svg id="miniMap" viewBox="0 0 110 150"></svg>
+    </div>
+    <div class="ctrl year-ctrl">
+      <label>Year</label>
+      <div id="yearLabel">—</div>
+      <input type="range" id="yearSlider" min="0" max="0" step="1" value="0">
+    </div>
+    <button id="playBtn" class="play-btn" type="button">▶ Play</button>
+    <div id="statsBar">
+      <div class="stat"><div class="n" id="statTotal">—</div><div class="l">Population</div></div>
+      <div class="stat"><div class="n" id="statMedianAge">—</div><div class="l">Median age band</div></div>
+      <div class="stat"><div class="n" id="statOver65">—</div><div class="l">65+</div></div>
+    </div>
+  </div>
+
+  <div id="chartWrap">
+    <div id="chartTitle">—</div>
+    <div id="chartSubtitle">—</div>
+    <svg id="pyramid" viewBox="0 0 800 520" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="legend-row">
+      <span><span class="legend-swatch" style="background:var(--male);"></span>Men</span>
+      <span><span class="legend-swatch" style="background:var(--female);"></span>Women</span>
+    </div>
+    <div id="statusLine"></div>
+  </div>
+
+  <div id="noteLine">
+    Source: regionalstatistik.de, table 12411-04-02-4-B ("Bevölkerung nach Geschlecht und Altersjahren", Stichtag 31.12.). Ages 0-74 are counted year by year and rolled up here into standard 5-year bands (0-4, 5-9, ... 85-89), with 90+ as an open top band. Covers 2011, 2014, 2017, 2020, 2023 and 2025 — a representative subset of the full annual series rather than every single year, chosen to show the shape of the demographic shift (population growth, the aging baby-boom cohort, below-replacement birth rates) without an exhaustive per-year pull. "Deutschland" is the sum of all 16 states from the same source, not a separately published national figure.
+  </div>
+
+  <div id="tooltip"></div>
+</div>
+
+<footer id="siteFooter">
+  Made with ❤️ by @shahabday ·
+  <a href="mailto:shahabdaiani@gmail.com">shahabdaiani@gmail.com</a> ·
+  <a href="https://instagram.com/shahabday" target="_blank" rel="noopener">@shahabday</a> ·
+  <a href="https://shahabwrites.com" target="_blank" rel="noopener">shahabwrites.com</a>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  const NS = "http://www.w3.org/2000/svg";
+  const W = 800, H = 520;
+  const MARGIN = { top: 10, right: 190, bottom: 30, left: 190 };
+  const CHART_W = W - MARGIN.left - MARGIN.right;
+  const CHART_H = H - MARGIN.top - MARGIN.bottom;
+
+  const state = {
+    prepared: null,
+    region: "Deutschland",
+    year: null,
+    years: [],
+    stateOutlines: null,
+  };
+
+  function fetchJson(url) {
+    return fetch(url, { cache: "no-cache" }).then((r) => {
+      if (!r.ok) throw new Error(`${url}: ${r.status}`);
+      return r.json();
+    });
+  }
+
+  function fmtInt(n) {
+    return Math.round(n).toLocaleString();
+  }
+
+  function populateRegionSelect() {
+    const sel = document.getElementById("regionSelect");
+    sel.innerHTML = "";
+    const optDE = document.createElement("option");
+    optDE.value = "Deutschland";
+    optDE.textContent = "Germany (all states)";
+    sel.appendChild(optDE);
+    const states = state.prepared.regions.filter((r) => r !== "Deutschland").sort();
+    for (const s of states) {
+      const opt = document.createElement("option");
+      opt.value = s;
+      opt.textContent = s;
+      sel.appendChild(opt);
+    }
+    sel.value = state.region;
+  }
+
+  function populateYearSlider() {
+    state.years = state.prepared.years;
+    const slider = document.getElementById("yearSlider");
+    slider.max = String(state.years.length - 1);
+    let idx = state.years.indexOf(state.year);
+    if (idx < 0) idx = state.years.length - 1;
+    slider.value = String(idx);
+    state.year = state.years[idx];
+    document.getElementById("yearLabel").textContent = state.year;
+  }
+
+  function currentSeries() {
+    const yearData = state.prepared.data[state.year];
+    return yearData ? yearData[state.region] : null;
+  }
+
+  function svgEl(tag, attrs) {
+    const el = document.createElementNS(NS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  // ---------- mini-map (state picker) ----------
+  function buildMiniMap(geojson) {
+    const svg = document.getElementById("miniMap");
+    const W = 110, H = 150, PAD = 4;
+
+    let minLon = Infinity, maxLon = -Infinity, minLat = Infinity, maxLat = -Infinity;
+    const eachCoord = (coords, depth) => {
+      if (depth === 0) {
+        const [lon, lat] = coords;
+        if (lon < minLon) minLon = lon;
+        if (lon > maxLon) maxLon = lon;
+        if (lat < minLat) minLat = lat;
+        if (lat > maxLat) maxLat = lat;
+      } else {
+        coords.forEach((c) => eachCoord(c, depth - 1));
+      }
+    };
+    for (const f of geojson.features) {
+      const depth = f.geometry.type === "Polygon" ? 2 : 3;
+      eachCoord(f.geometry.coordinates, depth);
+    }
+    const lonSpan = maxLon - minLon, latSpan = maxLat - minLat;
+    const scale = Math.min((W - PAD * 2) / lonSpan, (H - PAD * 2) / latSpan);
+    const offX = (W - lonSpan * scale) / 2;
+    const offY = (H - latSpan * scale) / 2;
+    const project = ([lon, lat]) => [
+      offX + (lon - minLon) * scale,
+      H - (offY + (lat - minLat) * scale), // flip y
+    ];
+
+    const ringToPath = (ring) => {
+      const pts = ring.map(project);
+      return "M" + pts.map((p) => p.join(",")).join("L") + "Z";
+    };
+    const geomToPath = (geom) => {
+      if (geom.type === "Polygon") {
+        return geom.coordinates.map(ringToPath).join(" ");
+      }
+      return geom.coordinates.map((poly) => poly.map(ringToPath).join(" ")).join(" ");
+    };
+
+    svg.innerHTML = "";
+    for (const f of geojson.features) {
+      const name = f.properties.name;
+      const path = svgEl("path", { d: geomToPath(f.geometry), "data-name": name });
+      path.addEventListener("click", () => {
+        state.region = name;
+        document.getElementById("regionSelect").value = name;
+        updateMiniMapSelection();
+        render();
+      });
+      const title = document.createElementNS(NS, "title");
+      title.textContent = name;
+      path.appendChild(title);
+      svg.appendChild(path);
+    }
+    updateMiniMapSelection();
+  }
+
+  function updateMiniMapSelection() {
+    document.querySelectorAll("#miniMap path").forEach((p) => {
+      p.classList.toggle("selected", p.dataset.name === state.region);
+    });
+  }
+
+  function render() {
+    const series = currentSeries();
+    const svg = document.getElementById("pyramid");
+    svg.innerHTML = "";
+    if (!series) {
+      document.getElementById("statusLine").textContent = "No data for this region/year combination.";
+      return;
+    }
+    document.getElementById("statusLine").textContent = "";
+
+    const labels = state.prepared.bin_labels;
+    const n = labels.length;
+    const maxVal = Math.max(...series.m, ...series.f, 1);
+    const barH = CHART_H / n;
+    const halfW = CHART_W / 2;
+
+    const g = svgEl("g", { transform: `translate(${MARGIN.left},${MARGIN.top})` });
+    svg.appendChild(g);
+
+    // center axis + gridlines at 0/25/50/75/100% of maxVal on each side
+    const ticks = [0.25, 0.5, 0.75, 1];
+    for (const t of ticks) {
+      const dx = t * halfW;
+      const lineL = svgEl("line", { x1: halfW - dx, x2: halfW - dx, y1: 0, y2: CHART_H, stroke: "#2a2e38", "stroke-width": 1 });
+      const lineR = svgEl("line", { x1: halfW + dx, x2: halfW + dx, y1: 0, y2: CHART_H, stroke: "#2a2e38", "stroke-width": 1 });
+      g.appendChild(lineL);
+      g.appendChild(lineR);
+    }
+    g.appendChild(svgEl("line", { x1: halfW, x2: halfW, y1: 0, y2: CHART_H, stroke: "#3a3f4b", "stroke-width": 1.2 }));
+
+    for (let i = 0; i < n; i++) {
+      const y = CHART_H - (i + 1) * barH;
+      const mVal = series.m[i] || 0;
+      const fVal = series.f[i] || 0;
+      const mW = (mVal / maxVal) * halfW;
+      const fW = (fVal / maxVal) * halfW;
+      const padH = barH * 0.16;
+
+      const barM = svgEl("rect", {
+        class: "bar-m", x: halfW - mW, y: y + padH / 2, width: mW, height: barH - padH,
+        "data-age": labels[i], "data-sex": "Men", "data-val": mVal,
+      });
+      const barF = svgEl("rect", {
+        class: "bar-f", x: halfW, y: y + padH / 2, width: fW, height: barH - padH,
+        "data-age": labels[i], "data-sex": "Women", "data-val": fVal,
+      });
+      g.appendChild(barM);
+      g.appendChild(barF);
+
+      const label = svgEl("text", { class: "age-label", x: halfW, y: y + barH / 2 });
+      label.textContent = labels[i];
+      g.appendChild(label);
+    }
+
+    // axis labels (approx population at each gridline)
+    for (const t of ticks) {
+      const val = t * maxVal;
+      const dx = t * halfW;
+      const lbl = svgEl("text", { class: "axis-label", x: halfW - dx, y: CHART_H + 18, "text-anchor": "middle" });
+      lbl.textContent = fmtInt(val);
+      g.appendChild(lbl);
+      const lblR = svgEl("text", { class: "axis-label", x: halfW + dx, y: CHART_H + 18, "text-anchor": "middle" });
+      lblR.textContent = fmtInt(val);
+      g.appendChild(lblR);
+    }
+
+    // stats
+    const totalM = series.m.reduce((a, b) => a + b, 0);
+    const totalF = series.f.reduce((a, b) => a + b, 0);
+    const total = totalM + totalF;
+    document.getElementById("statTotal").textContent = fmtInt(total);
+    const over65 = labels.reduce((sum, lbl, i) => {
+      const start = lbl === "90+" ? 90 : parseInt(lbl.split("-")[0], 10);
+      return start >= 65 ? sum + series.m[i] + series.f[i] : sum;
+    }, 0);
+    document.getElementById("statOver65").textContent = total ? Math.round((over65 / total) * 100) + "%" : "—";
+    let cum = 0;
+    let medianBand = "—";
+    for (let i = 0; i < n; i++) {
+      cum += series.m[i] + series.f[i];
+      if (cum >= total / 2) { medianBand = labels[i]; break; }
+    }
+    document.getElementById("statMedianAge").textContent = medianBand;
+
+    document.getElementById("chartTitle").textContent = `${state.region} — ${state.year}`;
+    document.getElementById("chartSubtitle").textContent = `Population: ${fmtInt(total)} (${fmtInt(totalM)} men, ${fmtInt(totalF)} women)`;
+
+    const tooltip = document.getElementById("tooltip");
+    svg.querySelectorAll("rect").forEach((rect) => {
+      rect.addEventListener("mousemove", (e) => {
+        tooltip.style.display = "block";
+        tooltip.style.left = e.clientX + 14 + "px";
+        tooltip.style.top = e.clientY + 14 + "px";
+        tooltip.innerHTML = `<div class="tt-age">${rect.dataset.age} years</div><div class="tt-row"><span>${rect.dataset.sex}</span><span>${fmtInt(rect.dataset.val)}</span></div>`;
+      });
+      rect.addEventListener("mouseleave", () => { tooltip.style.display = "none"; });
+    });
+  }
+
+  document.getElementById("regionSelect").addEventListener("change", (e) => {
+    state.region = e.target.value;
+    updateMiniMapSelection();
+    render();
+  });
+  document.getElementById("yearSlider").addEventListener("input", (e) => {
+    const idx = parseInt(e.target.value, 10);
+    state.year = state.years[idx];
+    document.getElementById("yearLabel").textContent = state.year;
+    render();
+  });
+
+  function init() {
+    Promise.all([
+      fetchJson("data/prepared/pyramid.json"),
+      fetchJson("data/prepared/state_outlines.geojson"),
+    ]).then(([prepared, stateOutlines]) => {
+      state.prepared = prepared;
+      state.stateOutlines = stateOutlines;
+      state.year = prepared.years[prepared.years.length - 1];
+      populateRegionSelect();
+      populateYearSlider();
+      buildMiniMap(stateOutlines);
+      render();
+    }).catch((err) => {
+      document.getElementById("statusLine").textContent = `Failed to load: ${err.message}`;
+    });
+  }
+
+  init();
+})();
+</script>
+
+<script>
+document.querySelectorAll(".dropdown").forEach((dd) => {
+  const toggle = dd.querySelector(".dropdown-toggle");
+  const menu = dd.querySelector(".dropdown-menu");
+  if (!toggle || !menu) return;
+  const position = () => {
+    const r = toggle.getBoundingClientRect();
+    menu.style.left = Math.round(r.left) + "px";
+    menu.style.top = Math.round(r.bottom + 4) + "px";
+  };
+  dd.addEventListener("mouseenter", position);
+  toggle.addEventListener("focus", position);
+  window.addEventListener("resize", position);
+  window.addEventListener("scroll", position, true);
+});
+
+document.querySelectorAll(".topnav").forEach((nav) => {
+  const toggle = nav.querySelector(".nav-toggle");
+  const menu = nav.querySelector(".mobile-menu");
+  if (!toggle || !menu) return;
+  toggle.addEventListener("click", () => {
+    const open = menu.classList.toggle("open");
+    toggle.classList.toggle("open", open);
+  });
+  menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+    menu.classList.remove("open");
+    toggle.classList.remove("open");
+  }));
+});
+</script>
+
+<script>
+(function () {
+  const slider = document.getElementById("yearSlider");
+  const btn = document.getElementById("playBtn");
+  if (!slider || !btn) return;
+  let timer = null;
+  function stop() {
+    clearInterval(timer);
+    timer = null;
+    btn.classList.remove("playing");
+    btn.textContent = "▶ Play";
+  }
+  function step() {
+    const max = Number(slider.max);
+    const v = Number(slider.value);
+    if (v >= max) { stop(); return; }
+    slider.value = v + 1;
+    slider.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  btn.addEventListener("click", () => {
+    if (timer) { stop(); return; }
+    if (Number(slider.value) >= Number(slider.max)) {
+      slider.value = slider.min;
+      slider.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    timer = setInterval(step, 1100);
+    btn.classList.add("playing");
+    btn.textContent = "⏸ Pause";
+  });
+})();
+</script>
+</body>
+</html>
