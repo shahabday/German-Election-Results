@@ -23,12 +23,25 @@ export default {
     }
 
     url.pathname = url.pathname.slice(PREFIX.length) || "/";
-    // The asset binding's default document for "/" is index.html, but that's
-    // now the tool index, not the landing page - serve home.html at the root
-    // instead. index.html is still reachable directly at /germany/index.html.
-    if (url.pathname === "/") {
-      url.pathname = "/home.html";
+
+    // The asset binding runs with html_handling:"none" (exact-match only),
+    // because its default "auto-trailing-slash" mode redirects /index.html
+    // straight to "/" - which collided with wanting "/" to serve a *different*
+    // file (home.html) and made the tool index unreachable. With that default
+    // off, directory-index resolution has to happen here instead:
+    //  - a bare directory path ("/map-all-elections", no trailing slash) is
+    //    redirected to add the slash, same as the old default did;
+    //  - a path ending in "/" gets its index document appended - home.html at
+    //    the root, index.html (the actual per-folder file) everywhere else.
+    if (!url.pathname.endsWith("/") && !/\.[a-zA-Z0-9]+$/.test(url.pathname)) {
+      const redirectUrl = new URL(request.url);
+      redirectUrl.pathname = PREFIX + url.pathname + "/";
+      return Response.redirect(redirectUrl.toString(), 301);
     }
+    if (url.pathname.endsWith("/")) {
+      url.pathname += url.pathname === "/" ? "home.html" : "index.html";
+    }
+
     const assetResponse = await env.ASSETS.fetch(new Request(url.toString(), request));
 
     const location = assetResponse.headers.get("Location");
