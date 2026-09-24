@@ -8,7 +8,6 @@
   },
   "assets": {
     "directory": ".",
-    "binding": "ASSETS",
-    "html_handling": "none"
+    "binding": "ASSETS"
   }
 }

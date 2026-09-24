@@ -1,5 +1,5 @@
-"""Builds the four election-type mosaics for the new scroll-story home page
-(home.html): one flat {ags: winning_party} lookup per election type, each
+"""Builds the four election-type mosaics for the scroll-story landing page
+(index.html): one flat {ags: winning_party} lookup per election type, each
 showing every municipality's MOST RECENT result of that type.
 
 Bundestag and Europawahl are simultaneous nationwide, so "most recent" is

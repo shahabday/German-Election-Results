@@ -54,21 +54,21 @@ NAV_CSS = """
 
 NAV_HTML = """<nav class="topnav">
   <div class="topnav-inner">
-    <a class="brand" href="../home.html">Germany in Maps</a>
+    <a class="brand" href="../index.html">Germany in Maps</a>
     <div class="nav-links">
-      <a class="nav-link" href="../index.html">Home</a>
+      <a class="nav-link" href="../tools.html">Home</a>
       <div class="dropdown">
         <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
         <div class="dropdown-menu">
-          <a href="../index.html#political-map">Map visualizations</a>
-          <a href="../index.html#political-trend">Trend visualizations</a>
+          <a href="../tools.html#political-map">Map visualizations</a>
+          <a href="../tools.html#political-trend">Trend visualizations</a>
         </div>
       </div>
       <div class="dropdown">
         <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
         <div class="dropdown-menu">
-          <a href="../index.html#demo-map">Map visualization</a>
-          <a href="../index.html#demo-trend">Trend visualization</a>
+          <a href="../tools.html#demo-map">Map visualization</a>
+          <a href="../tools.html#demo-trend">Trend visualization</a>
         </div>
       </div>
     </div>

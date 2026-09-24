@@ -136,9 +136,17 @@
   @media (max-width: 760px) {
     #app { flex-direction: column; height: auto; min-height: calc(100vh - 84px); }
     #panel { flex: 0 0 auto; width: 100%; max-height: 52vh; border-right: none; border-bottom: 1px solid var(--panel-border); }
-    #chartWrap { flex: 1 1 auto; width: 100%; min-height: 320px; }
+    #chartWrap { flex: 1 1 auto; width: 100%; min-height: 320px; display: flex; flex-direction: column; }
     #miniMap { height: 220px; }
-    #multiLegend { max-width: 150px; font-size: 10px; padding: 6px 8px; }
+    #chartTitle { position: static; padding: 10px 4vw 0; }
+    #chartSvg { flex: 1 1 auto; width: 100%; height: auto; min-height: 260px; }
+    /* The party/place legend used to float on top of the chart and cover its
+       data on narrow screens - here it drops into normal flow below the
+       chart instead, full width, so it never overlaps the lines it explains. */
+    #multiLegend {
+      position: static; width: 100%; max-width: none; max-height: none;
+      border-radius: 0; font-size: 10.5px; padding: 8px 4vw;
+    }
   }
 
   /* ---- top nav (shared across the site) ---- */
@@ -208,37 +216,37 @@
 <body>
 <nav class="topnav">
   <div class="topnav-inner">
-    <a class="brand" href="../home.html">Germany in Maps</a>
+    <a class="brand" href="../index.html">Germany in Maps</a>
     <div class="nav-links">
-      <a class="nav-link" href="../index.html">Home</a>
+      <a class="nav-link" href="../tools.html">Home</a>
       <div class="dropdown">
         <button class="dropdown-toggle" type="button">Political <span class="dropdown-caret">▾</span></button>
         <div class="dropdown-menu">
-          <a href="../index.html#political-map">Map visualizations</a>
-          <a href="../index.html#political-trend">Trend visualizations</a>
+          <a href="../tools.html#political-map">Map visualizations</a>
+          <a href="../tools.html#political-trend">Trend visualizations</a>
         </div>
       </div>
       <div class="dropdown">
         <button class="dropdown-toggle" type="button">Demographics &amp; Economy <span class="dropdown-caret">▾</span></button>
         <div class="dropdown-menu">
-          <a href="../index.html#demo-map">Map visualization</a>
-          <a href="../index.html#demo-trend">Trend visualization</a>
+          <a href="../tools.html#demo-map">Map visualization</a>
+          <a href="../tools.html#demo-trend">Trend visualization</a>
         </div>
       </div>
-      <a class="nav-link" href="../index.html#stories">Stories</a>
+      <a class="nav-link" href="../tools.html#stories">Stories</a>
       <a class="nav-link" href="../about/project.html">About</a>
     </div>
     <button class="nav-toggle" type="button" aria-label="Toggle menu"><span></span><span></span><span></span></button>
   </div>
   <div class="mobile-menu">
-    <a href="../index.html">Home</a>
+    <a href="../tools.html">Home</a>
     <div class="mobile-group-title">Political</div>
-    <a href="../index.html#political-map">Map visualizations</a>
-    <a href="../index.html#political-trend">Trend visualizations</a>
+    <a href="../tools.html#political-map">Map visualizations</a>
+    <a href="../tools.html#political-trend">Trend visualizations</a>
     <div class="mobile-group-title">Demographics &amp; Economy</div>
-    <a href="../index.html#demo-map">Map visualization</a>
-    <a href="../index.html#demo-trend">Trend visualization</a>
-    <a href="../index.html#stories">Stories</a>
+    <a href="../tools.html#demo-map">Map visualization</a>
+    <a href="../tools.html#demo-trend">Trend visualization</a>
+    <a href="../tools.html#stories">Stories</a>
     <a href="../about/project.html">About</a>
   </div>
 </nav>

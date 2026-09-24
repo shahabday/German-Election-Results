@@ -3,6 +3,14 @@
 // is scoped to that path, but the built assets are rooted at /, so the prefix
 // has to be stripped before handing off to ASSETS, and any redirect the assets
 // handler issues (e.g. /germany/map -> .../map/) needs the prefix added back.
+//
+// The assets binding uses Cloudflare's default html_handling ("auto-trailing-slash"),
+// which resolves "/" and every "/<dir>/" to that directory's own index.html and
+// redirects extension/trailing-slash variants to their canonical form - no custom
+// logic needed here for that. That only works cleanly because the site's actual
+// landing page lives at the literal root index.html (see index.html / tools.html:
+// the former "home.html" and "index.html" were swapped so nothing but the intended
+// landing page is ever named "index.html").
 const PREFIX = "/germany";
 
 export default {
@@ -23,25 +31,6 @@ export default {
     }
 
     url.pathname = url.pathname.slice(PREFIX.length) || "/";
-
-    // The asset binding runs with html_handling:"none" (exact-match only),
-    // because its default "auto-trailing-slash" mode redirects /index.html
-    // straight to "/" - which collided with wanting "/" to serve a *different*
-    // file (home.html) and made the tool index unreachable. With that default
-    // off, directory-index resolution has to happen here instead:
-    //  - a bare directory path ("/map-all-elections", no trailing slash) is
-    //    redirected to add the slash, same as the old default did;
-    //  - a path ending in "/" gets its index document appended - home.html at
-    //    the root, index.html (the actual per-folder file) everywhere else.
-    if (!url.pathname.endsWith("/") && !/\.[a-zA-Z0-9]+$/.test(url.pathname)) {
-      const redirectUrl = new URL(request.url);
-      redirectUrl.pathname = PREFIX + url.pathname + "/";
-      return Response.redirect(redirectUrl.toString(), 301);
-    }
-    if (url.pathname.endsWith("/")) {
-      url.pathname += url.pathname === "/" ? "home.html" : "index.html";
-    }
-
     const assetResponse = await env.ASSETS.fetch(new Request(url.toString(), request));
 
     const location = assetResponse.headers.get("Location");
