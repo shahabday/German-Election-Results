@@ -84,7 +84,7 @@
     background: linear-gradient(90deg, rgba(11,13,17,0.90) 0%, rgba(11,13,17,0.60) 34%, rgba(11,13,17,0.05) 64%);
     transition: opacity 0.8s ease;
   }
-  @media (max-width: 760px) { #stageVeil { background: rgba(11,13,17,0.76); } }
+  @media (max-width: 760px) { #stageVeil { background: none; } }
 
   #legendFloat {
     position: absolute; right: 22px; bottom: 22px; z-index: 401; pointer-events: none;
@@ -94,7 +94,7 @@
   #legendFloat .row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
   #legendFloat .row:last-child { margin-bottom: 0; }
   #legendFloat .sw { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-  @media (max-width: 760px) { #legendFloat { display: none; } }
+  @media (max-width: 760px) { #legendFloat { max-width: 170px; padding: 6px 10px; font-size: 10px; right: 12px; bottom: 12px; } }
 
   #progressDots {
     position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 500;
@@ -349,6 +349,20 @@
     </section>
 
     <section class="step" data-step="6">
+      <div class="step-card">
+        <div class="step-eyebrow">Germany is Not One</div>
+        <h2 class="step-headline">Explore Germany's Economic and Social Data</h2>
+        <p class="step-body">Foreign nationals make up under 5% of some counties and over 15% of others, one of thirteen social metrics and eight economic ones mapped county by county, year by year, in two data-driven stories. Darker counties have fewer foreign residents, gold counties have more.</p>
+        <div class="closing-cta">
+          <a class="primary" href="story/germany-is-not-one.html">Germany is Not One →</a>
+          <a href="story/germany-is-not-one-economy.html">The Economy →</a>
+          <a href="map-society/">Open the society map →</a>
+          <a href="map-demographics/?metric=foreign_share">Open the demographics map →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="7">
       <div class="step-card" style="max-width:620px;">
         <div class="step-eyebrow">Stories</div>
         <h2 class="step-headline">A few threads worth following</h2>
@@ -378,7 +392,7 @@
       </div>
     </section>
 
-    <section class="step" data-step="7">
+    <section class="step" data-step="8">
       <div class="step-card" style="max-width:600px;">
         <div class="step-eyebrow">Explore for yourself</div>
         <h2 class="step-headline">Every tool, in one place</h2>
@@ -481,12 +495,28 @@
     { type: "dim" },
     { type: "dim" },
     { type: "dim" },
+    { type: "dim" },
   ];
 
   // Index of the "election results, time series" step (data-step="5") - the
   // one step whose background is the East Germany trend chart instead of a
   // dimmed map.
   const TREND_CHART_STEP_INDEX = 5;
+
+  // Index of the "Germany is Not One" teaser step (data-step="6") - the one
+  // step whose background is a county-level foreign-national-share choropleth
+  // (same data and color ramp as the two "Germany is Not One" stories)
+  // instead of the dimmed municipality map.
+  const DEMO_MAP_STEP_INDEX = 6;
+  const RAMP_LOW = [27, 40, 56];
+  const RAMP_HIGH = [242, 184, 75];
+  function rampColor(t) {
+    t = Math.max(0, Math.min(1, t));
+    const r = Math.round(RAMP_LOW[0] + (RAMP_HIGH[0] - RAMP_LOW[0]) * t);
+    const g = Math.round(RAMP_LOW[1] + (RAMP_HIGH[1] - RAMP_LOW[1]) * t);
+    const b = Math.round(RAMP_LOW[2] + (RAMP_HIGH[2] - RAMP_LOW[2]) * t);
+    return `rgb(${r},${g},${b})`;
+  }
 
   const map = L.map("map", { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, touchZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false });
   map.setView([51.1, 10.4], 6);
@@ -505,10 +535,22 @@
   map.getPane("bgPaneB").style.transition = "opacity 0.1s linear";
   map.getPane("bgPaneB").style.opacity = "0";
 
+  // Third pane, sitting above both crossfade panes: a static county-level
+  // foreign-national-share choropleth shown only behind the "Germany is Not
+  // One" teaser step, faded in/out exactly like #trendChartFloat is for its
+  // own step - the county geometry and data are the same files that story
+  // itself loads, not a new dataset.
+  map.createPane("demoPane");
+  map.getPane("demoPane").style.zIndex = 425;
+  map.getPane("demoPane").style.pointerEvents = "none";
+  map.getPane("demoPane").style.transition = "opacity 0.1s linear";
+  map.getPane("demoPane").style.opacity = "0";
+
   const LOOKUPS = {};
   const LEGENDS = {};
   let paneLayerA = null;
   let paneLayerB = null;
+  let demoLayer = null;
 
   function colorFor(party) {
     return PARTY_COLORS[party] || PARTY_COLORS.other;
@@ -617,6 +659,9 @@
     const trendNorm = Math.max(-1, Math.min(1, stepSignedOffset(stepEls[TREND_CHART_STEP_INDEX], viewportH) / viewportH));
     trendChartFloat.style.opacity = fadeCurve(trendNorm);
 
+    const demoNorm = Math.max(-1, Math.min(1, stepSignedOffset(stepEls[DEMO_MAP_STEP_INDEX], viewportH) / viewportH));
+    map.getPane("demoPane").style.opacity = fadeCurve(demoNorm);
+
     if (!ready) return;
 
     // Step 0's own progress through one screen-height doubles as the overall
@@ -667,7 +712,9 @@
     fetch("data/home_story/landtag.json").then((r) => r.json()),
     fetch("data/home_story/kommunal.json").then((r) => r.json()),
     fetch("data/home_story/european.json").then((r) => r.json()),
-  ]).then(([muniGeo, federal, landtag, kommunal, european]) => {
+    fetch("story/data/germany-is-not-one/counties.geojson").then((r) => r.json()),
+    fetch("story/data/germany-is-not-one/metrics.json").then((r) => r.json()),
+  ]).then(([muniGeo, federal, landtag, kommunal, european, countyGeo, storyMetrics]) => {
     LOOKUPS.federal = federal;
     LOOKUPS.landtag = landtag;
     LOOKUPS.kommunal = kommunal;
@@ -688,6 +735,20 @@
       style: (f) => styleFeature(f.properties.ags, STEPS[1].type),
     }).addTo(map);
     map.fitBounds(paneLayerA.getBounds(), { paddingTopLeft: [40, 40], paddingBottomRight: [40, 40] });
+
+    const fs = storyMetrics.foreign_share;
+    const fsYear = fs.years[fs.years.length - 1];
+    const fsData = fs.data[fsYear];
+    const fsDomain = fs.domain;
+    demoLayer = L.geoJSON(countyGeo, {
+      pane: "demoPane", renderer: L.canvas({ pane: "demoPane", padding: 0.3 }), interactive: false,
+      style: (f) => {
+        const v = fsData[f.properties.county];
+        if (v == null) return { stroke: false, fillColor: DIM, fillOpacity: 0.2 };
+        const t = (v - fsDomain[0]) / (fsDomain[1] - fsDomain[0] || 1);
+        return { stroke: false, fillColor: rampColor(t), fillOpacity: 0.88 };
+      },
+    }).addTo(map);
 
     ready = true;
     updateScrollState();

@@ -102,7 +102,7 @@
     position: absolute; inset: 0; pointer-events: none; z-index: 400;
     background: linear-gradient(90deg, rgba(11,13,17,0.88) 0%, rgba(11,13,17,0.55) 32%, rgba(11,13,17,0.0) 62%);
   }
-  @media (max-width: 760px) { #stageVeil { background: rgba(11,13,17,0.72); } }
+  @media (max-width: 760px) { #stageVeil { background: none; } }
 
   #eyebrowFloat {
     position: absolute; top: 28px; left: 32px; z-index: 401; pointer-events: none;
@@ -120,7 +120,7 @@
   #legendFloat .row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; transition: opacity 0.5s ease; }
   #legendFloat .row:last-child { margin-bottom: 0; }
   #legendFloat .sw { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-  @media (max-width: 760px) { #legendFloat { display: none; } }
+  @media (max-width: 760px) { #legendFloat { max-width: 170px; padding: 6px 10px; font-size: 10px; right: 12px; bottom: 12px; } }
 
   #progressDots {
     position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 500;

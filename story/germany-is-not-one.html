@@ -83,7 +83,7 @@
     position: absolute; inset: 0; pointer-events: none; z-index: 400;
     background: linear-gradient(90deg, rgba(11,13,17,0.90) 0%, rgba(11,13,17,0.60) 34%, rgba(11,13,17,0.05) 64%);
   }
-  @media (max-width: 760px) { #stageVeil { background: rgba(11,13,17,0.76); } }
+  @media (max-width: 760px) { #stageVeil { background: none; } }
 
   /* Big year readout, updated every animation tick - "the year on top of / next
      to the map" the viewer watches change as each metric plays through its
@@ -114,7 +114,7 @@
   #scaleLegend .sl-labels { display: flex; justify-content: space-between; margin-top: 5px; font-variant-numeric: tabular-nums; }
   #scaleLegend .sl-nodata { margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--panel-border); display: flex; align-items: center; gap: 6px; }
   #scaleLegend .sl-nodata .sw { width: 9px; height: 9px; border-radius: 2px; background: #2b2e36; flex-shrink: 0; }
-  @media (max-width: 760px) { #scaleLegend { display: none; } }
+  @media (max-width: 760px) { #scaleLegend { width: 160px; padding: 8px 10px; font-size: 10px; right: 12px; bottom: 12px; } }
 
   #progressDots {
     position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 500;
@@ -257,7 +257,7 @@
     <section class="step" data-step="0">
       <div class="step-card">
         <div class="step-eyebrow">Demographics</div>
-        <h2 class="step-headline">The East is aging faster than the West, and the gap keeps growing</h2>
+        <h2 class="step-headline">The East is aging faster than the West</h2>
         <p class="step-body">The share of residents 65 and older has been higher in the East since at least 2011, and that gap has nearly doubled since then, from 3.2 points to 5.6 points by 2025. Some eastern counties are now close to a third senior.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-population-age/">Open the age map →</a>
@@ -268,8 +268,8 @@
     <section class="step" data-step="1">
       <div class="step-card">
         <div class="step-eyebrow">Demographics</div>
-        <h2 class="step-headline">The generation that left, and never came back</h2>
-        <p class="step-body">In 2011 the East and West had almost the same share of 28-to-35-year-olds. By 2025 that gap has become the widest of any age group in this story: 5.5% in the East against 8.5% in the West, and the split has only widened every year in between. This is the generation that left for work after reunification, and the pattern never reversed.</p>
+        <h2 class="step-headline">Where Are the Young People?</h2>
+        <p class="step-body">In 2011 the East and West had almost the same share of 28-to-35-year-olds. By 2025 that gap has become the widest of any age group in this story.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-population-age/">Open the age map →</a>
         </div>
@@ -279,7 +279,7 @@
     <section class="step" data-step="2">
       <div class="step-card">
         <div class="step-eyebrow">Demographics</div>
-        <h2 class="step-headline">One number for the whole picture</h2>
+        <h2 class="step-headline">Average Age</h2>
         <p class="step-body">Averaging every age group into a single number, the pattern is unmistakable: the average resident of the East is now about three years older than in the West, 48.3 versus 45.0 in 2025, and the gap has widened every year since 2011.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-population-age/">Open the age map →</a>
@@ -290,7 +290,7 @@
     <section class="step" data-step="3">
       <div class="step-card">
         <div class="step-eyebrow">Wellbeing</div>
-        <h2 class="step-headline">A happy country, with one bad year</h2>
+        <h2 class="step-headline">Self-Reported Life Satisfaction</h2>
         <p class="step-body">Self-reported life satisfaction sits in a tight band nationwide, roughly 6 to 7.4 out of 10. Hamburg usually tops the ranking. Every single state dropped together in 2021, the pandemic year, then recovered by 2024, a rare case of the whole country moving in lockstep.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-society/?metric=happiness">Open the society map →</a>
@@ -301,7 +301,7 @@
     <section class="step" data-step="4">
       <div class="step-card">
         <div class="step-eyebrow">Health</div>
-        <h2 class="step-headline">A country that lives long, with a modest north-south gap</h2>
+        <h2 class="step-headline">Living Long</h2>
         <p class="step-body">Every state sits between 79.2 and 82.4 years of life expectancy at birth in 2023, the only year available, a narrow band by international standards. Baden-Württemberg and Bavaria lead; Saxony-Anhalt trails. Notably, Saxony is the one eastern state right up near the top.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-society/?metric=life_expectancy">Open the society map →</a>
@@ -312,8 +312,8 @@
     <section class="step" data-step="5">
       <div class="step-card">
         <div class="step-eyebrow">Crime &amp; Safety</div>
-        <h2 class="step-headline">Rural Bavaria is the quietest place in Germany</h2>
-        <p class="step-body">The lowest-crime counties in the entire country are almost all in Bavaria, some under 2,500 recorded offenses per 100,000 residents a year. The East runs hotter, and so do big cities everywhere, Berlin, Frankfurt, Bremen, plus a scattering of border towns. Nationally, the rate has risen about 9% since 2020.</p>
+        <h2 class="step-headline">Crime Rate Is Lowest in the South</h2>
+        <p class="step-body">The lowest-crime counties in the country are almost all in Bavaria. The East runs hotter, and so do big cities everywhere.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-society/?metric=crime_rate">Open the society map →</a>
         </div>
@@ -324,7 +324,7 @@
       <div class="step-card">
         <div class="step-eyebrow">Labor &amp; Welfare</div>
         <h2 class="step-headline">Who receives Bürgergeld</h2>
-        <p class="step-body">Some Bavarian counties sit as low as 1.5% of the population on basic income support, Baden-Württemberg not far behind. Bremen and Hamburg run far higher, entire states averaging 10 to 14%, and most of the East sits in between, consistently above the Bavarian/Baden-Württemberg level.</p>
+        <p class="step-body">Bavaria and Baden-Württemberg sit lowest on basic income support. Bremen and Hamburg run far higher, and most of the East sits in between, consistently above the southern states.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-society/?metric=welfare_rate">Open the society map →</a>
         </div>
@@ -345,8 +345,8 @@
     <section class="step" data-step="8">
       <div class="step-card">
         <div class="step-eyebrow">Migration &amp; Diversity</div>
-        <h2 class="step-headline">Two trends, one map</h2>
-        <p class="step-body">Foreign nationals make up a rising share of Germany's population, and the rise clearly accelerated after 2015. But the East has never caught up: 1.6% in 1995, still only around 5% in 2020, against roughly 12% in the West throughout. Berlin is the exception, rising from 12.3% in 1995 to 19.6% in 2020, just 7 points in 25 years.</p>
+        <h2 class="step-headline">Foreigners Prefer to Live in the West</h2>
+        <p class="step-body">Foreign nationals make up a rising share of Germany's population, and that rise accelerated after 2015. But the East has never caught up to the West. Berlin is the one clear exception.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-demographics/?metric=foreign_share">Open the demographics map →</a>
         </div>
@@ -356,7 +356,7 @@
     <section class="step" data-step="9">
       <div class="step-card">
         <div class="step-eyebrow">Migration &amp; Diversity</div>
-        <h2 class="step-headline">2015, in one number</h2>
+        <h2 class="step-headline">Asylum Seekers: The Syrian Civil War Effect</h2>
         <p class="step-body">Asylum seekers registered per 1,000 residents jumped from about 4 in 2014 to over 15 in 2015, the year the Syrian civil war drove Europe's largest refugee movement in decades, then fell back toward 4 to 5 within a few years as arrivals slowed and cases were processed.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-demographics/?metric=asylum_seeker_share">Open the demographics map →</a>
@@ -367,7 +367,7 @@
     <section class="step" data-step="10">
       <div class="step-card">
         <div class="step-eyebrow">Faith</div>
-        <h2 class="step-headline">The whole country believes less. The East never believed as much to begin with.</h2>
+        <h2 class="step-headline">Belief Is Declining. The East Started Lower.</h2>
         <p class="step-body">Church membership has fallen in every state since 2001, from Saarland's 87% down to 67%, from Baden-Württemberg's 74% down to 55%. But the five eastern states started the century already under 36%, a legacy of decades of state atheism, and have simply kept falling from there, several now under 20%.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-society/?metric=religion_pct">Open the society map →</a>
@@ -378,7 +378,7 @@
     <section class="step" data-step="11">
       <div class="step-card">
         <div class="step-eyebrow">Community</div>
-        <h2 class="step-headline">A civic habit the East never built</h2>
+        <h2 class="step-headline">Sports Club Membership</h2>
         <p class="step-body">West German states run anywhere from 22% to 37% of residents in an organized sports club, a Sportverein, often the default local institution. Every eastern state sits under 19%. That's not a temporary gap closing over time, it's barely moved since 2018, a genuinely different associational culture.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-society/?metric=sports_rate">Open the society map →</a>

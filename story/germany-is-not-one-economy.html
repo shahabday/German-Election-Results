@@ -83,7 +83,7 @@
     position: absolute; inset: 0; pointer-events: none; z-index: 400;
     background: linear-gradient(90deg, rgba(11,13,17,0.90) 0%, rgba(11,13,17,0.60) 34%, rgba(11,13,17,0.05) 64%);
   }
-  @media (max-width: 760px) { #stageVeil { background: rgba(11,13,17,0.76); } }
+  @media (max-width: 760px) { #stageVeil { background: none; } }
 
   #yearBadge {
     position: absolute; right: 26px; top: 26px; z-index: 401; pointer-events: none;
@@ -111,7 +111,7 @@
   #scaleLegend .sl-labels { display: flex; justify-content: space-between; margin-top: 5px; font-variant-numeric: tabular-nums; }
   #scaleLegend .sl-nodata { margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--panel-border); display: flex; align-items: center; gap: 6px; }
   #scaleLegend .sl-nodata .sw { width: 9px; height: 9px; border-radius: 2px; background: #2b2e36; flex-shrink: 0; }
-  @media (max-width: 760px) { #scaleLegend { display: none; } }
+  @media (max-width: 760px) { #scaleLegend { width: 160px; padding: 8px 10px; font-size: 10px; right: 12px; bottom: 12px; } }
 
   #progressDots {
     position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 500;
@@ -251,7 +251,7 @@
       <div class="step-card">
         <div class="step-eyebrow">Income</div>
         <h2 class="step-headline">Germany got richer. The gap narrowed, but never closed.</h2>
-        <p class="step-body">Average household income per resident has almost doubled everywhere since 2001, from €13,547 to €22,113 in the East, from €16,792 to €24,649 in the West. As a ratio, East German incomes climbed from 81% of the West's to 90% by 2021. But in real terms the gap is still about €2,500 a year, smaller than two decades ago, but not gone.</p>
+        <p class="step-body">Average household income has almost doubled everywhere since 2001, and East German incomes have climbed closer to Western levels. But the gap is still about €2,500 a year, smaller than two decades ago, but not gone.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-demographics/?metric=hh_income">Open the demographics map →</a>
         </div>
@@ -262,7 +262,7 @@
       <div class="step-card">
         <div class="step-eyebrow">Economic output</div>
         <h2 class="step-headline">Wealth is produced in a handful of cities, and it isn't evenly spread</h2>
-        <p class="step-body">GDP per capita has less to do with where people live than where they work. Wolfsburg (Volkswagen), Ingolstadt (Audi) and Munich top the ranking at well over €100,000 per resident, several times the national county median. Measured this way the East trails further behind than on almost any other metric here: 74% of the Western average in 2020, and the absolute gap has actually widened since 2000, from about €8,900 to €10,350.</p>
+        <p class="step-body">GDP per capita has less to do with where people live than where they work. Wolfsburg (Volkswagen), Ingolstadt (Audi) and Munich top the ranking, several times the national county median. The gap between East and West has only grown since 2000, though that may say more about a handful of very rich Western cities than about the East itself.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-demographics/?metric=gdp_percap">Open the demographics map →</a>
         </div>
@@ -273,7 +273,7 @@
       <div class="step-card">
         <div class="step-eyebrow">Poverty</div>
         <h2 class="step-headline">A household in the East is still a third more likely to be low-income</h2>
-        <p class="step-body">The share of households living on less than 60% of the median income has fallen everywhere since 2013, from 39.6% to 32.1% in the East, from 29.7% to 24.5% in the West. The relative gap has barely moved: East German households are still roughly 30% more likely to fall into this bracket than Western ones, in 2013 and in 2021 alike.</p>
+        <p class="step-body">The share of low-income households has fallen everywhere since 2013. But the relative gap between East and West has barely moved: a household in the East is still about a third more likely to fall into this bracket than one in the West.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-demographics/?metric=share_low_income_hh">Open the demographics map →</a>
         </div>
@@ -283,8 +283,8 @@
     <section class="step" data-step="3">
       <div class="step-card">
         <div class="step-eyebrow">Labor market</div>
-        <h2 class="step-headline">The one gap that actually closed</h2>
-        <p class="step-body">In 1998 East German unemployment ran more than double the Western rate: 18.1% against 9.0%. By 2020 it was 6.7% against 5.2%, still higher, but within a point and a half for the first time since reunification. Of every metric in this story, unemployment shows the clearest, steadiest convergence.</p>
+        <h2 class="step-headline">Unemployment in the East Is Far Lower Than It Used to Be</h2>
+        <p class="step-body">In 1998 East German unemployment ran more than double the Western rate. That gap has closed sharply since, the clearest, steadiest convergence of any metric in this story, though the East still runs higher than the West today.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-demographics/?metric=unemployment_rate">Open the demographics map →</a>
         </div>
@@ -295,7 +295,7 @@
       <div class="step-card">
         <div class="step-eyebrow">Migration &amp; the workforce</div>
         <h2 class="step-headline">The workforce that never arrived in the East</h2>
-        <p class="step-body">Foreign nationals made up just 1.6% of the East's population in 1995, against 8.8% in the West, and the gap has barely closed since: 5.1% versus 12.5% by 2020. In an economy short of workers almost everywhere, the East has drawn a much smaller share of the migration that's filled gaps in the Western labor market. Berlin is the exception, climbing from 12.3% to 19.6% over the same period.</p>
+        <p class="step-body">Foreign nationals make up a small share of the East's population, and the gap with the West has barely closed. In an economy short of workers almost everywhere, the East has drawn a much smaller share of the migration filling gaps in the Western labor market. Berlin is the exception.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-demographics/?metric=foreign_share">Open the demographics map →</a>
         </div>
@@ -306,7 +306,7 @@
       <div class="step-card">
         <div class="step-eyebrow">Cost of living</div>
         <h2 class="step-headline">Rent is where the gap is still widening, not closing</h2>
-        <p class="step-body">Average asking rent has risen everywhere since 2010, but faster in the West: from €3.27/m² to €6.01 there, from €2.54 to €3.86 in the East. The ratio between them has widened, not narrowed, East rents now sit at 64% of Western levels, down from 78% in 2010. The most expensive places in the country aren't a region, they're a cluster: Munich and its wealthy commuter belt, plus Frankfurt and Stuttgart.</p>
+        <p class="step-body">Average rent has risen everywhere since 2010, but faster in the West. The gap between East and West has widened, not narrowed. The most expensive places in the country aren't a region, they're a cluster: Munich and its wealthy commuter belt, plus Frankfurt and Stuttgart.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-demographics/?metric=rent_price">Open the demographics map →</a>
         </div>
@@ -317,7 +317,7 @@
       <div class="step-card">
         <div class="step-eyebrow">Housing</div>
         <h2 class="step-headline">The real housing squeeze isn't East vs West, it's big city vs everywhere else</h2>
-        <p class="step-body">Living space per resident has grown everywhere since 2011, East and West alike, and the gap between them has narrowed to about three square meters. The tightest squeeze in the country runs through its biggest cities regardless of which Germany they're in: Frankfurt, Stuttgart, Berlin and Freiburg in the West, Rostock and Dresden in the East, all under 40 m² per resident while the national county average is nearly 50.</p>
+        <p class="step-body">Living space per resident has grown everywhere since 2011, and the gap between East and West has narrowed. The tightest squeeze in the country runs through its biggest cities regardless of which Germany they're in, Frankfurt and Stuttgart in the West, Rostock and Dresden in the East.</p>
         <div class="closing-cta">
           <a class="primary" href="../map-demographics/?metric=living_space_per_capita">Open the demographics map →</a>
         </div>
@@ -341,10 +341,10 @@
         <h2 class="step-headline">The country got richer. Whether that closed the divide depends which number you look at.</h2>
         <p class="step-body">Unemployment converged sharply. Income narrowed the gap by a third. But GDP per capita and rent are drifting further apart, not closer, and inequality runs in the opposite direction from the poverty gap entirely. There's no single answer to "did the East catch up", only eight different ones. Explore every metric here yourself, county by county, year by year.</p>
         <div class="final-list">
-          <a href="../map-demographics/">Demographics &amp; Economy Map <span class="arrow">→</span></a>
-          <a href="../map-society/">Society &amp; Culture Map <span class="arrow">→</span></a>
           <a href="germany-is-not-one.html">Germany is Not One <span class="arrow">→</span></a>
           <a href="east-germany-opposition.html">The East: One Region, One Opposition <span class="arrow">→</span></a>
+          <a href="../map-demographics/">Demographics &amp; Economy Map <span class="arrow">→</span></a>
+          <a href="../map-society/">Society &amp; Culture Map <span class="arrow">→</span></a>
         </div>
         <div class="closing-cta">
           <a class="primary" href="../index.html">Back to Germany in Maps →</a>
